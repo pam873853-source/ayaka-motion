@@ -1,21 +1,135 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
+<meta charset="UTF-8">
 <title>Ayaka Motion - Maintenance</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700;900&display=swap" rel="stylesheet">
 <style>
-body{background:black;color:white;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;font-family:sans-serif;flex-direction:column;text-align:center}
-h1{font-size:40px}
-p{color:#aaa}
-.loader{margin-top:20px;width:50px;height:50px;border:5px solid #333;border-top:5px solid white;border-radius:50%;animation:spin 1s linear infinite}
-@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    background-color: #FFEE00; /* Kuning Neo-Brutalism */
+    color: #000000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    margin: 0;
+    font-family: 'Space Grotesk', sans-serif;
+    padding: 20px;
+  }
+
+  .card {
+    background-color: #FFFFFF;
+    border: 5px solid #000000;
+    box-shadow: 12px 12px 0px #000000;
+    padding: 40px 30px;
+    max-width: 500px;
+    width: 100%;
+    text-align: center;
+    transform: rotate(-1deg);
+    transition: transform 0.2s ease;
+  }
+
+  .card:hover {
+    transform: rotate(0deg) scale(1.01);
+  }
+
+  .badge {
+    display: inline-block;
+    background-color: #000;
+    color: #FFEE00;
+    padding: 6px 14px;
+    font-size: 14px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border: 3px solid #000;
+    margin-bottom: 20px;
+    box-shadow: 4px 4px 0px #FFEE00;
+  }
+
+  h1 {
+    font-size: 38px;
+    font-weight: 900;
+    margin: 0 0 10px 0;
+    text-transform: uppercase;
+    letter-spacing: -1px;
+  }
+
+  h2 {
+    font-size: 22px;
+    font-weight: 700;
+    background: #000;
+    color: #FFF;
+    display: inline-block;
+    padding: 4px 12px;
+    margin: 0 0 20px 0;
+    transform: rotate(1deg);
+  }
+
+  p {
+    font-size: 16px;
+    font-weight: 700;
+    color: #222;
+    margin: 10px 0;
+    line-height: 1.5;
+  }
+
+  .loader-box {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .dot {
+    width: 16px;
+    height: 16px;
+    background-color: #000;
+    border: 3px solid #000;
+    animation: bounce 0.6s infinite alternate;
+  }
+
+  .dot:nth-child(2) {
+    animation-delay: 0.2s;
+    background-color: #FFEE00;
+  }
+
+  .dot:nth-child(3) {
+    animation-delay: 0.4s;
+  }
+
+  @keyframes bounce {
+    0% {
+      transform: translateY(0);
+      box-shadow: 3px 3px 0px #000;
+    }
+    100% {
+      transform: translateY(-12px);
+      box-shadow: 3px 12px 0px #000;
+    }
+  }
 </style>
 </head>
 <body>
-<h1>🛠️ AYAKA MOTION</h1>
-<h2>Lagi Maintenance!</h2>
-<p>Kita lagi upgrade biar makin keren & kenceng.</p>
-<p>Balik lagi nanti ya!</p>
-<div class="loader"></div>
+
+<div class="card">
+  <div class="badge">Status: Offline</div>
+  <h1>🛠️ AYAKA MOTION</h1>
+  <h2>Lagi Maintenance!</h2>
+  <p>Kita lagi upgrade sistem biar makin keren & kenceng.</p>
+  <p>Balik lagi nanti ya, jangan kangen!</p>
+  
+  <div class="loader-box">
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+  </div>
+</div>
+
 </body>
 </html>
