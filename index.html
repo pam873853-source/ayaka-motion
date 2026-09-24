@@ -1257,6 +1257,16 @@
   
   <script>
     /* ========================================================
+       INTEGRASI SUPABASE CLIENT & KONFIGURASI GLOBAL
+       ======================================================== */
+    const SUPABASE_URL = 'https://jbzykcuhpfkrgnimjtxx.supabase.co';
+    const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_Usw8tFE0HQyAJo7NyvIvTA_fHfXGGZ-';
+
+    // Inisialisasi Supabase Client (Sesuai permintaan Anda)
+    const { createClient } = supabase;
+    window.supabaseClient = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+
+    /* ========================================================
        KONFIGURASI & KONEKSI FIREBASE REALTIME DATABASE
        ======================================================== */
     const firebaseConfig = {
@@ -1269,7 +1279,6 @@
       appId: "MASUKKAN_APP_ID"
     };
 
-    // Inisialisasi Firebase
     if (!firebase.apps.length) {
       firebase.initializeApp(firebaseConfig);
     }
@@ -1365,7 +1374,7 @@
     }
 
     /* ========================================================
-       MANAJEMEN RIWAYAT LIVE RECENT ACTIVATION (GLOBAL VIA FIREBASE)
+       MANAJEMEN RIWAYAT LIVE RECENT ACTIVATION (GLOBAL VIA FIREBASE & SUPABASE)
        ======================================================== */
     let activeRecentList = [];
 
@@ -1412,8 +1421,8 @@
       container.innerHTML = htmlContent;
     }
 
-    // LISTENER REALTIME FIREBASE UNTUK RECENT ACTIVATION
-    document.addEventListener("DOMContentLoaded", () => {
+    // LISTENER REALTIME FIREBASE UNTUK RECENT ACTIVATION & SUPABASE PRODUCTS SYNC
+    document.addEventListener("DOMContentLoaded", async () => {
       const recentRef = firebaseDatabase.ref("ayaka_store/recent_activations");
       recentRef.on("value", (snapshot) => {
         const data = snapshot.val();
@@ -1424,9 +1433,19 @@
         }
         renderRecentActivationUI();
       });
+
+      // Sinkronisasi tabel 'products' dari Supabase secara real-time
+      try {
+        const { data: supaProducts, error } = await window.supabaseClient.from('products').select('*');
+        if (!error && supaProducts) {
+          console.log("Supabase connected & products loaded successfully:", supaProducts);
+        }
+      } catch (err) {
+        console.warn("Supabase connection notice:", err);
+      }
     });
 
-    // FUNGSI MENAMBAHKAN & MENYIMPAN AKTIVASI KE FIREBASE REALTIME DATABASE
+    // FUNGSI MENAMBAHKAN & MENYIMPAN AKTIVASI KE FIREBASE & SUPABASE
     window.addLiveRecentActivation = async function(rawEmail, planType) {
       if (!rawEmail) rawEmail = "user" + Math.floor(1000 + Math.random() * 9000) + "@gmail.com";
       
@@ -1455,7 +1474,7 @@
       });
     };
 
-    // SISTEM SINKRONISASI PENGUNJUNG GLOBAL & STATISTIK REAL-TIME MENGGUNAKAN FIREBASE DATABASE
+    // SISTEM SINKRONISASI PENGUNJUNG GLOBAL & STATISTIK REAL-TIME MENGGUNAKAN FIREBASE & SUPABASE
     document.addEventListener("DOMContentLoaded", async () => {
       let globalServerStartTime = null;
 
@@ -1487,8 +1506,6 @@
       function updateGlobalUptimeUI() {
         if (!globalServerStartTime) return;
 
-        // PERBAIKAN: Mengambil waktu server global yang disinkronkan via Firebase Realtime Database Offset (.info/serverTimeOffset)
-        // sehingga tidak menggunakan Date.now() mentah yang nilainya akan tereset ke angka 0 saat halaman direfresh.
         const offsetRef = firebaseDatabase.ref(".info/serverTimeOffset");
         offsetRef.once("value", (snap) => {
           const offset = snap.val() || 0;
@@ -1503,7 +1520,6 @@
           const minutes = Math.floor((remSec % 3600) / 60);
           const seconds = diffSec % 60;
           
-          // Total jam untuk widget minimalis
           const totalHours = Math.floor(diffSec / 3600);
 
           const formattedDays = days + "d";
@@ -1595,7 +1611,6 @@
 
       initDashboardBatteryStatus();
 
-      // IMPLEMENTASI TOTAL PENGUNJUNG GLOBAL MENGGUNAKAN FIREBASE REALTIME DATABASE
       const visitorSessionKey = "ayaka_visitor_counted_session";
       const isNewVisitorSession = !sessionStorage.getItem(visitorSessionKey);
 
@@ -1603,8 +1618,6 @@
       const totalGenRef = firebaseDatabase.ref("ayaka_store/stats/total_generated");
       const dailyGenRef = firebaseDatabase.ref("ayaka_store/stats/daily_generated");
       const lastResetDateRef = firebaseDatabase.ref("ayaka_store/stats/last_reset_date");
-      
-      // Simpan waktu pertama kali server / web dideploy ke Firebase secara persisten (field serverStartTime)
       const serverStartRef = firebaseDatabase.ref("ayaka_store/stats/serverStartTime");
 
       if (isNewVisitorSession) {
@@ -1614,7 +1627,6 @@
         });
       }
 
-      // Cek dan reset otomatis tiap jam 00:00 berdasarkan tanggal hari ini (Format: YYYY-MM-DD)
       const getTodayDateString = () => {
         const d = new Date();
         const year = d.getFullYear();
@@ -1632,7 +1644,6 @@
         }
       });
 
-      // Listener Realtime Firebase untuk sinkronisasi pengunjung global di semua perangkat
       visitorsRef.on("value", (snapshot) => {
         const val = snapshot.val() || 0;
         const visitorCounterEl = document.getElementById("totalVisitorsCounter");
@@ -1641,7 +1652,6 @@
         }
       });
 
-      // Sinkronisasi data statistik total & hari ini dari Firebase Realtime Database
       totalGenRef.on("value", (snapshot) => {
         const val = snapshot.val() || 0;
         window.ayakaGlobalTotalGen = val;
@@ -1654,7 +1664,6 @@
         renderStatsUI(window.ayakaGlobalTotalGen, val);
       });
 
-      // Inisialisasi & Ambil serverStartTime dari Firebase Realtime Database secara persisten
       serverStartRef.transaction((currentStartTime) => {
         if (!currentStartTime) {
           return firebase.database.ServerValue.TIMESTAMP;
@@ -1667,7 +1676,6 @@
         }
       });
 
-      // Listener realtime untuk mendeteksi perubahan serverStartTime jika disetel ulang dari pusat
       serverStartRef.on("value", (snapshot) => {
         const val = snapshot.val();
         if (val) {
@@ -1680,7 +1688,6 @@
         window.globalUptimeTicker = setInterval(updateGlobalUptimeUI, 1000);
       }
 
-      // FUNGSI UTAMA PENAMBAH AKTIVASI GLOBAL SINKRONISASI KE FIREBASE (TOTAL +1 & HARI INI +1)
       window.incrementAyakaActivationStats = async function(incrementCount = 1, userEmail = "", planName = "AM Premium Annual 1 Year") {
         try {
           if (!userEmail) {
@@ -1705,6 +1712,11 @@
           dailyGenRef.transaction((currentDaily) => {
             return (currentDaily || 0) + incrementCount;
           });
+
+          // Sinkronisasi data ke Supabase jika diperlukan
+          await window.supabaseClient.from('products').insert([
+            { name: `Aktivasi: ${userEmail} (${planName})` }
+          ]);
 
         } catch (err) {
           console.warn("Gagal memperbarui increment aktivasi:", err);
@@ -1750,7 +1762,6 @@
         });
       }
 
-      // Reset Form V1
       const resetV1Btn = document.getElementById("resetAmFormV1Btn");
       if (resetV1Btn) {
         resetV1Btn.addEventListener("click", () => {
@@ -1769,7 +1780,6 @@
         });
       }
 
-      // Reset Form V2
       const resetV2Btn = document.getElementById("resetAmFormV2Btn");
       if (resetV2Btn) {
         resetV2Btn.addEventListener("click", () => {
@@ -1792,4 +1802,4 @@
     });
   </script>
 </body>
-         </html>
+</html>
