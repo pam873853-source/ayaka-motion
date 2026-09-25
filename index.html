@@ -529,10 +529,10 @@
     .realtime-sky-bar {
       position: relative;
       width: 100%;
-      height: 140px;
+      height: 150px;
       border-radius: 18px;
       overflow: hidden;
-      margin-bottom: 18px;
+      margin-bottom: 12px;
       border: 3px solid #000000;
       box-shadow: 6px 6px 0px #000000;
       transition: background 3s ease-in-out;
@@ -557,7 +557,7 @@
       background: linear-gradient(180deg, #0b1026 0%, #14203f 40%, #1e2f57 70%, #2a4168 100%);
     }
 
-    /* Label Indikator Waktu */
+    /* Label Indikator Waktu (MALAM/SIANG dll - tetap di dalam kotak) */
     .sky-time-label {
       position: absolute;
       top: 10px;
@@ -583,39 +583,55 @@
       font-size: 13px;
     }
 
-    .sky-loc-label {
-      position: absolute;
-      bottom: 10px;
-      left: 14px;
-      z-index: 20;
-      color: rgba(255, 255, 255, 0.92);
+    /* ============================================================
+       KOTAK INFO DI BAWAH ANIMASI (Lokasi + Fase Bulan)
+       ============================================================ */
+    .sky-info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+      padding: 10px 14px;
+      background: #ffffff;
+      border: 2.5px solid #000000;
+      border-radius: 12px;
+      box-shadow: 4px 4px 0px #000000;
       font-family: 'Space Grotesk', sans-serif;
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: 1.5px;
-      text-shadow: 0 1px 3px rgba(0,0,0,0.6);
-      text-transform: uppercase;
+      flex-wrap: wrap;
+    }
+
+    .sky-loc-label {
       display: flex;
       align-items: center;
       gap: 6px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: #111111;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .sky-loc-label i {
+      color: #ec4899;
+      font-size: 13px;
     }
 
     .sky-phase-label {
-      position: absolute;
-      bottom: 10px;
-      right: 14px;
-      z-index: 20;
-      color: rgba(255, 255, 255, 0.92);
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
       font-weight: 800;
       letter-spacing: 0.8px;
-      text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+      color: #111111;
       text-transform: uppercase;
-      background: rgba(0, 0, 0, 0.35);
-      padding: 3px 8px;
-      border-radius: 10px;
-      backdrop-filter: blur(4px);
+      background: #fde047;
+      padding: 4px 10px;
+      border-radius: 20px;
+      border: 1.5px solid #000000;
+      white-space: nowrap;
     }
 
     /* MATAHARI */
@@ -753,16 +769,17 @@
       100% { transform: translateX(calc(100vw + 220px)); }
     }
 
-    /* GUNUNG / HORIZON SILUET */
+    /* GUNUNG / HORIZON SILUET - DIPERKECIL (hanya 18px) */
     .sky-horizon {
       position: absolute;
       bottom: 0;
       left: 0;
       width: 100%;
-      height: 44px;
+      height: 18px;
       z-index: 6;
       transition: all 1.5s ease-in-out;
       pointer-events: none;
+      opacity: 0.85;
     }
 
     .sky-horizon::before,
@@ -790,7 +807,7 @@
     .theme-morning .sky-horizon { background: #b5714b; }
     .theme-day     .sky-horizon { background: #4f7d54; }
     .theme-evening .sky-horizon { background: #3b1e42; }
-    .theme-night   .sky-horizon { background: #060b1a; }
+    .theme-night   .sky-horizon { background: #131c33; }
 
     .theme-night .sky-time-label {
       background: rgba(255, 255, 255, 0.14);
@@ -802,11 +819,12 @@
     .theme-evening .sky-cloud { opacity: 0.55; }
 
     @media (max-width: 600px) {
-      .realtime-sky-bar { height: 115px; border-radius: 14px; }
+      .realtime-sky-bar { height: 125px; border-radius: 14px; }
       .sky-sun, .sky-moon { width: 34px; height: 34px; }
       .sky-time-label { font-size: 10px; padding: 4px 9px; }
-      .sky-loc-label { font-size: 9px; }
-      .sky-phase-label { font-size: 9px; padding: 2px 6px; }
+      .sky-loc-label { font-size: 10px; }
+      .sky-phase-label { font-size: 10px; padding: 3px 8px; }
+      .sky-info-row { padding: 8px 10px; }
     }
   </style>
 </head>
@@ -885,7 +903,7 @@
 
       <!-- ============================================================
            BAR ATAS - ANIMASI LANGIT REAL-TIME ASTRONOMIS
-           (Posisi Matahari/Bulan & Fase Bulan sesuai kondisi langit nyata)
+           (Full animation, tanpa strip hitam di dalam kotak)
            ============================================================ -->
       <div class="realtime-sky-bar" id="realtimeSkyBar">
         <!-- Bintang (hanya muncul saat malam) -->
@@ -921,7 +939,7 @@
         <div class="sky-cloud cloud-2"></div>
         <div class="sky-cloud cloud-3"></div>
 
-        <!-- Horizon / Siluet Gunung -->
+        <!-- Horizon / Siluet Gunung (tipis saja) -->
         <div class="sky-horizon"></div>
 
         <!-- Label waktu real-time -->
@@ -929,11 +947,13 @@
           <i class="fa-solid fa-sun" id="skyTimeIcon"></i>
           <span id="skyTimeText">Memuat...</span>
         </div>
+      </div>
 
+      <!-- KOTAK INFO DI BAWAH ANIMASI: Lokasi + Fase Bulan -->
+      <div class="sky-info-row">
         <div class="sky-loc-label" id="skyLocLabel">
           <i class="fa-solid fa-location-dot"></i> <span id="skyLocationText">REALTIME SKY</span>
         </div>
-
         <div class="sky-phase-label" id="skyPhaseLabel">🌙 --</div>
       </div>
 
@@ -1769,16 +1789,12 @@
 
       if (!skyBar) return;
 
-      // Cek apakah SunCalc berhasil dimuat
       const hasSunCalc = typeof window.SunCalc !== 'undefined';
 
-      // Default lokasi: Jakarta, Indonesia
-      // (Dipakai jika pengguna tidak mengizinkan akses lokasi)
       let userLat = -6.2088;
       let userLng = 106.8456;
       let locationName = "JAKARTA (DEFAULT)";
 
-      // Coba ambil lokasi GPS pengguna
       if (navigator.geolocation) {
         try {
           const pos = await new Promise((resolve, reject) => {
@@ -1802,9 +1818,6 @@
         skyLocationText.textContent = locationName;
       }
 
-      // ============================================================
-      // MEMBUAT BINTANG (untuk tampilan malam hari)
-      // ============================================================
       function generateStars() {
         if (!skyStars) return;
         skyStars.innerHTML = "";
@@ -1824,29 +1837,17 @@
       }
       generateStars();
 
-      // ============================================================
-      // FUNGSI MEMBUAT PATH SVG UNTUK FASE BULAN
-      // phase: 0.0 = Bulan Baru, 0.25 = Kuartal Pertama,
-      //        0.5 = Bulan Penuh, 0.75 = Kuartal Ketiga
-      // fraction: 0.0 = gelap total, 1.0 = terang total
-      // ============================================================
       function getMoonPath(fraction, phase, r) {
         const cx = 50, cy = 50;
-        // Semi-axis horizontal terminator ellipse
         const rx = r * Math.abs(2 * fraction - 1);
-        // Waxing (menuju purnama) jika phase < 0.5, waning jika sebaliknya
         const waxing = phase < 0.5;
 
         let outerSweep, innerSweep;
 
         if (waxing) {
-          // Bagian terang di KANAN
           outerSweep = 1;
-          // Gibbous (fraction > 0.5): terminator menonjol ke kiri → sweep=1
-          // Crescent (fraction < 0.5): terminator menonjol ke kanan → sweep=0
           innerSweep = fraction > 0.5 ? 1 : 0;
         } else {
-          // Bagian terang di KIRI
           outerSweep = 0;
           innerSweep = fraction < 0.5 ? 1 : 0;
         }
@@ -1858,9 +1859,6 @@
         return `M ${startX} ${startY} A ${r} ${r} 0 0 ${outerSweep} ${startX} ${endY} A ${rx} ${r} 0 0 ${innerSweep} ${startX} ${startY} Z`;
       }
 
-      // ============================================================
-      // NAMA FASE BULAN (Bahasa Indonesia)
-      // ============================================================
       function getPhaseName(phase) {
         if (phase < 0.03 || phase >= 0.97) return "Bulan Baru";
         if (phase < 0.22) return "Sabit Awal";
@@ -1872,7 +1870,6 @@
         return "Sabit Akhir";
       }
 
-      // Ikon emoji berdasarkan fase bulan
       function getPhaseEmoji(phase) {
         if (phase < 0.03 || phase >= 0.97) return "🌑";
         if (phase < 0.22) return "🌒";
@@ -1884,36 +1881,21 @@
         return "🌘";
       }
 
-      // ============================================================
-      // MAPPING AZIMUT → POSISI X (persen)
-      // SunCalc: azimuth = 0 (Selatan), -π/2 (Timur), +π/2 (Barat)
-      // ============================================================
       function azimuthToXPercent(azimuthRad) {
         const azDeg = azimuthRad * 180 / Math.PI;
-        // Clamp ke -110° hingga +110° agar tidak keluar bar
         const clamped = Math.max(-110, Math.min(110, azDeg));
         return 50 + (clamped / 110) * 48;
       }
 
-      // ============================================================
-      // MAPPING ALTITUDE → POSISI Y (persen)
-      // Altitude 0° = horizon (bawah), 90° = zenith (atas)
-      // ============================================================
       function altitudeToYPercent(altitudeRad) {
         const altDeg = altitudeRad * 180 / Math.PI;
-        // Clamp dari -10° (bawah) sampai 90° (atas)
         const clamped = Math.max(-10, Math.min(90, altDeg));
-        // Map -10° → 100%, 90° → 0%
         return 100 - ((clamped + 10) / 100) * 100;
       }
 
-      // ============================================================
-      // FUNGSI UTAMA UPDATE LANGIT
-      // ============================================================
       function updateSky() {
         const now = new Date();
 
-        // Fallback kalau SunCalc gagal dimuat
         if (!hasSunCalc) {
           const hour = now.getHours();
           let theme = "day", label = "Siang", icon = "fa-solid fa-sun";
@@ -1930,7 +1912,6 @@
           return;
         }
 
-        // ---- Perhitungan astronomi dengan SunCalc ----
         const sunPos = window.SunCalc.getPosition(now, userLat, userLng);
         const moonPos = window.SunCalc.getMoonPosition(now, userLat, userLng);
         const moonIllum = window.SunCalc.getMoonIllumination(now);
@@ -1938,39 +1919,33 @@
         const sunAltDeg = sunPos.altitude * 180 / Math.PI;
         const moonAltDeg = moonPos.altitude * 180 / Math.PI;
 
-        // ---- Posisi Matahari (jika di atas horizon -3°) ----
         if (skySun) {
           if (sunAltDeg > -3) {
             const xPct = azimuthToXPercent(sunPos.azimuth);
             const yPct = altitudeToYPercent(sunPos.altitude);
             skySun.style.left = xPct + "%";
             skySun.style.top = yPct + "%";
-            // Opacity: penuh saat siang, redup saat senja
             skySun.style.opacity = sunAltDeg > 0 ? "1" : "0.45";
           } else {
             skySun.style.opacity = "0";
           }
         }
 
-        // ---- Posisi & Fase Bulan (jika di atas horizon -3°) ----
         if (skyMoon && moonLitPath) {
           if (moonAltDeg > -3) {
             const xPct = azimuthToXPercent(moonPos.azimuth);
             const yPct = altitudeToYPercent(moonPos.altitude);
             skyMoon.style.left = xPct + "%";
             skyMoon.style.top = yPct + "%";
-            // Opacity bulan: redup saat siang jika terlihat
             skyMoon.style.opacity = sunAltDeg > 0 ? "0.55" : "1";
           } else {
             skyMoon.style.opacity = "0";
           }
 
-          // Update bentuk fase bulan via SVG path
           const pathD = getMoonPath(moonIllum.fraction, moonIllum.phase, 45);
           moonLitPath.setAttribute("d", pathD);
         }
 
-        // ---- Update label fase bulan ----
         if (skyPhaseLabel) {
           const phaseEmoji = getPhaseEmoji(moonIllum.phase);
           const phaseName = getPhaseName(moonIllum.phase);
@@ -1978,7 +1953,6 @@
           skyPhaseLabel.textContent = `${phaseEmoji} ${phaseName} • ${fractionPct}%`;
         }
 
-        // ---- Tentukan tema langit berdasarkan altitude Matahari ----
         const isRising = sunPos.azimuth < 0;
         let theme, label, icon;
 
@@ -2011,13 +1985,9 @@
         if (skyTimeText) skyTimeText.textContent = label;
       }
 
-      // Jalankan langsung saat halaman dimuat
       updateSky();
-
-      // Update setiap 5 detik (dengan transisi CSS 4.5s linear → gerakan kontinu)
       setInterval(updateSky, 5000);
 
-      // Log info awal ke console (untuk debugging)
       if (hasSunCalc) {
         const _now = new Date();
         const _illum = window.SunCalc.getMoonIllumination(_now);
