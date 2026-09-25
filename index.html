@@ -14,6 +14,10 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+  <!-- Firebase SDK (Compat Version untuk Kemudahan Integrasi Realtime Database) -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+
   <link rel="stylesheet" href="style.css">
   <style>
     /* Styling khusus untuk merapatkan angka System Uptime */
@@ -391,7 +395,7 @@
       border-radius: 12px;
       outline: none;
       object-fit: contain;
-      transform: translateZ(0); /* Hardware acceleration untuk performa lebih smooth di HP */
+      transform: translateZ(0);
     }
 
     /* STYLING LIVE RECENT ACTIVATION */
@@ -654,11 +658,11 @@
               <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px;">
                 <h3>Total Pengunjung Global</h3>
                 <span style="font-size: 11px; font-weight: 700; color: #f59e0b; background: rgba(245, 158, 11, 0.1); padding: 2px 8px; border-radius: 20px; white-space: nowrap;" id="visitorBadgeLabel">
-                  Database Connected
+                  Firebase Connected
                 </span>
               </div>
               <p style="font-size: 20px; font-family: 'Space Grotesk', sans-serif; margin-top: 4px; color: #fff;" id="totalVisitorsCounter">Loading...</p>
-              <div class="stat-desc" id="visitorStatusDesc">Sinkronisasi otomatis global setiap tautan dibagikan</div>
+              <div class="stat-desc" id="visitorStatusDesc">Sinkronisasi otomatis global setiap pengunjung membuka web</div>
             </div>
           </div>
         </div>
@@ -675,8 +679,7 @@
             <span style="font-size: 12px; color: var(--text-muted);" id="recentCountText">Memuat data...</span>
           </div>
 
-          <div id="recentActivationList">
-            </div>
+          <div id="recentActivationList"></div>
         </div>
       </section>
 
@@ -1137,8 +1140,7 @@
                   <th>Status</th>
                 </tr>
               </thead>
-              <tbody id="bulkTableBody">
-                </tbody>
+              <tbody id="bulkTableBody"></tbody>
             </table>
           </div>
         </div>
@@ -1254,6 +1256,25 @@
   <script src="main.js"></script>
   
   <script>
+    /* ========================================================
+       KONFIGURASI & KONEKSI FIREBASE REALTIME DATABASE
+       ======================================================== */
+    const firebaseConfig = {
+      apiKey: "MASUKKAN_API_KEY_FIREBASE_ANDA",
+      authDomain: "MASUKKAN_PROJECT_ID.firebaseapp.com",
+      databaseURL: "https://MASUKKAN_PROJECT_ID-default-rtdb.firebaseio.com",
+      projectId: "MASUKKAN_PROJECT_ID",
+      storageBucket: "MASUKKAN_PROJECT_ID.appspot.com",
+      messagingSenderId: "MASUKKAN_MESSAGING_SENDER_ID",
+      appId: "MASUKKAN_APP_ID"
+    };
+
+    // Inisialisasi Firebase
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
+    const firebaseDatabase = firebase.database();
+
     // Navigation Routing & Active Tab Sync
     document.addEventListener("DOMContentLoaded", () => {
       const bottomNavItems = document.querySelectorAll(".bottom-nav-item");
@@ -1343,7 +1364,9 @@
       return username.substring(0, 3) + "****" + username.substring(username.length - 1) + "@" + domain;
     }
 
-    // MANAJEMEN RIWAYAT LIVE RECENT ACTIVATION (REALTIME SYNC VIA SUPABASE)
+    /* ========================================================
+       MANAJEMEN RIWAYAT LIVE RECENT ACTIVATION (GLOBAL VIA FIREBASE)
+       ======================================================== */
     let activeRecentList = [];
 
     function renderRecentActivationUI() {
@@ -1389,7 +1412,21 @@
       container.innerHTML = htmlContent;
     }
 
-    // FUNGSI MENAMBAHKAN & MENGAMBIL AKTIVASI LIVE REALTIME DARI SUPABASE
+    // LISTENER REALTIME FIREBASE UNTUK RECENT ACTIVATION
+    document.addEventListener("DOMContentLoaded", () => {
+      const recentRef = firebaseDatabase.ref("ayaka_store/recent_activations");
+      recentRef.on("value", (snapshot) => {
+        const data = snapshot.val();
+        if (data && Array.isArray(data)) {
+          activeRecentList = data;
+        } else {
+          activeRecentList = [];
+        }
+        renderRecentActivationUI();
+      });
+    });
+
+    // FUNGSI MENAMBAHKAN & MENYIMPAN AKTIVASI KE FIREBASE REALTIME DATABASE
     window.addLiveRecentActivation = async function(rawEmail, planType) {
       if (!rawEmail) rawEmail = "user" + Math.floor(1000 + Math.random() * 9000) + "@gmail.com";
       
@@ -1400,53 +1437,40 @@
         timestamp: Date.now()
       };
 
-      activeRecentList.unshift(newItem);
-      if (activeRecentList.length > 20) {
-        activeRecentList.pop();
-      }
-
-      renderRecentActivationUI();
-
-      // Sinkronkan ke database Supabase agar semua pengguna melihat data asli secara realtime
-      if (typeof window.supabaseClient !== 'undefined' && window.supabaseClient) {
-        try {
-          await window.supabaseClient
-            .from('site_stats')
-            .update({ recent_activations: activeRecentList })
-            .eq('id', 1);
-        } catch (err) {
-          console.warn("Gagal menyimpan riwayat live recent ke Supabase:", err);
+      const recentRef = firebaseDatabase.ref("ayaka_store/recent_activations");
+      recentRef.once("value", (snapshot) => {
+        let currentList = snapshot.val();
+        if (!currentList || !Array.isArray(currentList)) {
+          currentList = [];
         }
-      }
+
+        currentList.unshift(newItem);
+        if (currentList.length > 20) {
+          currentList.pop();
+        }
+
+        recentRef.set(currentList).catch((err) => {
+          console.warn("Gagal menyimpan riwayat live recent ke Firebase:", err);
+        });
+      });
     };
 
-    // SISTEM SINKRONISASI SERVER UPTIME PERMANEN & PENGUNJUNG GLOBAL REALTIME
+    // SISTEM SINKRONISASI PENGUNJUNG GLOBAL & STATISTIK REAL-TIME MENGGUNAKAN FIREBASE DATABASE
     document.addEventListener("DOMContentLoaded", async () => {
       let globalServerStartTime = null;
 
-      // Variable penampung nilai terbesar untuk mencegah angka tertimpa/turun kembali
       window.ayakaGlobalTotalGen = 0;
       window.ayakaGlobalDailyGen = 0;
 
-      // Ambil waktu awal server terdaftar atau buat jika belum ada
       function getOrInitBaseStartTime(dbTime) {
         if (dbTime && !isNaN(dbTime) && parseInt(dbTime) > 0) {
-          localStorage.setItem("ayaka_global_server_start_time", dbTime);
           return parseInt(dbTime);
         }
-
-        let localSaved = localStorage.getItem("ayaka_global_server_start_time");
-        if (localSaved && !isNaN(localSaved) && parseInt(localSaved) > 0) {
-          return parseInt(localSaved);
-        }
-
         const now = Date.now();
-        localStorage.setItem("ayaka_global_server_start_time", now);
         return now;
       }
 
       function renderStatsUI(total, daily, visitors) {
-        // Ambil nilai terbesar antara nilai baru dengan nilai yang sudah ada agar tidak pernah tertimpa ke angka lebih kecil
         window.ayakaGlobalTotalGen = Math.max(window.ayakaGlobalTotalGen || 0, Number(total || 0));
         window.ayakaGlobalDailyGen = Math.max(window.ayakaGlobalDailyGen || 0, Number(daily || 0));
 
@@ -1468,7 +1492,6 @@
         }
       }
 
-      // Hitung dan Perbarui Tampilan Uptime Tanpa Reset
       function updateGlobalUptimeUI() {
         if (!globalServerStartTime) {
           globalServerStartTime = getOrInitBaseStartTime(null);
@@ -1509,7 +1532,6 @@
         }
       }
 
-      // Widget Tanggal & Jam Live
       function updateLiveDateTimeWidget() {
         const dateEl = document.getElementById("widgetDateVal");
         const timeEl = document.getElementById("widgetTimeVal");
@@ -1535,7 +1557,6 @@
       setInterval(updateLiveDateTimeWidget, 1000);
       updateLiveDateTimeWidget();
 
-      // Battery API Reader
       function initDashboardBatteryStatus() {
         const batteryValEl = document.getElementById("widgetBatteryVal");
         const batteryIconEl = document.getElementById("widgetBatteryIcon");
@@ -1574,177 +1595,111 @@
 
       initDashboardBatteryStatus();
 
-      // MENGAMBIL & MENAMBAHKAN PENGUNJUNG BARU DENGAN IDENTITAS PERANGKAT LOKAL
-      async function fetchAndUpdateStats() {
-        try {
-          if (typeof window.supabaseClient !== 'undefined' && window.supabaseClient) {
-            const visitorBadgeLabel = document.getElementById("visitorBadgeLabel");
-            
-            const visitorKey = "ayaka_global_visitor_id";
-            const isNewDeviceVisitor = !localStorage.getItem(visitorKey);
+      // IMPLEMENTASI TOTAL PENGUNJUNG GLOBAL MENGGUNAKAN FIREBASE REALTIME DATABASE
+      const visitorSessionKey = "ayaka_visitor_counted_session";
+      const isNewVisitorSession = !sessionStorage.getItem(visitorSessionKey);
 
-            let { data: statsData, error } = await window.supabaseClient
-              .from('site_stats')
-              .select('visitors, total_generated, daily_generated, last_reset_date, server_start_time, recent_activations')
-              .eq('id', 1)
-              .single();
+      const visitorsRef = firebaseDatabase.ref("ayaka_store/stats/visitors");
+      const totalGenRef = firebaseDatabase.ref("ayaka_store/stats/total_generated");
+      const dailyGenRef = firebaseDatabase.ref("ayaka_store/stats/daily_generated");
+      const lastResetDateRef = firebaseDatabase.ref("ayaka_store/stats/last_reset_date");
+      const serverStartRef = firebaseDatabase.ref("ayaka_store/stats/server_start_time");
 
-            if (statsData) {
-              let currentVisitors = statsData.visitors || 0;
-              let currentGenerated = statsData.total_generated || 0;
-              let dailyGenerated = statsData.daily_generated || 0;
-              let lastResetDate = statsData.last_reset_date || '';
-
-              if (statsData.recent_activations && Array.isArray(statsData.recent_activations)) {
-                activeRecentList = statsData.recent_activations;
-                renderRecentActivationUI();
-              }
-
-              globalServerStartTime = getOrInitBaseStartTime(statsData.server_start_time);
-              if (!statsData.server_start_time) {
-                await window.supabaseClient
-                  .from('site_stats')
-                  .update({ server_start_time: globalServerStartTime })
-                  .eq('id', 1);
-              }
-
-              const todayStr = new Date().toISOString().split('T')[0];
-              if (lastResetDate !== todayStr) {
-                dailyGenerated = 0;
-                await window.supabaseClient
-                  .from('site_stats')
-                  .update({ daily_generated: 0, last_reset_date: todayStr })
-                  .eq('id', 1);
-              }
-
-              if (isNewDeviceVisitor) {
-                localStorage.setItem(visitorKey, "v_" + Date.now() + "_" + Math.random().toString(36).substring(2, 7));
-                currentVisitors += 1;
-                await window.supabaseClient
-                  .from('site_stats')
-                  .update({ visitors: currentVisitors })
-                  .eq('id', 1);
-              }
-
-              if (visitorBadgeLabel) visitorBadgeLabel.textContent = "Live Online";
-
-              renderStatsUI(currentGenerated, dailyGenerated, currentVisitors);
-              updateGlobalUptimeUI();
-            }
-          }
-        } catch (err) {
-          console.warn("Gagal sinkronisasi data Supabase:", err);
-        }
+      if (isNewVisitorSession) {
+        sessionStorage.setItem(visitorSessionKey, "true");
+        visitorsRef.transaction((currentVisitors) => {
+          return (currentVisitors || 0) + 1;
+        });
       }
 
-      await fetchAndUpdateStats();
+      // Cek dan reset otomatis tiap jam 00:00 berdasarkan tanggal hari ini (Format: YYYY-MM-DD)
+      const getTodayDateString = () => {
+        const d = new Date();
+        const year = d.getFullYear();
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+      };
+
+      lastResetDateRef.once("value", (snapshot) => {
+        const storedDate = snapshot.val();
+        const todayStr = getTodayDateString();
+        if (storedDate !== todayStr) {
+          // Reset angka HARI INI ke 0 secara global di Firebase saat tanggal berganti
+          dailyGenRef.set(0);
+          lastResetDateRef.set(todayStr);
+        }
+      });
+
+      // Listener Realtime Firebase untuk sinkronisasi pengunjung global di semua perangkat
+      visitorsRef.on("value", (snapshot) => {
+        const val = snapshot.val() || 0;
+        const visitorCounterEl = document.getElementById("totalVisitorsCounter");
+        if (visitorCounterEl) {
+          visitorCounterEl.textContent = Number(val).toLocaleString("id-ID");
+        }
+      });
+
+      // Sinkronisasi data statistik total & hari ini dari Firebase Realtime Database
+      totalGenRef.on("value", (snapshot) => {
+        const val = snapshot.val() || 0;
+        window.ayakaGlobalTotalGen = val;
+        renderStatsUI(val, window.ayakaGlobalDailyGen);
+      });
+
+      dailyGenRef.on("value", (snapshot) => {
+        const val = snapshot.val() || 0;
+        window.ayakaGlobalDailyGen = val;
+        renderStatsUI(window.ayakaGlobalTotalGen, val);
+      });
+
+      serverStartRef.once("value", (snapshot) => {
+        let stTime = snapshot.val();
+        if (!stTime) {
+          stTime = Date.now();
+          serverStartRef.set(stTime);
+        }
+        globalServerStartTime = getOrInitBaseStartTime(stTime);
+        updateGlobalUptimeUI();
+      });
 
       if (!window.globalUptimeTicker) {
         window.globalUptimeTicker = setInterval(updateGlobalUptimeUI, 1000);
       }
 
-      // REALTIME LISTENER SUPABASE (Sinkronisasi otomatis real-time lintas perangkat)
-      if (typeof window.supabaseClient !== 'undefined' && window.supabaseClient) {
-        try {
-          window.supabaseClient
-            .channel('public:site_stats_realtime')
-            .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'site_stats', filter: 'id=eq.1' }, payload => {
-              if (payload && payload.new) {
-                const newTotal = payload.new.total_generated || 0;
-                const newDaily = payload.new.daily_generated || 0;
-                const newVisitors = payload.new.visitors || 0;
-                if (payload.new.server_start_time) {
-                  globalServerStartTime = parseInt(payload.new.server_start_time);
-                }
-                if (payload.new.recent_activations && Array.isArray(payload.new.recent_activations)) {
-                  activeRecentList = payload.new.recent_activations;
-                  renderRecentActivationUI();
-                }
-                renderStatsUI(newTotal, newDaily, newVisitors);
-                updateGlobalUptimeUI();
-              }
-            })
-            .subscribe();
-        } catch (e) {
-          console.warn("Realtime listener active fallback", e);
-        }
-      }
-
-      setInterval(fetchAndUpdateStats, 2000);
-
-      // FUNGSI UTAMA PENAMBAH AKTIVASI GLOBAL SINKRONISASI SUPABASE
+      // FUNGSI UTAMA PENAMBAH AKTIVASI GLOBAL SINKRONISASI KE FIREBASE (TOTAL +1 & HARI INI +1)
       window.incrementAyakaActivationStats = async function(incrementCount = 1, userEmail = "", planName = "AM Premium Annual 1 Year") {
         try {
           if (!userEmail) {
             userEmail = document.getElementById("emailInput")?.value || document.getElementById("emailInputV2")?.value || "ayaka_user@gmail.com";
           }
 
-          // Tambahkan ke live recent real-time
+          // Pastikan cek reset harian sebelum melakukan penambahan
+          const todayStr = getTodayDateString();
+          lastResetDateRef.once("value", (snapshot) => {
+            const storedDate = snapshot.val();
+            if (storedDate !== todayStr) {
+              dailyGenRef.set(0);
+              lastResetDateRef.set(todayStr);
+            }
+          });
+
+          // Tambahkan ke live recent real-time (tersimpan secara global via Firebase)
           await window.addLiveRecentActivation(userEmail, planName);
 
-          if (typeof window.supabaseClient !== 'undefined' && window.supabaseClient) {
-            let { data: statsData } = await window.supabaseClient
-              .from('site_stats')
-              .select('total_generated, daily_generated, last_reset_date, recent_activations')
-              .eq('id', 1)
-              .single();
+          // Update nilai total dan daily generated ke Firebase Realtime Database secara atomic (transaction)
+          totalGenRef.transaction((currentTotal) => {
+            return (currentTotal || 0) + incrementCount;
+          });
 
-            if (statsData) {
-              const todayStr = new Date().toISOString().split('T')[0];
-              let currentDaily = statsData.daily_generated || 0;
+          dailyGenRef.transaction((currentDaily) => {
+            return (currentDaily || 0) + incrementCount;
+          });
 
-              if (statsData.last_reset_date !== todayStr) {
-                currentDaily = 0;
-              }
-
-              // Gunakan nilai terbesar antara database dengan angka yang sedang tercatat di memori browser
-              const dbTotal = statsData.total_generated || 0;
-              const baseTotal = Math.max(dbTotal, window.ayakaGlobalTotalGen || 0);
-              const baseDaily = Math.max(currentDaily, window.ayakaGlobalDailyGen || 0);
-
-              const newTotal = baseTotal + incrementCount;
-              const newDaily = baseDaily + incrementCount;
-
-              renderStatsUI(newTotal, newDaily);
-
-              await window.supabaseClient
-                .from('site_stats')
-                .update({ 
-                  total_generated: newTotal, 
-                  daily_generated: newDaily,
-                  last_reset_date: todayStr,
-                  recent_activations: activeRecentList
-                })
-                .eq('id', 1);
-            }
-          }
         } catch (err) {
           console.warn("Gagal memperbarui increment aktivasi:", err);
         }
       };
-
-      // OVERRIDE MAIN.JS DENGAN MENCEGAH NILAI BERKURANG
-      setInterval(() => {
-        if (window.ayakaGlobalTotalGen > 0) {
-          const el1 = document.getElementById("globalTotalAktivasi");
-          const el2 = document.getElementById("globalHariIniAktivasi");
-          const el3 = document.getElementById("totalGeneratedCounter");
-          const el4 = document.getElementById("statTotalSukses");
-
-          if (el1 && (parseInt(el1.textContent.replace(/\D/g, '')) || 0) < window.ayakaGlobalTotalGen) {
-            el1.textContent = window.ayakaGlobalTotalGen.toLocaleString("id-ID");
-          }
-          if (el2 && (parseInt(el2.textContent.replace(/\D/g, '')) || 0) < window.ayakaGlobalDailyGen) {
-            el2.textContent = window.ayakaGlobalDailyGen.toLocaleString("id-ID");
-          }
-          if (el3 && (parseInt(el3.textContent.replace(/\D/g, '')) || 0) < window.ayakaGlobalTotalGen) {
-            el3.textContent = window.ayakaGlobalTotalGen.toLocaleString("id-ID");
-          }
-          if (el4 && (parseInt(el4.textContent.replace(/\D/g, '')) || 0) < window.ayakaGlobalTotalGen) {
-            el4.textContent = window.ayakaGlobalTotalGen.toLocaleString("id-ID");
-          }
-        }
-      }, 500);
 
       // HUBUNGKAN PEMANGGILAN PEMBAHARUAN AKTIVASI DENGAN TOMBOL AKTIVASI
       const proceedStep3Btn = document.getElementById("proceedToStep3Btn");
