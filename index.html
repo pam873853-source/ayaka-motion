@@ -1351,7 +1351,7 @@
       return username.substring(0, 3) + "****" + username.substring(username.length - 1) + "@" + domain;
     }
 
-    // MANAJEMEN RIWAYAT LIVE RECENT ACTIVATION (REALTIME SYNC VIA SUPABASE)
+    // MANAJEMEN RIWAYAT LIVE RECENT ACTIVATION (REALTIME SYNC VIA SUPABASE & LOCALSTORAGE)
     let activeRecentList = [];
 
     function renderRecentActivationUI() {
@@ -1413,6 +1413,11 @@
         activeRecentList.pop();
       }
 
+      // Simpan juga ke localStorage agar aman saat halaman dibuka ulang
+      try {
+        localStorage.setItem("ayaka_saved_recent_activations", JSON.stringify(activeRecentList));
+      } catch (e) {}
+
       renderRecentActivationUI();
 
       if (typeof window.supabaseClient !== 'undefined' && window.supabaseClient) {
@@ -1427,12 +1432,24 @@
       }
     };
 
-    // SISTEM SINKRONISASI SERVER UPTIME YANG STABIL (TIDAK RESET / MELOMPAT)
+    // SISTEM SINKRONISASI SERVER UPTIME & STATISTIK YANG STABIL (TIDAK RESET / MELOMPAT)
     document.addEventListener("DOMContentLoaded", async () => {
       let globalServerStartTime = null;
 
-      window.ayakaGlobalTotalGen = 0;
-      window.ayakaGlobalDailyGen = 0;
+      window.ayakaGlobalTotalGen = parseInt(localStorage.getItem("ayaka_local_total_gen") || "0");
+      window.ayakaGlobalDailyGen = parseInt(localStorage.getItem("ayaka_local_daily_gen") || "0");
+
+      // Pulihkan riwayat live recent dari localStorage saat pertama kali buka web agar tidak hilang
+      try {
+        const savedLocalRecent = localStorage.getItem("ayaka_saved_recent_activations");
+        if (savedLocalRecent) {
+          const parsedLocal = JSON.parse(savedLocalRecent);
+          if (Array.isArray(parsedLocal) && parsedLocal.length > 0) {
+            activeRecentList = parsedLocal;
+            renderRecentActivationUI();
+          }
+        }
+      } catch (e) {}
 
       // Inisialisasi waktu awal yang aman dan diprioritaskan dari localStorage agar counter tidak melompat-lompat
       function getOrInitBaseStartTime(dbTime) {
@@ -1457,6 +1474,12 @@
       function renderStatsUI(total, daily, visitors) {
         window.ayakaGlobalTotalGen = Math.max(window.ayakaGlobalTotalGen || 0, Number(total || 0));
         window.ayakaGlobalDailyGen = Math.max(window.ayakaGlobalDailyGen || 0, Number(daily || 0));
+
+        // Simpan ke localStorage agar cache lokal selalu terjaga
+        try {
+          localStorage.setItem("ayaka_local_total_gen", window.ayakaGlobalTotalGen);
+          localStorage.setItem("ayaka_local_daily_gen", window.ayakaGlobalDailyGen);
+        } catch (e) {}
 
         const totalGenEl = document.getElementById("totalGeneratedCounter");
         const statSuksesEl = document.getElementById("statTotalSukses");
@@ -1605,12 +1628,16 @@
 
             if (statsData) {
               let currentVisitors = statsData.visitors || 0;
-              let currentGenerated = statsData.total_generated || 0;
-              let dailyGenerated = statsData.daily_generated || 0;
+              let dbTotal = statsData.total_generated || 0;
+              let dbDaily = statsData.daily_generated || 0;
               let lastResetDate = statsData.last_reset_date || '';
 
-              if (statsData.recent_activations && Array.isArray(statsData.recent_activations)) {
+              // Sinkronkan data riwayat aktivitas live dari database jika tersedia
+              if (statsData.recent_activations && Array.isArray(statsData.recent_activations) && statsData.recent_activations.length > 0) {
                 activeRecentList = statsData.recent_activations;
+                try {
+                  localStorage.setItem("ayaka_saved_recent_activations", JSON.stringify(activeRecentList));
+                } catch (e) {}
                 renderRecentActivationUI();
               }
 
@@ -1626,7 +1653,7 @@
 
               const todayStr = new Date().toISOString().split('T')[0];
               if (lastResetDate !== todayStr) {
-                dailyGenerated = 0;
+                dbDaily = 0;
                 await window.supabaseClient
                   .from('site_stats')
                   .update({ daily_generated: 0, last_reset_date: todayStr })
@@ -1644,11 +1671,17 @@
 
               if (visitorBadgeLabel) visitorBadgeLabel.textContent = "Live Online";
 
-              renderStatsUI(currentGenerated, dailyGenerated, currentVisitors);
+              // Ambil nilai tertinggi antara lokal dan database agar tidak pernah kembali jadi 0
+              const finalTotal = Math.max(dbTotal, window.ayakaGlobalTotalGen || 0);
+              const finalDaily = Math.max(dbDaily, window.ayakaGlobalDailyGen || 0);
+
+              renderStatsUI(finalTotal, finalDaily, currentVisitors);
             }
           }
         } catch (err) {
           console.warn("Gagal sinkronisasi data Supabase:", err);
+          // Fallback menggunakan cache lokal agar counter tetap tampil normal walau offline
+          renderStatsUI(window.ayakaGlobalTotalGen, window.ayakaGlobalDailyGen, 1);
         }
       }
 
@@ -1665,8 +1698,11 @@
                 const newTotal = payload.new.total_generated || 0;
                 const newDaily = payload.new.daily_generated || 0;
                 const newVisitors = payload.new.visitors || 0;
-                if (payload.new.recent_activations && Array.isArray(payload.new.recent_activations)) {
+                if (payload.new.recent_activations && Array.isArray(payload.new.recent_activations) && payload.new.recent_activations.length > 0) {
                   activeRecentList = payload.new.recent_activations;
+                  try {
+                    localStorage.setItem("ayaka_saved_recent_activations", JSON.stringify(activeRecentList));
+                  } catch (e) {}
                   renderRecentActivationUI();
                 }
                 renderStatsUI(newTotal, newDaily, newVisitors);
@@ -1678,49 +1714,53 @@
         }
       }
 
-      // FUNGSI UTAMA PENAMBAH AKTIVASI GLOBAL SINKRONISASI SUPABASE
+      // FUNGSI UTAMA PENAMBAH AKTIVASI GLOBAL SINKRONISASI SUPABASE & LOCALSTORAGE
       window.incrementAyakaActivationStats = async function(incrementCount = 1, userEmail = "", planName = "AM Premium Annual 1 Year") {
         try {
           if (!userEmail) {
             userEmail = document.getElementById("emailInput")?.value || document.getElementById("emailInputV2")?.value || "ayaka_user@gmail.com";
           }
 
+          // Tambah ke live recent activation dan simpan
           await window.addLiveRecentActivation(userEmail, planName);
 
+          window.ayakaGlobalTotalGen = (window.ayakaGlobalTotalGen || 0) + incrementCount;
+          window.ayakaGlobalDailyGen = (window.ayakaGlobalDailyGen || 0) + incrementCount;
+
+          renderStatsUI(window.ayakaGlobalTotalGen, window.ayakaGlobalDailyGen);
+
           if (typeof window.supabaseClient !== 'undefined' && window.supabaseClient) {
+            const todayStr = new Date().toISOString().split('T')[0];
+
             let { data: statsData } = await window.supabaseClient
               .from('site_stats')
               .select('total_generated, daily_generated, last_reset_date, recent_activations')
               .eq('id', 1)
               .single();
 
+            let targetTotal = window.ayakaGlobalTotalGen;
+            let targetDaily = window.ayakaGlobalDailyGen;
+
             if (statsData) {
-              const todayStr = new Date().toISOString().split('T')[0];
-              let currentDaily = statsData.daily_generated || 0;
-
-              if (statsData.last_reset_date !== todayStr) {
-                currentDaily = 0;
+              if (statsData.last_reset_date === todayStr) {
+                targetDaily = Math.max(statsData.daily_generated || 0, window.ayakaGlobalDailyGen);
               }
-
-              const dbTotal = statsData.total_generated || 0;
-              const baseTotal = Math.max(dbTotal, window.ayakaGlobalTotalGen || 0);
-              const baseDaily = Math.max(currentDaily, window.ayakaGlobalDailyGen || 0);
-
-              const newTotal = baseTotal + incrementCount;
-              const newDaily = baseDaily + incrementCount;
-
-              renderStatsUI(newTotal, newDaily);
-
-              await window.supabaseClient
-                .from('site_stats')
-                .update({ 
-                  total_generated: newTotal, 
-                  daily_generated: newDaily,
-                  last_reset_date: todayStr,
-                  recent_activations: activeRecentList
-                })
-                .eq('id', 1);
+              targetTotal = Math.max(statsData.total_generated || 0, window.ayakaGlobalTotalGen);
             }
+
+            window.ayakaGlobalTotalGen = targetTotal;
+            window.ayakaGlobalDailyGen = targetDaily;
+            renderStatsUI(targetTotal, targetDaily);
+
+            await window.supabaseClient
+              .from('site_stats')
+              .update({ 
+                total_generated: targetTotal, 
+                daily_generated: targetDaily,
+                last_reset_date: todayStr,
+                recent_activations: activeRecentList
+              })
+              .eq('id', 1);
           }
         } catch (err) {
           console.warn("Gagal memperbarui increment aktivasi:", err);
@@ -1748,7 +1788,7 @@
             el4.textContent = window.ayakaGlobalTotalGen.toLocaleString("id-ID");
           }
         }
-      }, 500);
+      }, 300);
 
       // HUBUNGKAN TOMBOL-TOMBOL AKTIVASI DENGAN FUNGSI SINKRONISASI DATABASE
       const proceedStep3Btn = document.getElementById("proceedToStep3Btn");
