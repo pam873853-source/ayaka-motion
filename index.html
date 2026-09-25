@@ -14,13 +14,36 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-  <!-- Inisialisasi Kredensial Supabase Global -->
+  <!-- ============================================================
+       KONFIGURASI SUPABASE GLOBAL (Next.js-style Environment)
+       ============================================================ -->
   <script>
-    const SUPABASE_URL = 'https://jbzykcuhpfkrgnimjtxx.supabase.co';
-    const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_Usw8tFE0HQyAJo7NyvIvTA_fHfXGGZ-';
-    
+    // ---- Environment Variables (setara .env / Next.js NEXT_PUBLIC_*) ----
+    window.NEXT_PUBLIC_SUPABASE_URL = 'https://jbzykcuhpfkrgnimjtxx.supabase.co';
+    window.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_Usw8tFE0HQyAJo7NyvIvTA_fHfXGGZ-';
+
+    // ---- Kredensial Global (untuk kompatibilitas modul script lain) ----
+    const SUPABASE_URL = window.NEXT_PUBLIC_SUPABASE_URL;
+    const SUPABASE_PUBLISHABLE_KEY = window.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+    window.SUPABASE_URL = SUPABASE_URL;
+    window.SUPABASE_PUBLISHABLE_KEY = SUPABASE_PUBLISHABLE_KEY;
+
+    // ================================================================
+    // import { createClient } from '@supabase/supabase-js'
+    // export const supabase = createClient(
+    //   process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    //   process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!
+    // )
+    // (Diadaptasi ke browser via CDN window.supabase.createClient)
+    // ================================================================
     if (window.supabase && typeof window.supabase.createClient === 'function') {
-      window.supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+      window.supabaseClient = window.supabase.createClient(
+        window.NEXT_PUBLIC_SUPABASE_URL,
+        window.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
+      );
+      console.log('✅ Supabase Client initialized →', window.NEXT_PUBLIC_SUPABASE_URL);
+    } else {
+      console.error('❌ Supabase JS SDK belum dimuat.');
     }
   </script>
 
@@ -1262,7 +1285,47 @@
   <script src="main.js"></script>
   
   <script>
-    // Navigation Routing & Active Tab Sync
+    // ============================================================
+    // KONEKSI LANGSUNG KE DATABASE SUPABASE
+    // (Diadaptasi dari React component 'WEB GLOBAL' → Vanilla JS)
+    // ============================================================
+    document.addEventListener("DOMContentLoaded", async () => {
+      try {
+        if (typeof window.supabaseClient === 'undefined' || !window.supabaseClient) {
+          console.warn("⚠️ Supabase Client belum siap, mencoba ulang...");
+          return;
+        }
+
+        // ---- Fetch dari tabel 'products' (mengikuti contoh React) ----
+        const { data, error } = await window.supabaseClient
+          .from('products')
+          .select('*');
+
+        if (error) {
+          // Kalau tabel products belum ada / RLS, tetap lanjut tanpa crash
+          console.warn('⚠️ Products fetch info:', error.message);
+          window.ayakaProductsData = [];
+        } else {
+          window.ayakaProductsData = data || [];
+
+          // ---- Banner konfirmasi koneksi (mirip <h1>WEB GLOBAL</h1>) ----
+          console.log('%c🌐 WEB GLOBAL', 'font-size:20px;font-weight:900;color:#22c55e;');
+          console.log('%c✅ Connected to: jbzykcuhpfkrgnimjtxx.supabase.co', 'color:#22c55e;font-weight:700;');
+          console.log('%c📦 Products loaded: ' + (data ? data.length : 0), 'color:#38bdf8;font-weight:700;');
+          console.log('%c🚀 Supabase LIVE!', 'color:#ec4899;font-weight:800;');
+        }
+
+        // ---- Update badge Database Connected di dashboard ----
+        const visitorBadgeLabel = document.getElementById("visitorBadgeLabel");
+        if (visitorBadgeLabel) visitorBadgeLabel.textContent = "Live Online";
+      } catch (e) {
+        console.warn("Supabase connection test failed:", e);
+      }
+    });
+
+    // ============================================================
+    // NAVIGATION ROUTING & ACTIVE TAB SYNC
+    // ============================================================
     document.addEventListener("DOMContentLoaded", () => {
       const bottomNavItems = document.querySelectorAll(".bottom-nav-item");
       const sidebarNavItems = document.querySelectorAll(".sidebar-menu .nav-item");
