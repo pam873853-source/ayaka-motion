@@ -14,6 +14,17 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+  <!-- Inisialisasi Kredensial Supabase Global -->
+  <script>
+    const SUPABASE_URL = 'https://jbzykcuhpfkrgnimjtxx.supabase.co';
+    const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_Usw8tFE0HQyAJo7NyvIvTA_fHfXGGZ-';
+    
+    // Membuat instance klien Supabase global untuk digunakan di seluruh sistem
+    if (window.supabase && typeof window.supabase.createClient === 'function') {
+      window.supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+    }
+  </script>
+
   <link rel="stylesheet" href="style.css">
   <style>
     /* Styling khusus untuk merapatkan angka System Uptime */
@@ -391,7 +402,7 @@
       border-radius: 12px;
       outline: none;
       object-fit: contain;
-      transform: translateZ(0); /* Hardware acceleration untuk performa lebih smooth di HP */
+      transform: translateZ(0);
     }
 
     /* STYLING LIVE RECENT ACTIVATION */
@@ -675,8 +686,7 @@
             <span style="font-size: 12px; color: var(--text-muted);" id="recentCountText">Memuat data...</span>
           </div>
 
-          <div id="recentActivationList">
-            </div>
+          <div id="recentActivationList"></div>
         </div>
       </section>
 
@@ -1137,8 +1147,7 @@
                   <th>Status</th>
                 </tr>
               </thead>
-              <tbody id="bulkTableBody">
-                </tbody>
+              <tbody id="bulkTableBody"></tbody>
             </table>
           </div>
         </div>
@@ -1424,11 +1433,11 @@
     document.addEventListener("DOMContentLoaded", async () => {
       let globalServerStartTime = null;
 
-      // Variable penampung nilai terbesar untuk mencegah angka tertimpa/turun kembali
+      // Variable penampung nilai terbesar untuk mencegah angka tertimpa/turun kembali ke nol
       window.ayakaGlobalTotalGen = 0;
       window.ayakaGlobalDailyGen = 0;
 
-      // Ambil waktu awal server terdaftar atau buat jika belum ada
+      // Ambil waktu awal server terdaftar atau buat jika belum ada (Uptime tidak direset)
       function getOrInitBaseStartTime(dbTime) {
         if (dbTime && !isNaN(dbTime) && parseInt(dbTime) > 0) {
           localStorage.setItem("ayaka_global_server_start_time", dbTime);
@@ -1446,7 +1455,6 @@
       }
 
       function renderStatsUI(total, daily, visitors) {
-        // Ambil nilai terbesar antara nilai baru dengan nilai yang sudah ada agar tidak pernah tertimpa ke angka lebih kecil
         window.ayakaGlobalTotalGen = Math.max(window.ayakaGlobalTotalGen || 0, Number(total || 0));
         window.ayakaGlobalDailyGen = Math.max(window.ayakaGlobalDailyGen || 0, Number(daily || 0));
 
@@ -1643,7 +1651,7 @@
         window.globalUptimeTicker = setInterval(updateGlobalUptimeUI, 1000);
       }
 
-      // REALTIME LISTENER SUPABASE (Sinkronisasi otomatis real-time lintas perangkat)
+      // REALTIME LISTENER SUPABASE
       if (typeof window.supabaseClient !== 'undefined' && window.supabaseClient) {
         try {
           window.supabaseClient
@@ -1679,7 +1687,6 @@
             userEmail = document.getElementById("emailInput")?.value || document.getElementById("emailInputV2")?.value || "ayaka_user@gmail.com";
           }
 
-          // Tambahkan ke live recent real-time
           await window.addLiveRecentActivation(userEmail, planName);
 
           if (typeof window.supabaseClient !== 'undefined' && window.supabaseClient) {
@@ -1697,7 +1704,6 @@
                 currentDaily = 0;
               }
 
-              // Gunakan nilai terbesar antara database dengan angka yang sedang tercatat di memori browser
               const dbTotal = statsData.total_generated || 0;
               const baseTotal = Math.max(dbTotal, window.ayakaGlobalTotalGen || 0);
               const baseDaily = Math.max(currentDaily, window.ayakaGlobalDailyGen || 0);
@@ -1723,7 +1729,7 @@
         }
       };
 
-      // OVERRIDE MAIN.JS DENGAN MENCEGAH NILAI BERKURANG
+      // MENCEGAH NILAI COUNTER BERKURANG / RESET KE ANGKA NOL
       setInterval(() => {
         if (window.ayakaGlobalTotalGen > 0) {
           const el1 = document.getElementById("globalTotalAktivasi");
@@ -1746,7 +1752,7 @@
         }
       }, 500);
 
-      // HUBUNGKAN PEMANGGILAN PEMBAHARUAN AKTIVASI DENGAN TOMBOL AKTIVASI
+      // HUBUNGKAN TOMBOL-TOMBOL AKTIVASI DENGAN FUNGSI SINKRONISASI DATABASE
       const proceedStep3Btn = document.getElementById("proceedToStep3Btn");
       if (proceedStep3Btn) {
         proceedStep3Btn.addEventListener("click", () => {
