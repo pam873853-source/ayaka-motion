@@ -15,6 +15,12 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <!-- ============================================================
+       LIBRARY ASTRONOMI REAL-TIME (SunCalc)
+       Menghitung posisi Matahari & Bulan + Fase Bulan sesungguhnya
+       ============================================================ -->
+  <script src="https://cdn.jsdelivr.net/npm/suncalc@1.9.0/suncalc.min.js"></script>
+
+  <!-- ============================================================
        KONFIGURASI SUPABASE GLOBAL (Next.js-style Environment)
        ============================================================ -->
   <script>
@@ -517,18 +523,19 @@
     }
 
     /* ============================================================
-       ANIMASI LANGIT REAL-TIME (PAGI / SIANG / SORE / MALAM)
+       ANIMASI LANGIT REAL-TIME ASTRONOMIS (PAGI / SIANG / SORE / MALAM)
+       Menghitung posisi & fase Matahari/Bulan yang sesungguhnya
        ============================================================ */
     .realtime-sky-bar {
       position: relative;
       width: 100%;
-      height: 130px;
+      height: 140px;
       border-radius: 18px;
       overflow: hidden;
       margin-bottom: 18px;
       border: 3px solid #000000;
       box-shadow: 6px 6px 0px #000000;
-      transition: background 1.5s ease-in-out;
+      transition: background 3s ease-in-out;
       isolation: isolate;
     }
 
@@ -537,22 +544,15 @@
       background: linear-gradient(180deg, #4facfe 0%, #a1c4fd 60%, #e0f2ff 100%);
     }
 
-    /* TEMA PAGI */
     .realtime-sky-bar.theme-morning {
       background: linear-gradient(180deg, #ff9a8b 0%, #ffb47d 35%, #ffd89b 65%, #ffefd5 100%);
     }
-
-    /* TEMA SIANG */
     .realtime-sky-bar.theme-day {
       background: linear-gradient(180deg, #4facfe 0%, #a1c4fd 60%, #e0f2ff 100%);
     }
-
-    /* TEMA SORE */
     .realtime-sky-bar.theme-evening {
       background: linear-gradient(180deg, #2c1e57 0%, #8a4d8e 35%, #ff7b54 70%, #ffb26b 100%);
     }
-
-    /* TEMA MALAM */
     .realtime-sky-bar.theme-night {
       background: linear-gradient(180deg, #0b1026 0%, #14203f 40%, #1e2f57 70%, #2a4168 100%);
     }
@@ -579,7 +579,6 @@
       transition: all 0.6s ease;
       text-transform: uppercase;
     }
-
     .sky-time-label i {
       font-size: 13px;
     }
@@ -596,20 +595,43 @@
       letter-spacing: 1.5px;
       text-shadow: 0 1px 3px rgba(0,0,0,0.6);
       text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .sky-phase-label {
+      position: absolute;
+      bottom: 10px;
+      right: 14px;
+      z-index: 20;
+      color: rgba(255, 255, 255, 0.92);
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.8px;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+      text-transform: uppercase;
+      background: rgba(0, 0, 0, 0.35);
+      padding: 3px 8px;
+      border-radius: 10px;
+      backdrop-filter: blur(4px);
     }
 
     /* MATAHARI */
     .sky-sun {
       position: absolute;
-      width: 46px;
-      height: 46px;
+      width: 42px;
+      height: 42px;
       border-radius: 50%;
       background: radial-gradient(circle at 35% 35%, #fff8b0 0%, #ffd93d 45%, #ff9500 100%);
       box-shadow: 0 0 30px 12px rgba(255, 217, 61, 0.75),
                   0 0 60px 20px rgba(255, 149, 0, 0.35);
       z-index: 5;
-      transition: all 1.8s ease-in-out;
+      transform: translate(-50%, -50%);
+      transition: left 4.5s linear, top 4.5s linear, opacity 2s ease;
       animation: sunPulse 4s ease-in-out infinite;
+      pointer-events: none;
     }
 
     @keyframes sunPulse {
@@ -617,31 +639,23 @@
       50%      { box-shadow: 0 0 40px 16px rgba(255, 217, 61, 0.9), 0 0 80px 26px rgba(255, 149, 0, 0.45); }
     }
 
-    /* BULAN */
+    /* BULAN - menampilkan fase sesungguhnya via SVG */
     .sky-moon {
       position: absolute;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: radial-gradient(circle at 35% 35%, #ffffff 0%, #e9edf5 55%, #b8c2d4 100%);
-      box-shadow: 0 0 22px 8px rgba(255, 255, 255, 0.55),
-                  0 0 50px 15px rgba(180, 200, 255, 0.35);
+      width: 46px;
+      height: 46px;
       z-index: 5;
-      opacity: 0;
-      transition: all 1.8s ease-in-out;
+      transform: translate(-50%, -50%);
+      transition: left 4.5s linear, top 4.5s linear, opacity 2s ease;
+      filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.65))
+              drop-shadow(0 0 16px rgba(180, 200, 255, 0.45));
+      pointer-events: none;
     }
 
-    .sky-moon::before {
-      content: "";
-      position: absolute;
-      top: 8px;
-      left: 10px;
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: rgba(150, 165, 190, 0.45);
-      box-shadow: 10px 8px 0 1px rgba(150, 165, 190, 0.4),
-                  4px 18px 0 -1px rgba(150, 165, 190, 0.4);
+    .sky-moon svg {
+      width: 100%;
+      height: 100%;
+      display: block;
     }
 
     /* BINTANG - HANYA TAMPIL DI MALAM */
@@ -650,7 +664,7 @@
       inset: 0;
       z-index: 3;
       opacity: 0;
-      transition: opacity 1.8s ease-in-out;
+      transition: opacity 2s ease-in-out;
       pointer-events: none;
     }
 
@@ -702,7 +716,7 @@
 
     .sky-cloud.cloud-2 {
       width: 70px; height: 26px;
-      top: 60px; left: -120px;
+      top: 62px; left: -120px;
       animation: cloudDrift2 38s linear infinite;
       opacity: 0.78;
     }
@@ -745,9 +759,10 @@
       bottom: 0;
       left: 0;
       width: 100%;
-      height: 42px;
+      height: 44px;
       z-index: 6;
       transition: all 1.5s ease-in-out;
+      pointer-events: none;
     }
 
     .sky-horizon::before,
@@ -777,18 +792,21 @@
     .theme-evening .sky-horizon { background: #3b1e42; }
     .theme-night   .sky-horizon { background: #060b1a; }
 
-    /* Efek kilau pada waktu malam */
     .theme-night .sky-time-label {
       background: rgba(255, 255, 255, 0.14);
       border-color: rgba(180, 210, 255, 0.5);
       color: #dbeafe;
     }
 
+    .theme-night .sky-cloud { opacity: 0.15 !important; }
+    .theme-evening .sky-cloud { opacity: 0.55; }
+
     @media (max-width: 600px) {
-      .realtime-sky-bar { height: 110px; border-radius: 14px; }
-      .sky-sun, .sky-moon { width: 36px; height: 36px; }
+      .realtime-sky-bar { height: 115px; border-radius: 14px; }
+      .sky-sun, .sky-moon { width: 34px; height: 34px; }
       .sky-time-label { font-size: 10px; padding: 4px 9px; }
-      .sky-loc-label { font-size: 10px; }
+      .sky-loc-label { font-size: 9px; }
+      .sky-phase-label { font-size: 9px; padding: 2px 6px; }
     }
   </style>
 </head>
@@ -866,17 +884,37 @@
     <div class="content-container">
 
       <!-- ============================================================
-           BAR ATAS - ANIMASI LANGIT REAL-TIME (PAGI / SIANG / SORE / MALAM)
+           BAR ATAS - ANIMASI LANGIT REAL-TIME ASTRONOMIS
+           (Posisi Matahari/Bulan & Fase Bulan sesuai kondisi langit nyata)
            ============================================================ -->
       <div class="realtime-sky-bar" id="realtimeSkyBar">
         <!-- Bintang (hanya muncul saat malam) -->
         <div class="sky-stars" id="skyStars"></div>
 
         <!-- Matahari -->
-        <div class="sky-sun" id="skySun" style="top: 20px; left: 12%;"></div>
+        <div class="sky-sun" id="skySun" style="left: 12%; top: 25%;"></div>
 
-        <!-- Bulan -->
-        <div class="sky-moon" id="skyMoon" style="top: 20px; right: 15%;"></div>
+        <!-- Bulan dengan SVG untuk menampilkan fase sesungguhnya -->
+        <div class="sky-moon" id="skyMoon" style="left: 15%; top: 22%; opacity: 0;">
+          <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
+            <defs>
+              <radialGradient id="moonSurfaceGrad" cx="35%" cy="35%" r="70%">
+                <stop offset="0%" stop-color="#ffffff"/>
+                <stop offset="55%" stop-color="#eef2fa"/>
+                <stop offset="100%" stop-color="#a9b7d0"/>
+              </radialGradient>
+            </defs>
+            <!-- Disk gelap (bagian bulan yang tidak terkena cahaya) -->
+            <circle cx="50" cy="50" r="45" fill="#1c2740" opacity="0.85"/>
+            <!-- Bagian bulan yang bercahaya (fase dinamis) -->
+            <path id="moonLitPath" d="" fill="url(#moonSurfaceGrad)"/>
+            <!-- Kawah kecil untuk tekstur -->
+            <circle cx="38" cy="42" r="4" fill="rgba(140,155,180,0.35)"/>
+            <circle cx="60" cy="58" r="5" fill="rgba(140,155,180,0.3)"/>
+            <circle cx="55" cy="32" r="3" fill="rgba(140,155,180,0.3)"/>
+            <circle cx="35" cy="65" r="3.5" fill="rgba(140,155,180,0.3)"/>
+          </svg>
+        </div>
 
         <!-- Awan -->
         <div class="sky-cloud cloud-1"></div>
@@ -892,9 +930,11 @@
           <span id="skyTimeText">Memuat...</span>
         </div>
 
-        <div class="sky-loc-label">
-          <i class="fa-solid fa-location-dot"></i> AYAKA STORE • REALTIME SKY
+        <div class="sky-loc-label" id="skyLocLabel">
+          <i class="fa-solid fa-location-dot"></i> <span id="skyLocationText">REALTIME SKY</span>
         </div>
+
+        <div class="sky-phase-label" id="skyPhaseLabel">🌙 --</div>
       </div>
 
       <div class="ayaka-banner">
@@ -1607,7 +1647,6 @@
   <script>
     // ============================================================
     // KONEKSI LANGSUNG KE DATABASE SUPABASE
-    // (Diadaptasi dari React component 'WEB GLOBAL' → Vanilla JS)
     // ============================================================
     document.addEventListener("DOMContentLoaded", async () => {
       try {
@@ -1616,26 +1655,22 @@
           return;
         }
 
-        // ---- Fetch dari tabel 'products' (mengikuti contoh React) ----
         const { data, error } = await window.supabaseClient
           .from('products')
           .select('*');
 
         if (error) {
-          // Kalau tabel products belum ada / RLS, tetap lanjut tanpa crash
           console.warn('⚠️ Products fetch info:', error.message);
           window.ayakaProductsData = [];
         } else {
           window.ayakaProductsData = data || [];
 
-          // ---- Banner konfirmasi koneksi (mirip <h1>WEB GLOBAL</h1>) ----
           console.log('%c🌐 WEB GLOBAL', 'font-size:20px;font-weight:900;color:#22c55e;');
           console.log('%c✅ Connected to: jbzykcuhpfkrgnimjtxx.supabase.co', 'color:#22c55e;font-weight:700;');
           console.log('%c📦 Products loaded: ' + (data ? data.length : 0), 'color:#38bdf8;font-weight:700;');
           console.log('%c🚀 Supabase LIVE!', 'color:#ec4899;font-weight:800;');
         }
 
-        // ---- Update badge Database Connected di dashboard ----
         const visitorBadgeLabel = document.getElementById("visitorBadgeLabel");
         if (visitorBadgeLabel) visitorBadgeLabel.textContent = "Live Online";
       } catch (e) {
@@ -1717,32 +1752,71 @@
     });
 
     // ============================================================
-    // ANIMASI LANGIT REAL-TIME (PAGI / SIANG / SORE / MALAM)
+    // ANIMASI LANGIT ASTRONOMIS REAL-TIME
+    // Menggunakan SunCalc untuk posisi Matahari/Bulan yang akurat
+    // dan fase Bulan yang sesungguhnya sesuai dunia nyata
     // ============================================================
-    document.addEventListener("DOMContentLoaded", () => {
+    document.addEventListener("DOMContentLoaded", async () => {
       const skyBar = document.getElementById("realtimeSkyBar");
       const skySun = document.getElementById("skySun");
       const skyMoon = document.getElementById("skyMoon");
       const skyStars = document.getElementById("skyStars");
-      const skyTimeLabel = document.getElementById("skyTimeLabel");
       const skyTimeIcon = document.getElementById("skyTimeIcon");
       const skyTimeText = document.getElementById("skyTimeText");
+      const skyPhaseLabel = document.getElementById("skyPhaseLabel");
+      const skyLocationText = document.getElementById("skyLocationText");
+      const moonLitPath = document.getElementById("moonLitPath");
 
       if (!skyBar) return;
 
-      // Buat bintang-bintang untuk malam hari
+      // Cek apakah SunCalc berhasil dimuat
+      const hasSunCalc = typeof window.SunCalc !== 'undefined';
+
+      // Default lokasi: Jakarta, Indonesia
+      // (Dipakai jika pengguna tidak mengizinkan akses lokasi)
+      let userLat = -6.2088;
+      let userLng = 106.8456;
+      let locationName = "JAKARTA (DEFAULT)";
+
+      // Coba ambil lokasi GPS pengguna
+      if (navigator.geolocation) {
+        try {
+          const pos = await new Promise((resolve, reject) => {
+            navigator.geolocation.getCurrentPosition(resolve, reject, {
+              timeout: 6000,
+              maximumAge: 600000,
+              enableHighAccuracy: false
+            });
+          });
+          userLat = pos.coords.latitude;
+          userLng = pos.coords.longitude;
+          locationName = "LIVE GPS";
+          console.log("🌍 Lokasi terdeteksi:", userLat, userLng);
+        } catch (e) {
+          console.warn("⚠️ Geolocation ditolak / gagal, menggunakan Jakarta sebagai default.");
+          locationName = "JAKARTA (DEFAULT)";
+        }
+      }
+
+      if (skyLocationText) {
+        skyLocationText.textContent = locationName;
+      }
+
+      // ============================================================
+      // MEMBUAT BINTANG (untuk tampilan malam hari)
+      // ============================================================
       function generateStars() {
         if (!skyStars) return;
         skyStars.innerHTML = "";
-        const totalStars = 45;
+        const totalStars = 50;
         for (let i = 0; i < totalStars; i++) {
           const star = document.createElement("div");
           star.className = "sky-star";
-          const size = Math.random() * 2 + 1; // 1px - 3px
+          const size = Math.random() * 2 + 1;
           star.style.width = size + "px";
           star.style.height = size + "px";
           star.style.left = Math.random() * 100 + "%";
-          star.style.top = Math.random() * 70 + "%";
+          star.style.top = Math.random() * 75 + "%";
           star.style.animationDelay = (Math.random() * 3) + "s";
           star.style.animationDuration = (1.8 + Math.random() * 1.8) + "s";
           skyStars.appendChild(star);
@@ -1750,123 +1824,208 @@
       }
       generateStars();
 
-      // Tentukan tema berdasarkan jam
-      function getThemeByHour(hour) {
-        if (hour >= 5 && hour < 10) {
-          return {
-            name: "morning",
-            label: "Pagi",
-            icon: "fa-solid fa-sun",
-            sunLeft: 12,
-            sunTop: 22,
-            moonOpacity: 0,
-            starsActive: false,
-            sunOpacity: 1
-          };
-        } else if (hour >= 10 && hour < 15) {
-          return {
-            name: "day",
-            label: "Siang",
-            icon: "fa-solid fa-sun",
-            sunLeft: 45,
-            sunTop: 8,
-            moonOpacity: 0,
-            starsActive: false,
-            sunOpacity: 1
-          };
-        } else if (hour >= 15 && hour < 18) {
-          return {
-            name: "evening",
-            label: "Sore",
-            icon: "fa-solid fa-cloud-sun",
-            sunLeft: 78,
-            sunTop: 30,
-            moonOpacity: 0,
-            starsActive: false,
-            sunOpacity: 1
-          };
+      // ============================================================
+      // FUNGSI MEMBUAT PATH SVG UNTUK FASE BULAN
+      // phase: 0.0 = Bulan Baru, 0.25 = Kuartal Pertama,
+      //        0.5 = Bulan Penuh, 0.75 = Kuartal Ketiga
+      // fraction: 0.0 = gelap total, 1.0 = terang total
+      // ============================================================
+      function getMoonPath(fraction, phase, r) {
+        const cx = 50, cy = 50;
+        // Semi-axis horizontal terminator ellipse
+        const rx = r * Math.abs(2 * fraction - 1);
+        // Waxing (menuju purnama) jika phase < 0.5, waning jika sebaliknya
+        const waxing = phase < 0.5;
+
+        let outerSweep, innerSweep;
+
+        if (waxing) {
+          // Bagian terang di KANAN
+          outerSweep = 1;
+          // Gibbous (fraction > 0.5): terminator menonjol ke kiri → sweep=1
+          // Crescent (fraction < 0.5): terminator menonjol ke kanan → sweep=0
+          innerSweep = fraction > 0.5 ? 1 : 0;
         } else {
-          return {
-            name: "night",
-            label: "Malam",
-            icon: "fa-solid fa-moon",
-            sunLeft: 12,
-            sunTop: 60,
-            moonOpacity: 1,
-            starsActive: true,
-            sunOpacity: 0
-          };
+          // Bagian terang di KIRI
+          outerSweep = 0;
+          innerSweep = fraction < 0.5 ? 1 : 0;
         }
+
+        const startX = cx;
+        const startY = cy - r;
+        const endY = cy + r;
+
+        return `M ${startX} ${startY} A ${r} ${r} 0 0 ${outerSweep} ${startX} ${endY} A ${rx} ${r} 0 0 ${innerSweep} ${startX} ${startY} Z`;
       }
 
-      function applyTheme() {
+      // ============================================================
+      // NAMA FASE BULAN (Bahasa Indonesia)
+      // ============================================================
+      function getPhaseName(phase) {
+        if (phase < 0.03 || phase >= 0.97) return "Bulan Baru";
+        if (phase < 0.22) return "Sabit Awal";
+        if (phase < 0.28) return "Kuartal Pertama";
+        if (phase < 0.47) return "Cembung Awal";
+        if (phase < 0.53) return "Bulan Penuh";
+        if (phase < 0.72) return "Cembung Akhir";
+        if (phase < 0.78) return "Kuartal Ketiga";
+        return "Sabit Akhir";
+      }
+
+      // Ikon emoji berdasarkan fase bulan
+      function getPhaseEmoji(phase) {
+        if (phase < 0.03 || phase >= 0.97) return "🌑";
+        if (phase < 0.22) return "🌒";
+        if (phase < 0.28) return "🌓";
+        if (phase < 0.47) return "🌔";
+        if (phase < 0.53) return "🌕";
+        if (phase < 0.72) return "🌖";
+        if (phase < 0.78) return "🌗";
+        return "🌘";
+      }
+
+      // ============================================================
+      // MAPPING AZIMUT → POSISI X (persen)
+      // SunCalc: azimuth = 0 (Selatan), -π/2 (Timur), +π/2 (Barat)
+      // ============================================================
+      function azimuthToXPercent(azimuthRad) {
+        const azDeg = azimuthRad * 180 / Math.PI;
+        // Clamp ke -110° hingga +110° agar tidak keluar bar
+        const clamped = Math.max(-110, Math.min(110, azDeg));
+        return 50 + (clamped / 110) * 48;
+      }
+
+      // ============================================================
+      // MAPPING ALTITUDE → POSISI Y (persen)
+      // Altitude 0° = horizon (bawah), 90° = zenith (atas)
+      // ============================================================
+      function altitudeToYPercent(altitudeRad) {
+        const altDeg = altitudeRad * 180 / Math.PI;
+        // Clamp dari -10° (bawah) sampai 90° (atas)
+        const clamped = Math.max(-10, Math.min(90, altDeg));
+        // Map -10° → 100%, 90° → 0%
+        return 100 - ((clamped + 10) / 100) * 100;
+      }
+
+      // ============================================================
+      // FUNGSI UTAMA UPDATE LANGIT
+      // ============================================================
+      function updateSky() {
         const now = new Date();
-        const hour = now.getHours();
-        const theme = getThemeByHour(hour);
 
-        // Hapus semua kelas tema
-        skyBar.classList.remove("theme-morning", "theme-day", "theme-evening", "theme-night");
+        // Fallback kalau SunCalc gagal dimuat
+        if (!hasSunCalc) {
+          const hour = now.getHours();
+          let theme = "day", label = "Siang", icon = "fa-solid fa-sun";
+          if (hour >= 5 && hour < 10) { theme = "morning"; label = "Pagi"; }
+          else if (hour >= 10 && hour < 15) { theme = "day"; label = "Siang"; }
+          else if (hour >= 15 && hour < 18) { theme = "evening"; label = "Sore"; icon = "fa-solid fa-cloud-sun"; }
+          else { theme = "night"; label = "Malam"; icon = "fa-solid fa-moon"; }
 
-        // Terapkan kelas tema baru
-        skyBar.classList.add("theme-" + theme.name);
+          skyBar.classList.remove("theme-morning", "theme-day", "theme-evening", "theme-night");
+          skyBar.classList.add("theme-" + theme);
+          if (skyStars) skyStars.classList.toggle("active", theme === "night");
+          if (skyTimeIcon) skyTimeIcon.className = icon;
+          if (skyTimeText) skyTimeText.textContent = label;
+          return;
+        }
 
-        // Atur posisi matahari
+        // ---- Perhitungan astronomi dengan SunCalc ----
+        const sunPos = window.SunCalc.getPosition(now, userLat, userLng);
+        const moonPos = window.SunCalc.getMoonPosition(now, userLat, userLng);
+        const moonIllum = window.SunCalc.getMoonIllumination(now);
+
+        const sunAltDeg = sunPos.altitude * 180 / Math.PI;
+        const moonAltDeg = moonPos.altitude * 180 / Math.PI;
+
+        // ---- Posisi Matahari (jika di atas horizon -3°) ----
         if (skySun) {
-          skySun.style.left = theme.sunLeft + "%";
-          skySun.style.top = theme.sunTop + "px";
-          skySun.style.opacity = theme.sunOpacity;
-        }
-
-        // Atur posisi & opacity bulan
-        if (skyMoon) {
-          skyMoon.style.opacity = theme.moonOpacity;
-          if (theme.name === "night") {
-            skyMoon.style.left = "auto";
-            skyMoon.style.right = "15%";
-            skyMoon.style.top = "22px";
+          if (sunAltDeg > -3) {
+            const xPct = azimuthToXPercent(sunPos.azimuth);
+            const yPct = altitudeToYPercent(sunPos.altitude);
+            skySun.style.left = xPct + "%";
+            skySun.style.top = yPct + "%";
+            // Opacity: penuh saat siang, redup saat senja
+            skySun.style.opacity = sunAltDeg > 0 ? "1" : "0.45";
+          } else {
+            skySun.style.opacity = "0";
           }
         }
 
-        // Bintang hanya aktif di malam
+        // ---- Posisi & Fase Bulan (jika di atas horizon -3°) ----
+        if (skyMoon && moonLitPath) {
+          if (moonAltDeg > -3) {
+            const xPct = azimuthToXPercent(moonPos.azimuth);
+            const yPct = altitudeToYPercent(moonPos.altitude);
+            skyMoon.style.left = xPct + "%";
+            skyMoon.style.top = yPct + "%";
+            // Opacity bulan: redup saat siang jika terlihat
+            skyMoon.style.opacity = sunAltDeg > 0 ? "0.55" : "1";
+          } else {
+            skyMoon.style.opacity = "0";
+          }
+
+          // Update bentuk fase bulan via SVG path
+          const pathD = getMoonPath(moonIllum.fraction, moonIllum.phase, 45);
+          moonLitPath.setAttribute("d", pathD);
+        }
+
+        // ---- Update label fase bulan ----
+        if (skyPhaseLabel) {
+          const phaseEmoji = getPhaseEmoji(moonIllum.phase);
+          const phaseName = getPhaseName(moonIllum.phase);
+          const fractionPct = Math.round(moonIllum.fraction * 100);
+          skyPhaseLabel.textContent = `${phaseEmoji} ${phaseName} • ${fractionPct}%`;
+        }
+
+        // ---- Tentukan tema langit berdasarkan altitude Matahari ----
+        const isRising = sunPos.azimuth < 0;
+        let theme, label, icon;
+
+        if (sunAltDeg > 10) {
+          theme = "day"; label = "Siang"; icon = "fa-solid fa-sun";
+        } else if (sunAltDeg > 0) {
+          if (isRising) {
+            theme = "morning"; label = "Pagi"; icon = "fa-solid fa-sun";
+          } else {
+            theme = "evening"; label = "Sore"; icon = "fa-solid fa-cloud-sun";
+          }
+        } else if (sunAltDeg > -6) {
+          if (isRising) {
+            theme = "morning"; label = "Fajar"; icon = "fa-solid fa-sun";
+          } else {
+            theme = "evening"; label = "Senja"; icon = "fa-solid fa-cloud-moon";
+          }
+        } else {
+          theme = "night"; label = "Malam"; icon = "fa-solid fa-moon";
+        }
+
+        skyBar.classList.remove("theme-morning", "theme-day", "theme-evening", "theme-night");
+        skyBar.classList.add("theme-" + theme);
+
         if (skyStars) {
-          if (theme.starsActive) {
-            skyStars.classList.add("active");
-          } else {
-            skyStars.classList.remove("active");
-          }
+          skyStars.classList.toggle("active", theme === "night");
         }
 
-        // Update label
-        if (skyTimeText) skyTimeText.textContent = theme.label;
-        if (skyTimeIcon) {
-          skyTimeIcon.className = theme.icon;
-        }
-
-        // Warna ikon label menyesuaikan tema
-        if (skyTimeIcon) {
-          if (theme.name === "night") {
-            skyTimeIcon.style.color = "#dbeafe";
-          } else if (theme.name === "evening") {
-            skyTimeIcon.style.color = "#ffd4a8";
-          } else if (theme.name === "morning") {
-            skyTimeIcon.style.color = "#fff2b3";
-          } else {
-            skyTimeIcon.style.color = "#fff5b8";
-          }
-        }
+        if (skyTimeIcon) skyTimeIcon.className = icon;
+        if (skyTimeText) skyTimeText.textContent = label;
       }
 
-      // Jalankan langsung & setiap 30 detik untuk cek perubahan waktu
-      applyTheme();
-      setInterval(applyTheme, 30000);
+      // Jalankan langsung saat halaman dimuat
+      updateSky();
 
-      // Cek lebih sering saat mendekati pergantian waktu (setiap 5 detik)
-      setInterval(() => {
-        const now = new Date();
-        const minute = now.getMinutes();
-        // Cek tiap 5 detik saja sudah cukup ringan
-        applyTheme();
-      }, 5000);
+      // Update setiap 5 detik (dengan transisi CSS 4.5s linear → gerakan kontinu)
+      setInterval(updateSky, 5000);
+
+      // Log info awal ke console (untuk debugging)
+      if (hasSunCalc) {
+        const _now = new Date();
+        const _illum = window.SunCalc.getMoonIllumination(_now);
+        console.log(`🌙 SunCalc aktif | Lokasi: ${userLat.toFixed(3)}, ${userLng.toFixed(3)}`);
+        console.log(`🌙 Fase Bulan: ${getPhaseName(_illum.phase)} (${Math.round(_illum.fraction * 100)}%)`);
+      } else {
+        console.warn("⚠️ SunCalc tidak dimuat. Menggunakan mode waktu lokal sederhana.");
+      }
     });
 
     // SENSOR OTOMATIS EMAIL UNTUK MENJAGA PRIVASI
@@ -1887,7 +2046,7 @@
       return username.substring(0, 3) + "****" + username.substring(username.length - 1) + "@" + domain;
     }
 
-    // MANAJEMEN RIWAYAT LIVE RECENT ACTIVATION (REALTIME SYNC VIA SUPABASE & LOCALSTORAGE)
+    // MANAJEMEN RIWAYAT LIVE RECENT ACTIVATION
     let activeRecentList = [];
 
     function renderRecentActivationUI() {
@@ -1933,7 +2092,6 @@
       container.innerHTML = htmlContent;
     }
 
-    // FUNGSI MENAMBAHKAN & MENGAMBIL AKTIVASI LIVE REALTIME DARI SUPABASE
     window.addLiveRecentActivation = async function(rawEmail, planType) {
       if (!rawEmail) rawEmail = "user" + Math.floor(1000 + Math.random() * 9000) + "@gmail.com";
       
@@ -1949,7 +2107,6 @@
         activeRecentList.pop();
       }
 
-      // Simpan juga ke localStorage agar aman saat halaman dibuka ulang
       try {
         localStorage.setItem("ayaka_saved_recent_activations", JSON.stringify(activeRecentList));
       } catch (e) {}
@@ -1968,14 +2125,13 @@
       }
     };
 
-    // SISTEM SINKRONISASI SERVER UPTIME & STATISTIK YANG STABIL (TIDAK RESET / MELOMPAT)
+    // SISTEM SINKRONISASI SERVER UPTIME & STATISTIK
     document.addEventListener("DOMContentLoaded", async () => {
       let globalServerStartTime = null;
 
       window.ayakaGlobalTotalGen = parseInt(localStorage.getItem("ayaka_local_total_gen") || "0");
       window.ayakaGlobalDailyGen = parseInt(localStorage.getItem("ayaka_local_daily_gen") || "0");
 
-      // Pulihkan riwayat live recent dari localStorage saat pertama kali buka web agar tidak hilang
       try {
         const savedLocalRecent = localStorage.getItem("ayaka_saved_recent_activations");
         if (savedLocalRecent) {
@@ -1987,7 +2143,6 @@
         }
       } catch (e) {}
 
-      // Inisialisasi waktu awal yang aman dan diprioritaskan dari localStorage agar counter tidak melompat-lompat
       function getOrInitBaseStartTime(dbTime) {
         let localSaved = localStorage.getItem("ayaka_global_server_start_time");
         if (localSaved && !isNaN(localSaved) && parseInt(localSaved) > 0) {
@@ -2004,14 +2159,12 @@
         return now;
       }
 
-      // Set nilai awal uptime segera setelah DOM dimuat agar tidak menunggu respons async
       globalServerStartTime = getOrInitBaseStartTime(null);
 
       function renderStatsUI(total, daily, visitors) {
         window.ayakaGlobalTotalGen = Math.max(window.ayakaGlobalTotalGen || 0, Number(total || 0));
         window.ayakaGlobalDailyGen = Math.max(window.ayakaGlobalDailyGen || 0, Number(daily || 0));
 
-        // Simpan ke localStorage agar cache lokal selalu terjaga
         try {
           localStorage.setItem("ayaka_local_total_gen", window.ayakaGlobalTotalGen);
           localStorage.setItem("ayaka_local_daily_gen", window.ayakaGlobalDailyGen);
@@ -2035,7 +2188,6 @@
         }
       }
 
-      // Perhitungan Uptime yang mulus dan kontinu
       function updateGlobalUptimeUI() {
         if (!globalServerStartTime) {
           globalServerStartTime = getOrInitBaseStartTime(null);
@@ -2076,13 +2228,11 @@
         }
       }
 
-      // Langsung jalankan ticker uptime agar berjalan mulus sejak detik pertama
       if (!window.globalUptimeTicker) {
         updateGlobalUptimeUI();
         window.globalUptimeTicker = setInterval(updateGlobalUptimeUI, 1000);
       }
 
-      // Widget Tanggal & Jam Live
       function updateLiveDateTimeWidget() {
         const dateEl = document.getElementById("widgetDateVal");
         const timeEl = document.getElementById("widgetTimeVal");
@@ -2108,7 +2258,6 @@
       setInterval(updateLiveDateTimeWidget, 1000);
       updateLiveDateTimeWidget();
 
-      // Battery API Reader
       function initDashboardBatteryStatus() {
         const batteryValEl = document.getElementById("widgetBatteryVal");
         const batteryIconEl = document.getElementById("widgetBatteryIcon");
@@ -2147,7 +2296,6 @@
 
       initDashboardBatteryStatus();
 
-      // MENGAMBIL & MENAMBAHKAN PENGUNJUNG BARU DENGAN IDENTITAS PERANGKAT LOKAL
       async function fetchAndUpdateStats() {
         try {
           if (typeof window.supabaseClient !== 'undefined' && window.supabaseClient) {
@@ -2168,7 +2316,6 @@
               let dbDaily = statsData.daily_generated || 0;
               let lastResetDate = statsData.last_reset_date || '';
 
-              // Sinkronkan data riwayat aktivitas live dari database jika tersedia
               if (statsData.recent_activations && Array.isArray(statsData.recent_activations) && statsData.recent_activations.length > 0) {
                 activeRecentList = statsData.recent_activations;
                 try {
@@ -2177,7 +2324,6 @@
                 renderRecentActivationUI();
               }
 
-              // Set base start time jika database menyediakan dan belum tersimpan secara lokal
               if (statsData.server_start_time && !localStorage.getItem("ayaka_global_server_start_time")) {
                 globalServerStartTime = getOrInitBaseStartTime(statsData.server_start_time);
               } else if (!statsData.server_start_time && globalServerStartTime) {
@@ -2207,7 +2353,6 @@
 
               if (visitorBadgeLabel) visitorBadgeLabel.textContent = "Live Online";
 
-              // Ambil nilai tertinggi antara lokal dan database agar tidak pernah kembali jadi 0
               const finalTotal = Math.max(dbTotal, window.ayakaGlobalTotalGen || 0);
               const finalDaily = Math.max(dbDaily, window.ayakaGlobalDailyGen || 0);
 
@@ -2216,7 +2361,6 @@
           }
         } catch (err) {
           console.warn("Gagal sinkronisasi data Supabase:", err);
-          // Fallback menggunakan cache lokal agar counter tetap tampil normal walau offline
           renderStatsUI(window.ayakaGlobalTotalGen, window.ayakaGlobalDailyGen, 1);
         }
       }
@@ -2224,7 +2368,6 @@
       await fetchAndUpdateStats();
       setInterval(fetchAndUpdateStats, 5000);
 
-      // REALTIME LISTENER SUPABASE
       if (typeof window.supabaseClient !== 'undefined' && window.supabaseClient) {
         try {
           window.supabaseClient
@@ -2250,14 +2393,12 @@
         }
       }
 
-      // FUNGSI UTAMA PENAMBAH AKTIVASI GLOBAL SINKRONISASI SUPABASE & LOCALSTORAGE
       window.incrementAyakaActivationStats = async function(incrementCount = 1, userEmail = "", planName = "AM Premium Annual 1 Year") {
         try {
           if (!userEmail) {
             userEmail = document.getElementById("emailInput")?.value || document.getElementById("emailInputV2")?.value || "ayaka_user@gmail.com";
           }
 
-          // Tambah ke live recent activation dan simpan
           await window.addLiveRecentActivation(userEmail, planName);
 
           window.ayakaGlobalTotalGen = (window.ayakaGlobalTotalGen || 0) + incrementCount;
@@ -2303,7 +2444,6 @@
         }
       };
 
-      // MENCEGAH NILAI COUNTER BERKURANG / RESET KE ANGKA NOL
       setInterval(() => {
         if (window.ayakaGlobalTotalGen > 0) {
           const el1 = document.getElementById("globalTotalAktivasi");
@@ -2326,7 +2466,6 @@
         }
       }, 300);
 
-      // HUBUNGKAN TOMBOL-TOMBOL AKTIVASI DENGAN FUNGSI SINKRONISASI DATABASE
       const proceedStep3Btn = document.getElementById("proceedToStep3Btn");
       if (proceedStep3Btn) {
         proceedStep3Btn.addEventListener("click", () => {
@@ -2366,7 +2505,6 @@
         });
       }
 
-      // Reset Form V1
       const resetV1Btn = document.getElementById("resetAmFormV1Btn");
       if (resetV1Btn) {
         resetV1Btn.addEventListener("click", () => {
@@ -2385,7 +2523,6 @@
         });
       }
 
-      // Reset Form V2
       const resetV2Btn = document.getElementById("resetAmFormV2Btn");
       if (resetV2Btn) {
         resetV2Btn.addEventListener("click", () => {
