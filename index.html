@@ -416,6 +416,7 @@
       overflow: hidden;
       border: 2px solid #000000;
       box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      position: relative;
     }
     .tutorial-video-wrapper video {
       width: 100% !important;
@@ -425,6 +426,7 @@
       outline: none;
       object-fit: contain;
       transform: translateZ(0);
+      background: #000000;
     }
 
     /* STYLING LIVE RECENT ACTIVATION */
@@ -513,6 +515,281 @@
       border-radius: 8px;
       border: 1px solid rgba(16, 185, 129, 0.2);
     }
+
+    /* ============================================================
+       ANIMASI LANGIT REAL-TIME (PAGI / SIANG / SORE / MALAM)
+       ============================================================ */
+    .realtime-sky-bar {
+      position: relative;
+      width: 100%;
+      height: 130px;
+      border-radius: 18px;
+      overflow: hidden;
+      margin-bottom: 18px;
+      border: 3px solid #000000;
+      box-shadow: 6px 6px 0px #000000;
+      transition: background 1.5s ease-in-out;
+      isolation: isolate;
+    }
+
+    /* Default: siang */
+    .realtime-sky-bar {
+      background: linear-gradient(180deg, #4facfe 0%, #a1c4fd 60%, #e0f2ff 100%);
+    }
+
+    /* TEMA PAGI */
+    .realtime-sky-bar.theme-morning {
+      background: linear-gradient(180deg, #ff9a8b 0%, #ffb47d 35%, #ffd89b 65%, #ffefd5 100%);
+    }
+
+    /* TEMA SIANG */
+    .realtime-sky-bar.theme-day {
+      background: linear-gradient(180deg, #4facfe 0%, #a1c4fd 60%, #e0f2ff 100%);
+    }
+
+    /* TEMA SORE */
+    .realtime-sky-bar.theme-evening {
+      background: linear-gradient(180deg, #2c1e57 0%, #8a4d8e 35%, #ff7b54 70%, #ffb26b 100%);
+    }
+
+    /* TEMA MALAM */
+    .realtime-sky-bar.theme-night {
+      background: linear-gradient(180deg, #0b1026 0%, #14203f 40%, #1e2f57 70%, #2a4168 100%);
+    }
+
+    /* Label Indikator Waktu */
+    .sky-time-label {
+      position: absolute;
+      top: 10px;
+      right: 14px;
+      z-index: 20;
+      background: rgba(0, 0, 0, 0.55);
+      color: #ffffff;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      padding: 5px 12px;
+      border-radius: 20px;
+      border: 1.5px solid rgba(255, 255, 255, 0.35);
+      backdrop-filter: blur(6px);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.6s ease;
+      text-transform: uppercase;
+    }
+
+    .sky-time-label i {
+      font-size: 13px;
+    }
+
+    .sky-loc-label {
+      position: absolute;
+      bottom: 10px;
+      left: 14px;
+      z-index: 20;
+      color: rgba(255, 255, 255, 0.92);
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+      text-transform: uppercase;
+    }
+
+    /* MATAHARI */
+    .sky-sun {
+      position: absolute;
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #fff8b0 0%, #ffd93d 45%, #ff9500 100%);
+      box-shadow: 0 0 30px 12px rgba(255, 217, 61, 0.75),
+                  0 0 60px 20px rgba(255, 149, 0, 0.35);
+      z-index: 5;
+      transition: all 1.8s ease-in-out;
+      animation: sunPulse 4s ease-in-out infinite;
+    }
+
+    @keyframes sunPulse {
+      0%, 100% { box-shadow: 0 0 30px 12px rgba(255, 217, 61, 0.75), 0 0 60px 20px rgba(255, 149, 0, 0.35); }
+      50%      { box-shadow: 0 0 40px 16px rgba(255, 217, 61, 0.9), 0 0 80px 26px rgba(255, 149, 0, 0.45); }
+    }
+
+    /* BULAN */
+    .sky-moon {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #ffffff 0%, #e9edf5 55%, #b8c2d4 100%);
+      box-shadow: 0 0 22px 8px rgba(255, 255, 255, 0.55),
+                  0 0 50px 15px rgba(180, 200, 255, 0.35);
+      z-index: 5;
+      opacity: 0;
+      transition: all 1.8s ease-in-out;
+    }
+
+    .sky-moon::before {
+      content: "";
+      position: absolute;
+      top: 8px;
+      left: 10px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(150, 165, 190, 0.45);
+      box-shadow: 10px 8px 0 1px rgba(150, 165, 190, 0.4),
+                  4px 18px 0 -1px rgba(150, 165, 190, 0.4);
+    }
+
+    /* BINTANG - HANYA TAMPIL DI MALAM */
+    .sky-stars {
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      opacity: 0;
+      transition: opacity 1.8s ease-in-out;
+      pointer-events: none;
+    }
+
+    .sky-stars.active {
+      opacity: 1;
+    }
+
+    .sky-star {
+      position: absolute;
+      background: #ffffff;
+      border-radius: 50%;
+      animation: twinkle 2.4s ease-in-out infinite;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.25; transform: scale(0.8); }
+      50%      { opacity: 1;    transform: scale(1.15); }
+    }
+
+    /* AWAN */
+    .sky-cloud {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.92);
+      border-radius: 50%;
+      filter: blur(0.3px);
+      z-index: 4;
+      transition: opacity 1.5s ease-in-out;
+    }
+
+    .sky-cloud::before,
+    .sky-cloud::after {
+      content: "";
+      position: absolute;
+      background: inherit;
+      border-radius: 50%;
+    }
+
+    .sky-cloud.cloud-1 {
+      width: 50px; height: 22px;
+      top: 30px; left: -80px;
+      animation: cloudDrift1 28s linear infinite;
+    }
+    .sky-cloud.cloud-1::before {
+      width: 28px; height: 28px; top: -12px; left: 8px;
+    }
+    .sky-cloud.cloud-1::after {
+      width: 22px; height: 22px; top: -8px; left: 26px;
+    }
+
+    .sky-cloud.cloud-2 {
+      width: 70px; height: 26px;
+      top: 60px; left: -120px;
+      animation: cloudDrift2 38s linear infinite;
+      opacity: 0.78;
+    }
+    .sky-cloud.cloud-2::before {
+      width: 36px; height: 36px; top: -18px; left: 12px;
+    }
+    .sky-cloud.cloud-2::after {
+      width: 26px; height: 26px; top: -12px; left: 40px;
+    }
+
+    .sky-cloud.cloud-3 {
+      width: 42px; height: 20px;
+      top: 15px; left: -100px;
+      animation: cloudDrift3 45s linear infinite;
+      opacity: 0.7;
+    }
+    .sky-cloud.cloud-3::before {
+      width: 24px; height: 24px; top: -11px; left: 8px;
+    }
+    .sky-cloud.cloud-3::after {
+      width: 20px; height: 20px; top: -7px; left: 22px;
+    }
+
+    @keyframes cloudDrift1 {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(calc(100vw + 200px)); }
+    }
+    @keyframes cloudDrift2 {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(calc(100vw + 260px)); }
+    }
+    @keyframes cloudDrift3 {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(calc(100vw + 220px)); }
+    }
+
+    /* GUNUNG / HORIZON SILUET */
+    .sky-horizon {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 42px;
+      z-index: 6;
+      transition: all 1.5s ease-in-out;
+    }
+
+    .sky-horizon::before,
+    .sky-horizon::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      background: inherit;
+    }
+
+    .sky-horizon::before {
+      width: 55%;
+      height: 100%;
+      left: -4%;
+      clip-path: polygon(0 100%, 22% 42%, 40% 68%, 60% 25%, 80% 55%, 100% 100%);
+    }
+
+    .sky-horizon::after {
+      width: 60%;
+      height: 100%;
+      right: -4%;
+      clip-path: polygon(0 100%, 18% 60%, 34% 32%, 52% 55%, 70% 38%, 88% 60%, 100% 100%);
+    }
+
+    .theme-morning .sky-horizon { background: #b5714b; }
+    .theme-day     .sky-horizon { background: #4f7d54; }
+    .theme-evening .sky-horizon { background: #3b1e42; }
+    .theme-night   .sky-horizon { background: #060b1a; }
+
+    /* Efek kilau pada waktu malam */
+    .theme-night .sky-time-label {
+      background: rgba(255, 255, 255, 0.14);
+      border-color: rgba(180, 210, 255, 0.5);
+      color: #dbeafe;
+    }
+
+    @media (max-width: 600px) {
+      .realtime-sky-bar { height: 110px; border-radius: 14px; }
+      .sky-sun, .sky-moon { width: 36px; height: 36px; }
+      .sky-time-label { font-size: 10px; padding: 4px 9px; }
+      .sky-loc-label { font-size: 10px; }
+    }
   </style>
 </head>
 <body>
@@ -587,6 +864,38 @@
 
   <div class="main-wrapper">
     <div class="content-container">
+
+      <!-- ============================================================
+           BAR ATAS - ANIMASI LANGIT REAL-TIME (PAGI / SIANG / SORE / MALAM)
+           ============================================================ -->
+      <div class="realtime-sky-bar" id="realtimeSkyBar">
+        <!-- Bintang (hanya muncul saat malam) -->
+        <div class="sky-stars" id="skyStars"></div>
+
+        <!-- Matahari -->
+        <div class="sky-sun" id="skySun" style="top: 20px; left: 12%;"></div>
+
+        <!-- Bulan -->
+        <div class="sky-moon" id="skyMoon" style="top: 20px; right: 15%;"></div>
+
+        <!-- Awan -->
+        <div class="sky-cloud cloud-1"></div>
+        <div class="sky-cloud cloud-2"></div>
+        <div class="sky-cloud cloud-3"></div>
+
+        <!-- Horizon / Siluet Gunung -->
+        <div class="sky-horizon"></div>
+
+        <!-- Label waktu real-time -->
+        <div class="sky-time-label" id="skyTimeLabel">
+          <i class="fa-solid fa-sun" id="skyTimeIcon"></i>
+          <span id="skyTimeText">Memuat...</span>
+        </div>
+
+        <div class="sky-loc-label">
+          <i class="fa-solid fa-location-dot"></i> AYAKA STORE • REALTIME SKY
+        </div>
+      </div>
 
       <div class="ayaka-banner">
         <div class="ayaka-info">
@@ -1205,10 +1514,21 @@
         <h1 class="dash-title">Tutorial & Panduan</h1>
         <p class="dash-subtitle">Langkah Mudah Menggunakan Seluruh Layanan Otomasi AYAKA STORE</p>
 
+        <!-- =====================================================
+             VIDEO TUTORIAL - MENGGUNAKAN TAG <video> (BUKAN <img>)
+             ===================================================== -->
         <div class="tutorial-video-card">
           <h4><i class="fa-solid fa-video" style="color: #f472b6;"></i> Video Tutorial Aktivasi AM Premium</h4>
           <div class="tutorial-video-wrapper">
-            <video controls playsinline preload="metadata" width="100%">
+            <video 
+              controls 
+              playsinline 
+              preload="metadata" 
+              width="100%" 
+              poster=""
+              controlsList="nodownload"
+            >
+              <source src="utorial-baru%20am-premium-E373B9E.mp4" type="video/mp4">
               <source src="utorial-baru am-premium-E373B9E.mp4" type="video/mp4">
               Browser Anda tidak mendukung pemutar video HTML5. Silakan perbarui browser Anda.
             </video>
@@ -1394,6 +1714,159 @@
           if (e.target === qrModal) closeQrPopup();
         });
       }
+    });
+
+    // ============================================================
+    // ANIMASI LANGIT REAL-TIME (PAGI / SIANG / SORE / MALAM)
+    // ============================================================
+    document.addEventListener("DOMContentLoaded", () => {
+      const skyBar = document.getElementById("realtimeSkyBar");
+      const skySun = document.getElementById("skySun");
+      const skyMoon = document.getElementById("skyMoon");
+      const skyStars = document.getElementById("skyStars");
+      const skyTimeLabel = document.getElementById("skyTimeLabel");
+      const skyTimeIcon = document.getElementById("skyTimeIcon");
+      const skyTimeText = document.getElementById("skyTimeText");
+
+      if (!skyBar) return;
+
+      // Buat bintang-bintang untuk malam hari
+      function generateStars() {
+        if (!skyStars) return;
+        skyStars.innerHTML = "";
+        const totalStars = 45;
+        for (let i = 0; i < totalStars; i++) {
+          const star = document.createElement("div");
+          star.className = "sky-star";
+          const size = Math.random() * 2 + 1; // 1px - 3px
+          star.style.width = size + "px";
+          star.style.height = size + "px";
+          star.style.left = Math.random() * 100 + "%";
+          star.style.top = Math.random() * 70 + "%";
+          star.style.animationDelay = (Math.random() * 3) + "s";
+          star.style.animationDuration = (1.8 + Math.random() * 1.8) + "s";
+          skyStars.appendChild(star);
+        }
+      }
+      generateStars();
+
+      // Tentukan tema berdasarkan jam
+      function getThemeByHour(hour) {
+        if (hour >= 5 && hour < 10) {
+          return {
+            name: "morning",
+            label: "Pagi",
+            icon: "fa-solid fa-sun",
+            sunLeft: 12,
+            sunTop: 22,
+            moonOpacity: 0,
+            starsActive: false,
+            sunOpacity: 1
+          };
+        } else if (hour >= 10 && hour < 15) {
+          return {
+            name: "day",
+            label: "Siang",
+            icon: "fa-solid fa-sun",
+            sunLeft: 45,
+            sunTop: 8,
+            moonOpacity: 0,
+            starsActive: false,
+            sunOpacity: 1
+          };
+        } else if (hour >= 15 && hour < 18) {
+          return {
+            name: "evening",
+            label: "Sore",
+            icon: "fa-solid fa-cloud-sun",
+            sunLeft: 78,
+            sunTop: 30,
+            moonOpacity: 0,
+            starsActive: false,
+            sunOpacity: 1
+          };
+        } else {
+          return {
+            name: "night",
+            label: "Malam",
+            icon: "fa-solid fa-moon",
+            sunLeft: 12,
+            sunTop: 60,
+            moonOpacity: 1,
+            starsActive: true,
+            sunOpacity: 0
+          };
+        }
+      }
+
+      function applyTheme() {
+        const now = new Date();
+        const hour = now.getHours();
+        const theme = getThemeByHour(hour);
+
+        // Hapus semua kelas tema
+        skyBar.classList.remove("theme-morning", "theme-day", "theme-evening", "theme-night");
+
+        // Terapkan kelas tema baru
+        skyBar.classList.add("theme-" + theme.name);
+
+        // Atur posisi matahari
+        if (skySun) {
+          skySun.style.left = theme.sunLeft + "%";
+          skySun.style.top = theme.sunTop + "px";
+          skySun.style.opacity = theme.sunOpacity;
+        }
+
+        // Atur posisi & opacity bulan
+        if (skyMoon) {
+          skyMoon.style.opacity = theme.moonOpacity;
+          if (theme.name === "night") {
+            skyMoon.style.left = "auto";
+            skyMoon.style.right = "15%";
+            skyMoon.style.top = "22px";
+          }
+        }
+
+        // Bintang hanya aktif di malam
+        if (skyStars) {
+          if (theme.starsActive) {
+            skyStars.classList.add("active");
+          } else {
+            skyStars.classList.remove("active");
+          }
+        }
+
+        // Update label
+        if (skyTimeText) skyTimeText.textContent = theme.label;
+        if (skyTimeIcon) {
+          skyTimeIcon.className = theme.icon;
+        }
+
+        // Warna ikon label menyesuaikan tema
+        if (skyTimeIcon) {
+          if (theme.name === "night") {
+            skyTimeIcon.style.color = "#dbeafe";
+          } else if (theme.name === "evening") {
+            skyTimeIcon.style.color = "#ffd4a8";
+          } else if (theme.name === "morning") {
+            skyTimeIcon.style.color = "#fff2b3";
+          } else {
+            skyTimeIcon.style.color = "#fff5b8";
+          }
+        }
+      }
+
+      // Jalankan langsung & setiap 30 detik untuk cek perubahan waktu
+      applyTheme();
+      setInterval(applyTheme, 30000);
+
+      // Cek lebih sering saat mendekati pergantian waktu (setiap 5 detik)
+      setInterval(() => {
+        const now = new Date();
+        const minute = now.getMinutes();
+        // Cek tiap 5 detik saja sudah cukup ringan
+        applyTheme();
+      }, 5000);
     });
 
     // SENSOR OTOMATIS EMAIL UNTUK MENJAGA PRIVASI
