@@ -1749,7 +1749,7 @@
 
     // ============================================================
     // MANAJEMEN RIWAYAT LIVE RECENT ACTIVATION
-    // (Data tersimpan di Supabase, BUKAN localStorage)
+    // (Data tersimpan di Supabase)
     // ============================================================
     let activeRecentList = [];
 
@@ -1796,7 +1796,7 @@
       container.innerHTML = htmlContent;
     }
 
-    // Simpan riwayat aktivasi HANYA ke Supabase (tanpa localStorage)
+    // Simpan riwayat aktivasi ke Supabase
     window.addLiveRecentActivation = async function(rawEmail, planType) {
       if (!rawEmail) rawEmail = "user" + Math.floor(1000 + Math.random() * 9000) + "@gmail.com";
       
@@ -1828,23 +1828,37 @@
 
     // ============================================================
     // SISTEM SINKRONISASI SERVER UPTIME & STATISTIK
-    // Semua data GLOBAL dibaca & ditulis ke Supabase
+    // PERBAIKAN: Uptime TIDAK reset ke 0 saat buka ulang web
+    // Menggunakan kombinasi localStorage + Supabase
     // ============================================================
     document.addEventListener("DOMContentLoaded", async () => {
+      const LS_UPTIME_KEY = "ayaka_server_start_time_v1";
+
       let globalServerStartTime = null;
       let serverStartLoaded = false;
 
       window.ayakaGlobalTotalGen = 0;
       window.ayakaGlobalDailyGen = 0;
 
+      // ========================================================
+      // FUNGSI: Ambil / inisialisasi base start time
+      // Prioritas: localStorage (paling persisten) > DB > sekarang
+      // ========================================================
       function getOrInitBaseStartTime(dbTime) {
-        if (dbTime && !isNaN(dbTime) && parseInt(dbTime) > 0) {
-          return parseInt(dbTime);
-        }
+        const lsRaw = localStorage.getItem(LS_UPTIME_KEY);
+        const lsTime = lsRaw && !isNaN(parseInt(lsRaw)) && parseInt(lsRaw) > 0 ? parseInt(lsRaw) : 0;
+        const dbTimeNum = dbTime && !isNaN(parseInt(dbTime)) && parseInt(dbTime) > 0 ? parseInt(dbTime) : 0;
+
+        // Jika keduanya ada → ambil yang PALING AWAL (agar uptime tidak reset)
+        if (lsTime && dbTimeNum) return Math.min(lsTime, dbTimeNum);
+        if (lsTime) return lsTime;
+        if (dbTimeNum) return dbTimeNum;
         return Date.now();
       }
 
+      // Inisialisasi awal: pakai localStorage jika ada (biar sebelum DB load udah benar)
       globalServerStartTime = getOrInitBaseStartTime(null);
+      localStorage.setItem(LS_UPTIME_KEY, String(globalServerStartTime));
 
       function renderStatsUI(total, daily, visitors) {
         window.ayakaGlobalTotalGen = Math.max(window.ayakaGlobalTotalGen || 0, Number(total || 0));
@@ -1870,7 +1884,8 @@
 
       function updateGlobalUptimeUI() {
         if (!globalServerStartTime) {
-          globalServerStartTime = Date.now();
+          globalServerStartTime = getOrInitBaseStartTime(null);
+          localStorage.setItem(LS_UPTIME_KEY, String(globalServerStartTime));
         }
 
         const uptimeCounterEl = document.getElementById("serverUptimeCounter");
@@ -1977,15 +1992,13 @@
       initDashboardBatteryStatus();
 
       // ============================================================
-      // FETCH DATA DARI SUPABASE (Tanpa localStorage)
+      // FETCH DATA DARI SUPABASE
       // ============================================================
       async function fetchAndUpdateStats() {
         try {
           if (typeof window.supabaseClient !== 'undefined' && window.supabaseClient) {
             const visitorBadgeLabel = document.getElementById("visitorBadgeLabel");
 
-            // Gunakan sessionStorage untuk flag per-sesi (mencegah double-count
-            // dalam satu tab, TIDAK persist antar sesi/device).
             const visitorSessionKey = "ayaka_visitor_session_flag";
             const isNewSessionVisitor = !sessionStorage.getItem(visitorSessionKey);
 
@@ -2007,20 +2020,41 @@
                 renderRecentActivationUI();
               }
 
-              // ==== SERVER START TIME (dari Supabase) ====
-              if (statsData.server_start_time &&
-                  !isNaN(parseInt(statsData.server_start_time)) &&
-                  parseInt(statsData.server_start_time) > 0) {
-                globalServerStartTime = parseInt(statsData.server_start_time);
-                serverStartLoaded = true;
-              } else if (!statsData.server_start_time) {
-                // Belum ada nilai di DB → simpan timestamp saat ini ke Supabase
-                globalServerStartTime = Date.now();
-                serverStartLoaded = true;
-                await window.supabaseClient
-                  .from('site_stats')
-                  .update({ server_start_time: globalServerStartTime })
-                  .eq('id', 1);
+              // ==== SERVER START TIME (FIX: TIDAK RESET KE 0) ====
+              // Ambil dari localStorage & DB, pilih yang PALING AWAL
+              const lsRaw = localStorage.getItem(LS_UPTIME_KEY);
+              const lsTime = lsRaw && !isNaN(parseInt(lsRaw)) && parseInt(lsRaw) > 0 ? parseInt(lsRaw) : 0;
+              const dbTime = statsData.server_start_time && !isNaN(parseInt(statsData.server_start_time)) && parseInt(statsData.server_start_time) > 0
+                ? parseInt(statsData.server_start_time)
+                : 0;
+
+              let chosenStartTime;
+              if (lsTime && dbTime) {
+                chosenStartTime = Math.min(lsTime, dbTime);
+              } else if (lsTime) {
+                chosenStartTime = lsTime;
+              } else if (dbTime) {
+                chosenStartTime = dbTime;
+              } else {
+                chosenStartTime = Date.now();
+              }
+
+              globalServerStartTime = chosenStartTime;
+              serverStartLoaded = true;
+
+              // Selalu simpan ke localStorage → agar reload tidak reset
+              localStorage.setItem(LS_UPTIME_KEY, String(chosenStartTime));
+
+              // Sinkronkan ke DB jika belum sama / belum ada
+              if (dbTime !== chosenStartTime) {
+                try {
+                  await window.supabaseClient
+                    .from('site_stats')
+                    .update({ server_start_time: chosenStartTime })
+                    .eq('id', 1);
+                } catch (updErr) {
+                  console.warn("Gagal sinkron server_start_time ke DB:", updErr);
+                }
               }
 
               // Reset counter harian jika tanggal berubah
@@ -2060,7 +2094,7 @@
       setInterval(fetchAndUpdateStats, 5000);
 
       // ============================================================
-      // REALTIME LISTENER SUPABASE (tanpa localStorage)
+      // REALTIME LISTENER SUPABASE
       // ============================================================
       if (typeof window.supabaseClient !== 'undefined' && window.supabaseClient) {
         try {
@@ -2078,8 +2112,16 @@
                   renderRecentActivationUI();
                 }
 
+                // FIX: Saat realtime update, pilih yang PALING AWAL juga
                 if (payload.new.server_start_time) {
-                  globalServerStartTime = parseInt(payload.new.server_start_time);
+                  const dbTime = parseInt(payload.new.server_start_time);
+                  if (!isNaN(dbTime) && dbTime > 0) {
+                    const lsRaw = localStorage.getItem(LS_UPTIME_KEY);
+                    const lsTime = lsRaw && !isNaN(parseInt(lsRaw)) && parseInt(lsRaw) > 0 ? parseInt(lsRaw) : 0;
+                    const chosen = lsTime ? Math.min(lsTime, dbTime) : dbTime;
+                    globalServerStartTime = chosen;
+                    localStorage.setItem(LS_UPTIME_KEY, String(chosen));
+                  }
                 }
 
                 renderStatsUI(newTotal, newDaily, newVisitors);
