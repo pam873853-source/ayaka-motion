@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cek Koneksi (Clean)</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, 'Segoe UI', sans-serif;
+      background: #0f172a;
+      color: #fff;
+      padding: 16px;
+      min-height: 100vh;
+    }
+    .card {
+      background: #1e293b;
+      border: 2px solid #f472b6;
+      border-radius: 16px;
+      padding: 20px;
+      max-width: 600px;
+      margin: 0 auto 14px auto;
+    }
+    h1 { font-size: 20px; margin-bottom: 6px; color: #f472b6; }
+    .sub { font-size: 12px; color: #94a3b8; margin-bottom: 16px; }
+    .test {
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin-bottom: 10px;
+      font-size: 13px;
+    }
+    .test.running { border-color: #fbbf24; }
+    .test.ok      { border-color: #22c55e; background: rgba(34,197,94,0.1); }
+    .test.fail    { border-color: #ef4444; background: rgba(239,68,68,0.1); }
+    .test b { display: block; margin-bottom: 4px; font-size: 14px; }
+    .test .detail {
+      font-family: 'Courier New', monospace;
+      font-size: 11px;
+      color: #fbbf24;
+      margin-top: 6px;
+      padding: 8px;
+      background: #000;
+      border-radius: 6px;
+      word-break: break-all;
+      white-space: pre-wrap;
+    }
+    .url-preview {
+      background: #000;
+      color: #22c55e;
+      padding: 10px;
+      border-radius: 6px;
+      font-family: monospace;
+      font-size: 11px;
+      word-break: break-all;
+      margin-top: 8px;
+    }
+    button {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #ec4899, #8b5cf6);
+      color: #fff;
+      font-weight: 800;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    button:disabled { opacity: 0.5; }
+    .verdict {
+      padding: 16px;
+      border-radius: 12px;
+      margin-top: 16px;
+      font-size: 13px;
+      line-height: 1.6;
+      display: none;
+    }
+    .verdict.ok { display: block; background: rgba(34,197,94,0.15); border: 1px solid #22c55e; }
+    .verdict.fail { display: block; background: rgba(239,68,68,0.15); border: 1px solid #ef4444; }
+    .verdict b { font-size: 15px; display: block; margin-bottom: 8px; }
+    code {
+      background: #000;
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: #fbbf24;
+      font-size: 11px;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>🔍 Cek Koneksi (Clean Version)</h1>
+    <p class="sub">URL dibangun dari potongan kecil → mustahil ada karakter tersembunyi</p>
+
+    <div class="url-preview" id="urlPreview">URL: ...</div>
+
+    <div style="height: 12px;"></div>
+
+    <div class="test" id="t1">
+      <b>1. Load SDK</b>
+      <span id="t1-detail">Menunggu...</span>
+    </div>
+    <div class="test" id="t2">
+      <b>2. Buat Client</b>
+      <span id="t2-detail">Menunggu...</span>
+    </div>
+    <div class="test" id="t3">
+      <b>3. Cek Tabel</b>
+      <span id="t3-detail">Menunggu...</span>
+    </div>
+    <div class="test" id="t4">
+      <b>4. Baca Baris id=1</b>
+      <span id="t4-detail">Menunggu...</span>
+    </div>
+    <div class="test" id="t5">
+      <b>5. Tes Tulis</b>
+      <span id="t5-detail">Menunggu...</span>
+    </div>
+
+    <button id="runBtn">▶ MULAI CEK</button>
+
+    <div class="verdict" id="verdict"></div>
+  </div>
+
+  <script>
+    // ============================================================
+    // URL DIBANGUN DARI POTONGAN → GARANSI BERSIH
+    // ============================================================
+    const P1 = 'http';
+    const P2 = 's';
+    const P3 = '://';
+    const P4 = 'jbzykcuhpfkrgnimjtxx';
+    const P5 = '.';
+    const P6 = 'supabase';
+    const P7 = '.';
+    const P8 = 'co';
+    const URL_CLEAN = P1 + P2 + P3 + P4 + P5 + P6 + P7 + P8;
+
+    // Key dipecah juga
+    const K1 = 'sb_';
+    const K2 = 'publishable_';
+    const K3 = 'Usw8tFE0HQyAJo7NyvIvTA_';
+    const K4 = 'fHfXGGZ-';
+    const KEY_CLEAN = K1 + K2 + K3 + K4;
+
+    document.getElementById('urlPreview').textContent = 'URL: ' + URL_CLEAN + ' (' + URL_CLEAN.length + ' karakter)';
+
+    let sb = null;
+
+    function setT(id, status, msg, detail) {
+      const el = document.getElementById(id);
+      el.className = 'test ' + status;
+      const dEl = document.getElementById(id + '-detail');
+      dEl.textContent = msg;
+      const oldDetail = el.querySelector('.detail');
+      if (oldDetail) oldDetail.remove();
+      if (detail) {
+        const div = document.createElement('div');
+        div.className = 'detail';
+        div.textContent = detail;
+        el.appendChild(div);
+      }
+    }
+
+    function showVerdict(ok, html) {
+      const v = document.getElementById('verdict');
+      v.className = 'verdict ' + (ok ? 'ok' : 'fail');
+      v.innerHTML = html;
+    }
+
+    async function runTest() {
+      const btn = document.getElementById('runBtn');
+      btn.disabled = true;
+      btn.textContent = '⏳ Sedang Cek...';
+      showVerdict(false, '');
+      document.getElementById('verdict').style.display = 'none';
+
+      // TEST 1: SDK
+      if (!window.supabase || typeof window.supabase.createClient !== 'function') {
+        setT('t1', 'fail', '❌ SDK tidak dimuat');
+        showVerdict(false, '<b>❌ SDK gagal dimuat</b>Cek internet, lalu coba lagi.');
+        btn.disabled = false; btn.textContent = '▶ COBA LAGI';
+        return;
+      }
+      setT('t1', 'ok', '✅ SDK v' + (window.supabase.version || 'loaded'));
+
+      // TEST 2: Create client
+      try {
+        sb = window.supabase.createClient(URL_CLEAN, KEY_CLEAN);
+        setT('t2', 'ok', '✅ Client dibuat (URL valid)');
+      } catch (e) {
+        setT('t2', 'fail', '❌ ' + e.message, e.message);
+        showVerdict(false,
+          '<b>❌ Gagal buat client</b>' +
+          'Detail: ' + e.message + '<br><br>' +
+          'URL yang dipakai: <code>' + URL_CLEAN + '</code>'
+        );
+        btn.disabled = false; btn.textContent = '▶ COBA LAGI';
+        return;
+      }
+
+      // TEST 3: Table exists
+      try {
+        const { error } = await sb.from('site_stats').select('id').limit(1);
+        if (error && /does not exist|relation|schema cache/i.test(error.message)) {
+          setT('t3', 'fail', '❌ Tabel site_stats belum ada', error.message);
+          showVerdict(false,
+            '<b>❌ Tabel site_stats belum dibuat</b>' +
+            'Buka SQL Editor Supabase → paste SQL → RUN.<br>' +
+            'Detail: ' + error.message
+          );
+          btn.disabled = false; btn.textContent = '▶ COBA LAGI';
+          return;
+        }
+        if (error) throw error;
+        setT('t3', 'ok', '✅ Tabel site_stats ada');
+      } catch (e) {
+        setT('t3', 'fail', '❌ ' + e.message, e.message);
+        btn.disabled = false; btn.textContent = '▶ COBA LAGI';
+        return;
+      }
+
+      // TEST 4: Read id=1
+      try {
+        const { data, error } = await sb.from('site_stats').select('*').eq('id', 1).maybeSingle();
+        if (error) throw error;
+        if (!data) {
+          setT('t4', 'fail', '❌ Baris id=1 belum ada');
+          showVerdict(false,
+            '<b>⚠️ Baris id=1 belum dibuat</b>' +
+            'Jalankan SQL ini di Supabase SQL Editor:<br><br>' +
+            '<code>INSERT INTO site_stats (id, visitors, total_generated, daily_generated, last_reset_date, server_start_time, recent_activations) VALUES (1, 0, 0, 0, \'2026-01-01\', 0, \'[]\'::jsonb) ON CONFLICT (id) DO NOTHING;</code>'
+          );
+          btn.disabled = false; btn.textContent = '▶ COBA LAGI';
+          return;
+        }
+        setT('t4', 'ok', '✅ id=1 OK → total=' + (data.total_generated || 0) + ', daily=' + (data.daily_generated || 0));
+      } catch (e) {
+        setT('t4', 'fail', '❌ ' + e.message, e.message);
+        btn.disabled = false; btn.textContent = '▶ COBA LAGI';
+        return;
+      }
+
+      // TEST 5: Write
+      try {
+        const { error } = await sb.from('site_stats').update({ updated_at: new Date().toISOString() }).eq('id', 1);
+        if (error) throw error;
+        setT('t5', 'ok', '✅ Tulis data BERHASIL');
+        showVerdict(true,
+          '<b>✅ SEMUA BERHASIL!</b>' +
+          'Database siap.<br><br>' +
+          '<b>Langkah selanjutnya:</b><br>' +
+          '1. Ganti isi file <code>index.html</code> dengan versi terbaru<br>' +
+          '2. Tutup semua tab → buka <code>index.html</code> lagi<br>' +
+          '3. Status akan jadi hijau ✅'
+        );
+        btn.textContent = '✅ SELESAI';
+      } catch (e) {
+        setT('t5', 'fail', '❌ Tulis gagal: ' + e.message, e.message);
+        showVerdict(false,
+          '<b>⚠️ RLS Policy belum aktif</b>' +
+          'Jalankan SQL ini di SQL Editor:<br><br>' +
+          '<code>ALTER TABLE site_stats ENABLE ROW LEVEL SECURITY;<br>' +
+          'CREATE POLICY "anon all" ON site_stats FOR ALL TO anon USING (true) WITH CHECK (true);</code>'
+        );
+        btn.disabled = false; btn.textContent = '▶ COBA LAGI';
+      }
+    }
+
+    document.getElementById('runBtn').addEventListener('click', runTest);
+  </script>
+</body>
+</html>

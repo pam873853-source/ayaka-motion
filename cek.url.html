@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Diagnostik URL Supabase</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, sans-serif;
+      background: #0f172a;
+      color: #fff;
+      padding: 16px;
+      min-height: 100vh;
+    }
+    .card {
+      background: #1e293b;
+      border: 2px solid #f472b6;
+      border-radius: 16px;
+      padding: 20px;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    h1 { font-size: 18px; color: #f472b6; margin-bottom: 12px; }
+    .box {
+      background: #000;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 12px;
+      font-family: 'Courier New', monospace;
+      font-size: 11px;
+      word-break: break-all;
+      white-space: pre-wrap;
+    }
+    .label { color: #94a3b8; font-size: 11px; margin-bottom: 4px; display: block; }
+    .ok { color: #22c55e; }
+    .fail { color: #ef4444; }
+    .warn { color: #fbbf24; }
+    .char-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 8px;
+    }
+    .char-box {
+      background: #1e293b;
+      border: 1px solid #475569;
+      border-radius: 4px;
+      padding: 4px 6px;
+      font-family: monospace;
+      font-size: 10px;
+      text-align: center;
+      min-width: 32px;
+    }
+    .char-box .ch { color: #f472b6; font-weight: 700; display: block; }
+    .char-box .cd { color: #94a3b8; font-size: 8px; }
+    .char-box.bad { border-color: #ef4444; background: rgba(239,68,68,0.15); }
+    .verdict {
+      padding: 14px;
+      border-radius: 10px;
+      margin-top: 14px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .verdict.ok { background: rgba(34,197,94,0.15); border: 1px solid #22c55e; }
+    .verdict.fail { background: rgba(239,68,68,0.15); border: 1px solid #ef4444; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>🔍 Diagnostik URL Supabase</h1>
+
+    <span class="label">URL yang terbaca dari file kamu:</span>
+    <div class="box" id="urlBox">memuat...</div>
+
+    <span class="label">Panjang karakter:</span>
+    <div class="box" id="lenBox">-</div>
+
+    <span class="label">Analisis karakter satu per satu:</span>
+    <div class="char-row" id="charRow"></div>
+
+    <div class="verdict" id="verdict" style="display:none;"></div>
+  </div>
+
+  <script>
+    // ⬇️ URL YANG SAMA seperti di cek-koneksi.html
+    const URL_TEST = 'https://jbzykcuhpfkrgnimjtxx.supabase.co';
+
+    document.getElementById('urlBox').textContent = '[' + URL_TEST + ']';
+    document.getElementById('lenBox').textContent = URL_TEST.length + ' karakter';
+
+    // Analisis per karakter
+    const row = document.getElementById('charRow');
+    let adaMasalah = false;
+    let masalahList = [];
+
+    for (let i = 0; i < URL_TEST.length; i++) {
+      const ch = URL_TEST[i];
+      const code = URL_TEST.charCodeAt(i);
+      const box = document.createElement('div');
+      box.className = 'char-box';
+
+      // Deteksi karakter yang mencurigakan
+      const isNormalChar = /[a-zA-Z0-9:\/\.\-_]/.test(ch);
+      if (!isNormalChar) {
+        box.classList.add('bad');
+        adaMasalah = true;
+        masalahList.push(`Posisi ${i}: karakter "${ch}" (kode ${code}) — BUKAN karakter URL normal`);
+      }
+
+      box.innerHTML =
+        '<span class="ch">' + (ch === ' ' ? '␣' : ch) + '</span>' +
+        '<span class="cd">' + code + '</span>';
+      row.appendChild(box);
+    }
+
+    // Coba buat URL object
+    let urlValid = false;
+    let urlErrMsg = '';
+    try {
+      new URL(URL_TEST);
+      urlValid = true;
+    } catch (e) {
+      urlValid = false;
+      urlErrMsg = e.message;
+    }
+
+    // Tampilkan verdict
+    const v = document.getElementById('verdict');
+    v.style.display = 'block';
+
+    if (urlValid && !adaMasalah) {
+      v.className = 'verdict ok';
+      v.innerHTML =
+        '<b>✅ URL VALID</b><br>' +
+        'URL di file kamu benar.<br><br>' +
+        '<b>Kalau masih error "malformed", coba:</b><br>' +
+        '1. Buka <code>index.html</code> & <code>cek-koneksi.html</code> di text editor<br>' +
+        '2. Cari baris <code>https://...</code><br>' +
+        '3. Pastikan TIDAK ADA spasi di awal/akhir URL<br>' +
+        '4. Atau langsung ganti dengan URL dari dashboard Supabase (lihat panduan di bawah)';
+    } else {
+      v.className = 'verdict fail';
+      v.innerHTML =
+        '<b>❌ URL BERMASALAH</b><br>' +
+        (urlErrMsg ? 'Error: ' + urlErrMsg + '<br><br>' : '') +
+        (masalahList.length ? 'Karakter mencurigakan:<br>' + masalahList.join('<br>') : '');
+    }
+  </script>
+</body>
+</html>
