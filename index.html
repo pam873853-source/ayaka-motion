@@ -14,15 +14,28 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+  <!-- ============================================================
+       KONFIGURASI SUPABASE GLOBAL (Next.js-style Environment)
+       ============================================================ -->
   <script>
+    // ---- Environment Variables (setara .env / Next.js NEXT_PUBLIC_*) ----
     window.NEXT_PUBLIC_SUPABASE_URL = 'https://jbzykcuhpfkrgnimjtxx.supabase.co';
     window.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_Usw8tFE0HQyAJo7NyvIvTA_fHfXGGZ-';
 
+    // ---- Kredensial Global (untuk kompatibilitas modul script lain) ----
     const SUPABASE_URL = window.NEXT_PUBLIC_SUPABASE_URL;
     const SUPABASE_PUBLISHABLE_KEY = window.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
     window.SUPABASE_URL = SUPABASE_URL;
     window.SUPABASE_PUBLISHABLE_KEY = SUPABASE_PUBLISHABLE_KEY;
 
+    // ================================================================
+    // import { createClient } from '@supabase/supabase-js'
+    // export const supabase = createClient(
+    //   process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    //   process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!
+    // )
+    // (Diadaptasi ke browser via CDN window.supabase.createClient)
+    // ================================================================
     if (window.supabase && typeof window.supabase.createClient === 'function') {
       window.supabaseClient = window.supabase.createClient(
         window.NEXT_PUBLIC_SUPABASE_URL,
@@ -36,6 +49,7 @@
 
   <link rel="stylesheet" href="style.css">
   <style>
+    /* Styling khusus untuk merapatkan angka System Uptime */
     .uptime-digits-row {
       display: flex;
       gap: 6px !important;
@@ -53,6 +67,7 @@
       white-space: nowrap;
     }
 
+    /* Penyesuaian Kotak Total Aktivasi & Hari Ini */
     .custom-stats-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 240px));
@@ -119,6 +134,7 @@
       line-height: 1;
     }
 
+    /* KOTAK WIDGET MINIMALIS PRESISI */
     .widget-info-row {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -152,10 +168,25 @@
       transform: translateY(-2px);
     }
 
-    .widget-mini-card.bg-white { background-color: #ffffff; color: #111111; }
-    .widget-mini-card.bg-yellow { background-color: #fde047; color: #111111; }
-    .widget-mini-card.bg-green { background-color: #a3e635; color: #111111; }
-    .widget-mini-card.bg-blue { background-color: #bae6fd; color: #111111; }
+    .widget-mini-card.bg-white {
+      background-color: #ffffff;
+      color: #111111;
+    }
+
+    .widget-mini-card.bg-yellow {
+      background-color: #fde047;
+      color: #111111;
+    }
+
+    .widget-mini-card.bg-green {
+      background-color: #a3e635;
+      color: #111111;
+    }
+
+    .widget-mini-card.bg-blue {
+      background-color: #bae6fd;
+      color: #111111;
+    }
 
     .widget-header-text {
       font-family: 'Space Grotesk', sans-serif;
@@ -192,6 +223,7 @@
       text-overflow: ellipsis;
     }
 
+    /* STYLING UNTUK BOTTOM NAVIGATION BAR */
     .bottom-nav-container {
       position: fixed;
       bottom: 20px;
@@ -259,6 +291,7 @@
       padding-bottom: 110px !important;
     }
 
+    /* KOTAK DONASI TANPA PRATINJAU QR CODE */
     .donation-square-card {
       background: #ffffff;
       border: 3px solid #000000;
@@ -279,6 +312,7 @@
       box-shadow: 8px 8px 0px #000000;
     }
 
+    /* POPUP MODAL QR CODE DONASI */
     .qr-modal-overlay {
       position: fixed;
       top: 0;
@@ -298,7 +332,10 @@
       box-sizing: border-box;
     }
 
-    .qr-modal-overlay.active { opacity: 1; visibility: visible; }
+    .qr-modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
 
     .qr-modal-card {
       background: #fffbdf;
@@ -315,7 +352,9 @@
       box-sizing: border-box;
     }
 
-    .qr-modal-overlay.active .qr-modal-card { transform: scale(1); }
+    .qr-modal-overlay.active .qr-modal-card {
+      transform: scale(1);
+    }
 
     .qr-modal-close-btn {
       position: absolute;
@@ -334,7 +373,9 @@
       transition: transform 0.15s ease;
     }
 
-    .qr-modal-close-btn:hover { transform: scale(1.1); }
+    .qr-modal-close-btn:hover {
+      transform: scale(1.1);
+    }
 
     .qr-code-modal-img {
       max-width: 220px;
@@ -348,6 +389,7 @@
       box-shadow: 3px 3px 0px #000000;
     }
 
+    /* STYLING PEMUTAR VIDEO TUTORIAL */
     .tutorial-video-card {
       background: var(--card-inner);
       border: 1px solid var(--border-color);
@@ -374,7 +416,6 @@
       overflow: hidden;
       border: 2px solid #000000;
       box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-      position: relative;
     }
     .tutorial-video-wrapper video {
       width: 100% !important;
@@ -384,9 +425,9 @@
       outline: none;
       object-fit: contain;
       transform: translateZ(0);
-      background: #000000;
     }
 
+    /* STYLING LIVE RECENT ACTIVATION */
     .recent-act-badge {
       display: inline-flex;
       align-items: center;
@@ -472,244 +513,6 @@
       border-radius: 8px;
       border: 1px solid rgba(16, 185, 129, 0.2);
     }
-
-    .realtime-sky-bar {
-      position: relative;
-      width: 100%;
-      height: 130px;
-      border-radius: 18px;
-      overflow: hidden;
-      margin-bottom: 18px;
-      border: 3px solid #000000;
-      box-shadow: 6px 6px 0px #000000;
-      transition: background 1.5s ease-in-out;
-      isolation: isolate;
-      background: linear-gradient(180deg, #4facfe 0%, #a1c4fd 60%, #e0f2ff 100%);
-    }
-
-    .realtime-sky-bar.theme-morning {
-      background: linear-gradient(180deg, #ff9a8b 0%, #ffb47d 35%, #ffd89b 65%, #ffefd5 100%);
-    }
-    .realtime-sky-bar.theme-day {
-      background: linear-gradient(180deg, #4facfe 0%, #a1c4fd 60%, #e0f2ff 100%);
-    }
-    .realtime-sky-bar.theme-evening {
-      background: linear-gradient(180deg, #2c1e57 0%, #8a4d8e 35%, #ff7b54 70%, #ffb26b 100%);
-    }
-    .realtime-sky-bar.theme-night {
-      background: linear-gradient(180deg, #0b1026 0%, #14203f 40%, #1e2f57 70%, #2a4168 100%);
-    }
-
-    .sky-time-label {
-      position: absolute;
-      top: 10px;
-      right: 14px;
-      z-index: 20;
-      background: rgba(0, 0, 0, 0.55);
-      color: #ffffff;
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 12px;
-      font-weight: 800;
-      letter-spacing: 1px;
-      padding: 5px 12px;
-      border-radius: 20px;
-      border: 1.5px solid rgba(255, 255, 255, 0.35);
-      backdrop-filter: blur(6px);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      transition: all 0.6s ease;
-      text-transform: uppercase;
-    }
-
-    .sky-time-label i { font-size: 13px; }
-
-    .sky-loc-label {
-      position: absolute;
-      bottom: 10px;
-      left: 14px;
-      z-index: 20;
-      color: rgba(255, 255, 255, 0.92);
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: 1.5px;
-      text-shadow: 0 1px 3px rgba(0,0,0,0.6);
-      text-transform: uppercase;
-    }
-
-    .sky-sun {
-      position: absolute;
-      width: 46px;
-      height: 46px;
-      border-radius: 50%;
-      background: radial-gradient(circle at 35% 35%, #fff8b0 0%, #ffd93d 45%, #ff9500 100%);
-      box-shadow: 0 0 30px 12px rgba(255, 217, 61, 0.75),
-                  0 0 60px 20px rgba(255, 149, 0, 0.35);
-      z-index: 5;
-      transition: all 1.8s ease-in-out;
-      animation: sunPulse 4s ease-in-out infinite;
-    }
-
-    @keyframes sunPulse {
-      0%, 100% { box-shadow: 0 0 30px 12px rgba(255, 217, 61, 0.75), 0 0 60px 20px rgba(255, 149, 0, 0.35); }
-      50%      { box-shadow: 0 0 40px 16px rgba(255, 217, 61, 0.9), 0 0 80px 26px rgba(255, 149, 0, 0.45); }
-    }
-
-    .sky-moon {
-      position: absolute;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: radial-gradient(circle at 35% 35%, #ffffff 0%, #e9edf5 55%, #b8c2d4 100%);
-      box-shadow: 0 0 22px 8px rgba(255, 255, 255, 0.55),
-                  0 0 50px 15px rgba(180, 200, 255, 0.35);
-      z-index: 5;
-      opacity: 0;
-      transition: all 1.8s ease-in-out;
-    }
-
-    .sky-moon::before {
-      content: "";
-      position: absolute;
-      top: 8px;
-      left: 10px;
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: rgba(150, 165, 190, 0.45);
-      box-shadow: 10px 8px 0 1px rgba(150, 165, 190, 0.4),
-                  4px 18px 0 -1px rgba(150, 165, 190, 0.4);
-    }
-
-    .sky-stars {
-      position: absolute;
-      inset: 0;
-      z-index: 3;
-      opacity: 0;
-      transition: opacity 1.8s ease-in-out;
-      pointer-events: none;
-    }
-
-    .sky-stars.active { opacity: 1; }
-
-    .sky-star {
-      position: absolute;
-      background: #ffffff;
-      border-radius: 50%;
-      animation: twinkle 2.4s ease-in-out infinite;
-    }
-
-    @keyframes twinkle {
-      0%, 100% { opacity: 0.25; transform: scale(0.8); }
-      50%      { opacity: 1;    transform: scale(1.15); }
-    }
-
-    .sky-cloud {
-      position: absolute;
-      background: rgba(255, 255, 255, 0.92);
-      border-radius: 50%;
-      filter: blur(0.3px);
-      z-index: 4;
-      transition: opacity 1.5s ease-in-out;
-    }
-
-    .sky-cloud::before,
-    .sky-cloud::after {
-      content: "";
-      position: absolute;
-      background: inherit;
-      border-radius: 50%;
-    }
-
-    .sky-cloud.cloud-1 {
-      width: 50px; height: 22px;
-      top: 30px; left: -80px;
-      animation: cloudDrift1 28s linear infinite;
-    }
-    .sky-cloud.cloud-1::before { width: 28px; height: 28px; top: -12px; left: 8px; }
-    .sky-cloud.cloud-1::after { width: 22px; height: 22px; top: -8px; left: 26px; }
-
-    .sky-cloud.cloud-2 {
-      width: 70px; height: 26px;
-      top: 60px; left: -120px;
-      animation: cloudDrift2 38s linear infinite;
-      opacity: 0.78;
-    }
-    .sky-cloud.cloud-2::before { width: 36px; height: 36px; top: -18px; left: 12px; }
-    .sky-cloud.cloud-2::after { width: 26px; height: 26px; top: -12px; left: 40px; }
-
-    .sky-cloud.cloud-3 {
-      width: 42px; height: 20px;
-      top: 15px; left: -100px;
-      animation: cloudDrift3 45s linear infinite;
-      opacity: 0.7;
-    }
-    .sky-cloud.cloud-3::before { width: 24px; height: 24px; top: -11px; left: 8px; }
-    .sky-cloud.cloud-3::after { width: 20px; height: 20px; top: -7px; left: 22px; }
-
-    @keyframes cloudDrift1 {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(calc(100vw + 200px)); }
-    }
-    @keyframes cloudDrift2 {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(calc(100vw + 260px)); }
-    }
-    @keyframes cloudDrift3 {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(calc(100vw + 220px)); }
-    }
-
-    .sky-horizon {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 42px;
-      z-index: 6;
-      transition: all 1.5s ease-in-out;
-    }
-
-    .sky-horizon::before,
-    .sky-horizon::after {
-      content: "";
-      position: absolute;
-      bottom: 0;
-      background: inherit;
-    }
-
-    .sky-horizon::before {
-      width: 55%;
-      height: 100%;
-      left: -4%;
-      clip-path: polygon(0 100%, 22% 42%, 40% 68%, 60% 25%, 80% 55%, 100% 100%);
-    }
-
-    .sky-horizon::after {
-      width: 60%;
-      height: 100%;
-      right: -4%;
-      clip-path: polygon(0 100%, 18% 60%, 34% 32%, 52% 55%, 70% 38%, 88% 60%, 100% 100%);
-    }
-
-    .theme-morning .sky-horizon { background: #b5714b; }
-    .theme-day     .sky-horizon { background: #4f7d54; }
-    .theme-evening .sky-horizon { background: #3b1e42; }
-    .theme-night   .sky-horizon { background: #060b1a; }
-
-    .theme-night .sky-time-label {
-      background: rgba(255, 255, 255, 0.14);
-      border-color: rgba(180, 210, 255, 0.5);
-      color: #dbeafe;
-    }
-
-    @media (max-width: 600px) {
-      .realtime-sky-bar { height: 110px; border-radius: 14px; }
-      .sky-sun, .sky-moon { width: 36px; height: 36px; }
-      .sky-time-label { font-size: 10px; padding: 4px 9px; }
-      .sky-loc-label { font-size: 10px; }
-    }
   </style>
 </head>
 <body>
@@ -785,23 +588,6 @@
   <div class="main-wrapper">
     <div class="content-container">
 
-      <div class="realtime-sky-bar" id="realtimeSkyBar">
-        <div class="sky-stars" id="skyStars"></div>
-        <div class="sky-sun" id="skySun" style="top: 20px; left: 12%;"></div>
-        <div class="sky-moon" id="skyMoon" style="top: 20px; right: 15%;"></div>
-        <div class="sky-cloud cloud-1"></div>
-        <div class="sky-cloud cloud-2"></div>
-        <div class="sky-cloud cloud-3"></div>
-        <div class="sky-horizon"></div>
-        <div class="sky-time-label" id="skyTimeLabel">
-          <i class="fa-solid fa-sun" id="skyTimeIcon"></i>
-          <span id="skyTimeText">Memuat...</span>
-        </div>
-        <div class="sky-loc-label">
-          <i class="fa-solid fa-location-dot"></i> AYAKA STORE • REALTIME SKY
-        </div>
-      </div>
-
       <div class="ayaka-banner">
         <div class="ayaka-info">
           <h3>Kamisato Ayaka • Cryo Frostflake Heron</h3>
@@ -827,6 +613,7 @@
               <div class="widget-value-text" id="widgetDateVal">Memuat...</div>
             </div>
           </div>
+
           <div class="widget-mini-card bg-yellow">
             <div class="widget-header-text">WAKTU</div>
             <div class="widget-body-content">
@@ -834,6 +621,7 @@
               <div class="widget-value-text" id="widgetTimeVal">Memuat...</div>
             </div>
           </div>
+
           <div class="widget-mini-card bg-green">
             <div class="widget-header-text">BATERAI</div>
             <div class="widget-body-content">
@@ -841,6 +629,7 @@
               <div class="widget-value-text" id="widgetBatteryVal">--%</div>
             </div>
           </div>
+
           <div class="widget-mini-card bg-blue">
             <div class="widget-header-text">UPTIME</div>
             <div class="widget-body-content">
@@ -898,7 +687,7 @@
               <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px;">
                 <h3>Total Pengunjung Global</h3>
                 <span style="font-size: 11px; font-weight: 700; color: #f59e0b; background: rgba(245, 158, 11, 0.1); padding: 2px 8px; border-radius: 20px; white-space: nowrap;" id="visitorBadgeLabel">
-                  Menghubungkan...
+                  Database Connected
                 </span>
               </div>
               <p style="font-size: 20px; font-family: 'Space Grotesk', sans-serif; margin-top: 4px; color: #fff;" id="totalVisitorsCounter">Loading...</p>
@@ -918,6 +707,7 @@
             </div>
             <span style="font-size: 12px; color: var(--text-muted);" id="recentCountText">Memuat data...</span>
           </div>
+
           <div id="recentActivationList"></div>
         </div>
       </section>
@@ -990,14 +780,19 @@
           <div class="custom-stat-square-box">
             <div class="custom-stat-header-row">
               <span class="custom-stat-title-text">TOTAL AKTIVASI</span>
-              <div class="custom-stat-icon-elem"><i class="fa-solid fa-trophy"></i></div>
+              <div class="custom-stat-icon-elem">
+                <i class="fa-solid fa-trophy"></i>
+              </div>
             </div>
             <div class="custom-stat-number-val" id="globalTotalAktivasi">0</div>
           </div>
+
           <div class="custom-stat-square-box yellow-box">
             <div class="custom-stat-header-row">
               <span class="custom-stat-title-text">HARI INI</span>
-              <div class="custom-stat-icon-elem"><i class="fa-solid fa-clock"></i></div>
+              <div class="custom-stat-icon-elem">
+                <i class="fa-solid fa-clock"></i>
+              </div>
             </div>
             <div class="custom-stat-number-val" id="globalHariIniAktivasi">0</div>
           </div>
@@ -1083,6 +878,7 @@
 
       <section id="view-temp-mail" style="display: none;">
         <div id="tempMailMsg" class="message"></div>
+
         <div class="ss-replica-wrapper">
           <div class="ss-top-header">
             <span class="ss-label-title">ALAMAT EMAIL KAMU</span>
@@ -1090,6 +886,7 @@
               <i class="fa-solid fa-globe"></i> Outlook Reader
             </button>
           </div>
+
           <div class="ss-email-box">
             <div class="ss-email-left">
               <i class="fa-regular fa-envelope ss-email-icon"></i>
@@ -1099,13 +896,16 @@
               <i class="fa-regular fa-copy"></i>
             </button>
           </div>
+
           <div class="ss-domain-approved-box">
             <i class="fa-solid fa-check"></i>
             <span>Domain approved (uptime <span id="uptimeDaysCount">14</span> days)</span>
           </div>
+
           <button type="button" class="ss-custom-btn" id="customTempMailBtn">
             <i class="fa-solid fa-pen"></i> Custom
           </button>
+
           <div class="ss-action-row">
             <button type="button" class="ss-refresh-btn" id="refreshTempMailBtn">
               <i class="fa-solid fa-rotate" id="refreshInboxIcon"></i> Refresh
@@ -1114,10 +914,12 @@
               <i class="fa-solid fa-plus"></i> Buat Baru
             </button>
           </div>
+
           <div class="ss-inbox-section-title">
             Kotak Masuk <span id="inboxCountBadge">(0)</span>
             <span id="clearInboxBtn">Bersihkan</span>
           </div>
+
           <div id="tempMailInboxList" class="inbox-list">
             <div style="text-align: center; color: var(--text-muted); padding: 16px 10px; font-size: 12px; background: var(--card-inner); border: 1px dashed var(--border-color); border-radius: 10px;">
               Belum ada pesan masuk. Email akan muncul di sini secara real-time.
@@ -1150,6 +952,7 @@
 
           <div class="am-step-content-panel active" id="amPanel1">
             <h3 style="font-size: 15px; font-weight: 800; color: #fbcfe8; margin-bottom: 12px;">Tahap 1: Hubungkan Akun Alight Motion</h3>
+            
             <div class="auth-form-group">
               <label>Email Akun Alight Motion</label>
               <div style="display:flex; gap:8px; flex-wrap:wrap;">
@@ -1157,10 +960,12 @@
                 <button type="button" id="sendBtn" class="btn-pink" style="width: auto; padding: 12px 16px; flex-shrink: 0;">Kirim Link</button>
               </div>
             </div>
+
             <div class="auth-form-group">
               <label>Magic Link / URL Verifikasi Email</label>
               <input type="url" id="magicInput" class="auth-input" placeholder="Paste link dari email di sini...">
             </div>
+
             <button type="button" id="nextToStep2Btn" class="btn-pink">
               <i class="fa-solid fa-arrow-right"></i> Lanjut ke Tahap 2 (Aktivasi Akun)
             </button>
@@ -1169,6 +974,7 @@
           <div class="am-step-content-panel" id="amPanel2">
             <h3 style="font-size: 15px; font-weight: 800; color: #fbcfe8; margin-bottom: 6px;">Tahap 2: Aktivasi Akun</h3>
             <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">Selesaikan proses aktivasi untuk membuka lisensi premium permanen.</p>
+
             <div style="display: flex; justify-content: space-between; gap: 10px; margin-top: 20px;">
               <button type="button" class="btn-pink" style="background: transparent; border: 1px solid var(--border-color); color: #fff; width: auto;" id="backToStep1Btn">
                 <i class="fa-solid fa-arrow-left"></i> Kembali
@@ -1184,8 +990,10 @@
               <div style="width: 52px; height: 52px; border-radius: 50%; background: var(--success-bg); border: 2px solid var(--success); display: flex; align-items: center; justify-content: center; color: var(--success); font-size: 22px; margin-bottom: 12px;">
                 <i class="fa-solid fa-check"></i>
               </div>
+
               <h2 class="am-hero-title">Premium Aktif!</h2>
               <p class="am-hero-desc">Verifikasi akun telah selesai. Akun Alight Motion Anda kini resmi aktif.</p>
+
               <div class="res-data-box">
                 <div class="res-data-row">
                   <span class="lbl">Email:</span>
@@ -1200,6 +1008,7 @@
                   <span class="val" style="color: var(--success);">SUCCESS</span>
                 </div>
               </div>
+
               <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
                 <button type="button" class="btn-pink" style="background: transparent; border: 1px solid var(--border-color); color: #fff; width: auto; padding: 10px 20px; font-size: 13px;" id="resetAmFormV1Btn">
                   <i class="fa-solid fa-rotate-right"></i> Proses Akun Lain
@@ -1207,6 +1016,7 @@
               </div>
             </div>
           </div>
+
         </div>
       </section>
 
@@ -1234,6 +1044,7 @@
 
           <div class="am-step-content-panel active" id="amV2Panel1">
             <h3 style="font-size: 15px; font-weight: 800; color: #fbcfe8; margin-bottom: 12px;">Tahap 1: Hubungkan Akun V2</h3>
+
             <div class="auth-form-group">
               <label>Paket / Durasi Premium</label>
               <select id="v2ProductSelect" class="auth-select">
@@ -1241,10 +1052,12 @@
                 <option value="am.full.sub.monthly.19q4">Monthly Sub (1 Bulan)</option>
               </select>
             </div>
+
             <div class="auth-form-group">
               <label>Prefix Order ID (Opsional)</label>
               <input type="text" id="v2PrefixInput" class="auth-input" value="GPA" placeholder="Contoh: GPA / AYAKA">
             </div>
+
             <div class="auth-form-group">
               <label>Email Akun Alight Motion</label>
               <div style="display:flex; gap:8px; flex-wrap:wrap;">
@@ -1252,10 +1065,12 @@
                 <button type="button" id="sendBtnV2" class="btn-pink" style="width: auto; padding: 12px 16px; flex-shrink: 0;">Kirim Link</button>
               </div>
             </div>
+
             <div class="auth-form-group">
               <label>Magic Link / URL Verifikasi Email</label>
               <input type="url" id="magicInputV2" class="auth-input" placeholder="Paste link dari email di sini...">
             </div>
+
             <button type="button" id="nextToAmV2Step2Btn" class="btn-pink">
               <i class="fa-solid fa-arrow-right"></i> Lanjut ke Tahap 2 (Aktivasi Akun)
             </button>
@@ -1264,6 +1079,7 @@
           <div class="am-step-content-panel" id="amV2Panel2">
             <h3 style="font-size: 15px; font-weight: 800; color: #fbcfe8; margin-bottom: 6px;">Tahap 2: Aktivasi Sistem V2</h3>
             <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">Selesaikan proses Engine V2 untuk mengaktifkan langganan.</p>
+
             <div style="display: flex; justify-content: space-between; gap: 10px; margin-top: 20px;">
               <button type="button" class="btn-pink" style="background: transparent; border: 1px solid var(--border-color); color: #fff; width: auto;" id="backToAmV2Step1Btn">
                 <i class="fa-solid fa-arrow-left"></i> Kembali
@@ -1279,8 +1095,10 @@
               <div style="width: 52px; height: 52px; border-radius: 50%; background: var(--success-bg); border: 2px solid var(--success); display: flex; align-items: center; justify-content: center; color: var(--success); font-size: 22px; margin-bottom: 12px;">
                 <i class="fa-solid fa-check"></i>
               </div>
+
               <h2 class="am-hero-title">Aktivasi V2 Berhasil!</h2>
               <p class="am-hero-desc">Akun Alight Motion Anda telah sukses ditingkatkan via Engine V2.</p>
+
               <div class="res-data-box">
                 <div class="res-data-row">
                   <span class="lbl">Email:</span>
@@ -1299,11 +1117,13 @@
                   <span class="val" style="color: var(--success);">SUCCESS</span>
                 </div>
               </div>
+
               <button type="button" class="btn-pink" style="background: transparent; border: 1px solid var(--border-color); color: #fff; width: auto; padding: 10px 20px; font-size: 13px;" id="resetAmFormV2Btn">
                 <i class="fa-solid fa-rotate-right"></i> Proses Akun Lain
               </button>
             </div>
           </div>
+
         </div>
       </section>
 
@@ -1313,6 +1133,7 @@
 
         <div class="dash-card">
           <div id="msgBoxBulk" class="message"></div>
+
           <div class="auth-form-group">
             <label>Paket / Durasi Premium</label>
             <select id="bulkProductSelect" class="auth-select">
@@ -1320,10 +1141,12 @@
               <option value="am.full.sub.monthly.19q4">Monthly Sub (1 Bulan)</option>
             </select>
           </div>
+
           <div class="auth-form-group">
             <label>Daftar Akun (Format: <code>email | magic_link</code> atau <code>email,magic_link</code> per baris)</label>
             <textarea id="bulkDataInput" class="auth-textarea" placeholder="user1@gmail.com | https://identitytoolkit.googleapis.com/...&#10;user2@gmail.com | https://identitytoolkit.googleapis.com/..."></textarea>
           </div>
+
           <div style="display: flex; gap: 10px; flex-wrap: wrap;">
             <button type="button" id="startBulkBtn" class="btn-pink" style="flex: 1; min-width: 160px;">
               <i class="fa-solid fa-play"></i> Mulai Proses Bulk
@@ -1363,8 +1186,10 @@
             <p style="font-size: 12px; color: #4b5563; margin-bottom: 16px; line-height: 1.4;">
               Dukungan Anda membantu biaya server, database, & fitur otomasi baru.
             </p>
+
             <div style="font-size: 14px; font-weight: 800; color: #000; font-family: 'Space Grotesk', sans-serif;">OLPI STORE</div>
             <div style="font-size: 11px; color: #6b7280; margin-bottom: 20px;">NMID: ID1026559688191</div>
+
             <button type="button" class="btn-pink" id="showQrBtn" style="width: 100%; padding: 13px; font-size: 13px; border-radius: 12px; box-shadow: 3px 3px 0px #000; display: flex; align-items: center; justify-content: center; gap: 8px;">
               <i class="fa-solid fa-qrcode"></i> Tampilkan Kode QR
             </button>
@@ -1383,9 +1208,8 @@
         <div class="tutorial-video-card">
           <h4><i class="fa-solid fa-video" style="color: #f472b6;"></i> Video Tutorial Aktivasi AM Premium</h4>
           <div class="tutorial-video-wrapper">
-            <video controls playsinline preload="metadata" width="100%" poster="" controlsList="nodownload">
-              <source src="utorial-baru%20am-premium-E373B9E.mp4" type="video/mp4">
-              <source src="utorial-baru am-premium-E373B9E.mp4" type="video/mp4">
+            <video controls playsinline preload="metadata">
+              <source src="am-premium-19D25F8.mp4" type="video/mp4">
               Browser Anda tidak mendukung pemutar video HTML5. Silakan perbarui browser Anda.
             </video>
           </div>
@@ -1393,15 +1217,18 @@
 
         <div class="dash-card">
           <h3 style="font-size: 16px; font-weight: 800; color: #fbcfe8; margin-bottom: 16px;"><i class="fa-solid fa-circle-play"></i> Panduan Aktivasi Alight Motion</h3>
+          
           <div style="display: grid; gap: 14px;">
             <div style="background: var(--card-inner); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px;">
               <h4 style="color: #fff; font-size: 14px; margin-bottom: 6px;">1. Buka Menu Aktivasi / AM Generator</h4>
               <p style="font-size: 12px; color: var(--text-muted);">Masukkan email akun Alight Motion Anda pada kolom yang telah disediakan, lalu klik <b>Kirim Link</b>.</p>
             </div>
+
             <div style="background: var(--card-inner); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px;">
               <h4 style="color: #fff; font-size: 14px; margin-bottom: 6px;">2. Dapatkan Magic Link / Verifikasi</h4>
               <p style="font-size: 12px; color: var(--text-muted);">Buka email Anda (bisa menggunakan Auto Temp Mail jika tidak ada email pribadi), lalu salin URL verifikasi yang dikirimkan oleh Alight Motion.</p>
             </div>
+
             <div style="background: var(--card-inner); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px;">
               <h4 style="color: #fff; font-size: 14px; margin-bottom: 6px;">3. Tempel Link & Aktivasi</h4>
               <p style="font-size: 12px; color: var(--text-muted);">Tempelkan tautan Magic Link tersebut di form panel dan klik <b>Lanjut ke Tahap Aktivasi</b>. Sistem akan memproses lisensi secara otomatis dalam hitungan detik.</p>
@@ -1409,18 +1236,23 @@
           </div>
         </div>
       </section>
+
     </div>
   </div>
 
   <div class="qr-modal-overlay" id="qrDonasiModal">
     <div class="qr-modal-card">
       <div class="qr-modal-close-btn" id="closeQrModalBtn"><i class="fa-solid fa-xmark"></i></div>
+      
       <div style="font-size: 12px; font-weight: 800; color: #ec4899; letter-spacing: 1px; text-transform: uppercase;">SCAN QRIS DONASI</div>
       <h3 style="font-size: 20px; font-weight: 800; color: #111; margin: 4px 0 2px 0; font-family: 'Space Grotesk', sans-serif;">OLPI STORE</h3>
       <div style="font-size: 11px; color: #4b5563;">NMID: ID1026559688191</div>
+
       <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=00020101021126570011ID.DANA.WWW011893600915303359272702090335927270303UMI51440014ID.CO.QRIS.WWW0215ID10265596881910303UMI5204654053033605802ID5910OLPI%20STORE6012Kab.%20Sumbawa6105843856304A947" alt="QRIS OLPI STORE Pop-up" class="qr-code-modal-img">
+
       <div style="font-size: 12px; font-weight: 700; color: #111; margin-top: 4px;">DANA, OVO, GoPay, ShopeePay & M-Banking</div>
       <div style="font-size: 11px; color: #6b7280; margin-bottom: 16px;">Kab. Sumbawa</div>
+
       <div style="display: flex; flex-direction: column; gap: 8px;">
         <a href="https://wa.me/6282339430604?text=Halo%20Ayaka%20Store,%20saya%20sudah%20mengirimkan%20donasi" target="_blank" class="btn-pink" style="padding: 10px 16px; font-size: 12px; text-decoration: none; border-radius: 10px;">
           <i class="fa-brands fa-whatsapp"></i> Konfirmasi via WhatsApp
@@ -1451,34 +1283,48 @@
   <script src="config.js"></script>
   <script src="auth.js"></script>
   <script src="main.js"></script>
-
+  
   <script>
     // ============================================================
     // KONEKSI LANGSUNG KE DATABASE SUPABASE
+    // (Diadaptasi dari React component 'WEB GLOBAL' → Vanilla JS)
     // ============================================================
     document.addEventListener("DOMContentLoaded", async () => {
       try {
         if (typeof window.supabaseClient === 'undefined' || !window.supabaseClient) {
-          console.warn("⚠️ Supabase Client belum siap.");
+          console.warn("⚠️ Supabase Client belum siap, mencoba ulang...");
           return;
         }
-        const { data, error } = await window.supabaseClient.from('products').select('*');
+
+        // ---- Fetch dari tabel 'products' (mengikuti contoh React) ----
+        const { data, error } = await window.supabaseClient
+          .from('products')
+          .select('*');
+
         if (error) {
+          // Kalau tabel products belum ada / RLS, tetap lanjut tanpa crash
           console.warn('⚠️ Products fetch info:', error.message);
           window.ayakaProductsData = [];
         } else {
           window.ayakaProductsData = data || [];
+
+          // ---- Banner konfirmasi koneksi (mirip <h1>WEB GLOBAL</h1>) ----
           console.log('%c🌐 WEB GLOBAL', 'font-size:20px;font-weight:900;color:#22c55e;');
           console.log('%c✅ Connected to: jbzykcuhpfkrgnimjtxx.supabase.co', 'color:#22c55e;font-weight:700;');
+          console.log('%c📦 Products loaded: ' + (data ? data.length : 0), 'color:#38bdf8;font-weight:700;');
           console.log('%c🚀 Supabase LIVE!', 'color:#ec4899;font-weight:800;');
         }
+
+        // ---- Update badge Database Connected di dashboard ----
+        const visitorBadgeLabel = document.getElementById("visitorBadgeLabel");
+        if (visitorBadgeLabel) visitorBadgeLabel.textContent = "Live Online";
       } catch (e) {
         console.warn("Supabase connection test failed:", e);
       }
     });
 
     // ============================================================
-    // NAVIGATION ROUTING
+    // NAVIGATION ROUTING & ACTIVE TAB SYNC
     // ============================================================
     document.addEventListener("DOMContentLoaded", () => {
       const bottomNavItems = document.querySelectorAll(".bottom-nav-item");
@@ -1487,33 +1333,46 @@
 
       function switchView(targetView) {
         sections.forEach(sec => sec.style.display = "none");
+
         const targetSection = document.getElementById(`view-${targetView}`);
-        if (targetSection) targetSection.style.display = "block";
+        if (targetSection) {
+          targetSection.style.display = "block";
+        }
 
         bottomNavItems.forEach(item => {
-          if (item.getAttribute("data-view") === targetView) item.classList.add("active");
-          else item.classList.remove("active");
+          if (item.getAttribute("data-view") === targetView) {
+            item.classList.add("active");
+          } else {
+            item.classList.remove("active");
+          }
         });
+
         sidebarNavItems.forEach(item => {
-          if (item.getAttribute("data-view") === targetView) item.classList.add("active");
-          else item.classList.remove("active");
+          if (item.getAttribute("data-view") === targetView) {
+            item.classList.add("active");
+          } else {
+            item.classList.remove("active");
+          }
         });
+
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
 
       bottomNavItems.forEach(item => {
         item.addEventListener("click", () => {
-          const tv = item.getAttribute("data-view");
-          if (tv) switchView(tv);
-        });
-      });
-      sidebarNavItems.forEach(item => {
-        item.addEventListener("click", () => {
-          const tv = item.getAttribute("data-view");
-          if (tv) switchView(tv);
+          const targetView = item.getAttribute("data-view");
+          if (targetView) switchView(targetView);
         });
       });
 
+      sidebarNavItems.forEach(item => {
+        item.addEventListener("click", () => {
+          const targetView = item.getAttribute("data-view");
+          if (targetView) switchView(targetView);
+        });
+      });
+
+      // LOGIKA KONTROL POPUP MODAL QR DONASI
       const qrModal = document.getElementById("qrDonasiModal");
       const showQrBtn = document.getElementById("showQrBtn");
       const closeQrBtn = document.getElementById("closeQrModalBtn");
@@ -1522,11 +1381,14 @@
         if (e) e.stopPropagation();
         if (qrModal) qrModal.classList.add("active");
       }
+
       function closeQrPopup() {
         if (qrModal) qrModal.classList.remove("active");
       }
+
       if (showQrBtn) showQrBtn.addEventListener("click", openQrPopup);
       if (closeQrBtn) closeQrBtn.addEventListener("click", closeQrPopup);
+
       if (qrModal) {
         qrModal.addEventListener("click", (e) => {
           if (e.target === qrModal) closeQrPopup();
@@ -1534,85 +1396,7 @@
       }
     });
 
-    // ============================================================
-    // ANIMASI LANGIT REAL-TIME
-    // ============================================================
-    document.addEventListener("DOMContentLoaded", () => {
-      const skyBar = document.getElementById("realtimeSkyBar");
-      const skySun = document.getElementById("skySun");
-      const skyMoon = document.getElementById("skyMoon");
-      const skyStars = document.getElementById("skyStars");
-      const skyTimeIcon = document.getElementById("skyTimeIcon");
-      const skyTimeText = document.getElementById("skyTimeText");
-
-      if (!skyBar) return;
-
-      function generateStars() {
-        if (!skyStars) return;
-        skyStars.innerHTML = "";
-        for (let i = 0; i < 45; i++) {
-          const star = document.createElement("div");
-          star.className = "sky-star";
-          const size = Math.random() * 2 + 1;
-          star.style.width = size + "px";
-          star.style.height = size + "px";
-          star.style.left = Math.random() * 100 + "%";
-          star.style.top = Math.random() * 70 + "%";
-          star.style.animationDelay = (Math.random() * 3) + "s";
-          star.style.animationDuration = (1.8 + Math.random() * 1.8) + "s";
-          skyStars.appendChild(star);
-        }
-      }
-      generateStars();
-
-      function getThemeByHour(hour) {
-        if (hour >= 5 && hour < 10) return { name:"morning", label:"Pagi", icon:"fa-solid fa-sun", sunLeft:12, sunTop:22, moonOpacity:0, starsActive:false, sunOpacity:1 };
-        if (hour >= 10 && hour < 15) return { name:"day", label:"Siang", icon:"fa-solid fa-sun", sunLeft:45, sunTop:8, moonOpacity:0, starsActive:false, sunOpacity:1 };
-        if (hour >= 15 && hour < 18) return { name:"evening", label:"Sore", icon:"fa-solid fa-cloud-sun", sunLeft:78, sunTop:30, moonOpacity:0, starsActive:false, sunOpacity:1 };
-        return { name:"night", label:"Malam", icon:"fa-solid fa-moon", sunLeft:12, sunTop:60, moonOpacity:1, starsActive:true, sunOpacity:0 };
-      }
-
-      function applyTheme() {
-        const now = new Date();
-        const theme = getThemeByHour(now.getHours());
-        skyBar.classList.remove("theme-morning", "theme-day", "theme-evening", "theme-night");
-        skyBar.classList.add("theme-" + theme.name);
-
-        if (skySun) {
-          skySun.style.left = theme.sunLeft + "%";
-          skySun.style.top = theme.sunTop + "px";
-          skySun.style.opacity = theme.sunOpacity;
-        }
-        if (skyMoon) {
-          skyMoon.style.opacity = theme.moonOpacity;
-          if (theme.name === "night") {
-            skyMoon.style.left = "auto";
-            skyMoon.style.right = "15%";
-            skyMoon.style.top = "22px";
-          }
-        }
-        if (skyStars) {
-          if (theme.starsActive) skyStars.classList.add("active");
-          else skyStars.classList.remove("active");
-        }
-        if (skyTimeText) skyTimeText.textContent = theme.label;
-        if (skyTimeIcon) skyTimeIcon.className = theme.icon;
-        if (skyTimeIcon) {
-          if (theme.name === "night") skyTimeIcon.style.color = "#dbeafe";
-          else if (theme.name === "evening") skyTimeIcon.style.color = "#ffd4a8";
-          else if (theme.name === "morning") skyTimeIcon.style.color = "#fff2b3";
-          else skyTimeIcon.style.color = "#fff5b8";
-        }
-      }
-
-      applyTheme();
-      setInterval(applyTheme, 30000);
-      setInterval(applyTheme, 5000);
-    });
-
-    // ============================================================
-    // MASK EMAIL
-    // ============================================================
+    // SENSOR OTOMATIS EMAIL UNTUK MENJAGA PRIVASI
     function maskEmailAddress(emailStr) {
       if (!emailStr || typeof emailStr !== 'string' || !emailStr.includes('@')) {
         return "user****@gmail.com";
@@ -1620,86 +1404,23 @@
       const parts = emailStr.split('@');
       const username = parts[0];
       const domain = parts[1];
-      if (username.length <= 2) return username.substring(0, 1) + "****@" + domain;
-      if (username.length <= 4) return username.substring(0, 2) + "****@" + domain;
+
+      if (username.length <= 2) {
+        return username.substring(0, 1) + "****@" + domain;
+      }
+      if (username.length <= 4) {
+        return username.substring(0, 2) + "****@" + domain;
+      }
       return username.substring(0, 3) + "****" + username.substring(username.length - 1) + "@" + domain;
     }
 
-    // ============================================================
-    // STATE GLOBAL TUNGGAL (100% MURNI DARI DATABASE)
-    // ============================================================
+    // MANAJEMEN RIWAYAT LIVE RECENT ACTIVATION (REALTIME SYNC VIA SUPABASE & LOCALSTORAGE)
     let activeRecentList = [];
 
-    window.ayakaStats = {
-      total: 0,
-      daily: 0,
-      visitors: 0,
-      serverStartTime: 0,
-      online: false,
-      loaded: false,
-      lastSync: null
-    };
-
-    function ayakaTodayISO() {
-      const d = new Date();
-      const off = d.getTimezoneOffset() * 60000;
-      return new Date(d.getTime() - off).toISOString().split('T')[0];
-    }
-
-    function ayakaSetText(id, value) {
-      const el = document.getElementById(id);
-      if (el) el.textContent = value;
-    }
-
-    function ayakaFmt(n) {
-      return Number(n || 0).toLocaleString('id-ID');
-    }
-
-    // ============================================================
-    // RENDER SEMUA ANGKA GLOBAL KE SELURUH MENU
-    // ============================================================
-    function renderGlobalStatsUI() {
-      const s = window.ayakaStats;
-      const totalStr = ayakaFmt(s.total);
-      const dailyStr = ayakaFmt(s.daily);
-      const visitorStr = ayakaFmt(s.visitors);
-
-      // Statistik Store
-      ayakaSetText("globalTotalAktivasi", totalStr);
-      ayakaSetText("globalHariIniAktivasi", dailyStr);
-      ayakaSetText("statTotalSukses", totalStr);
-
-      // Dashboard & Server Status
-      ayakaSetText("totalGeneratedCounter", totalStr);
-      ayakaSetText("totalVisitorsCounter", visitorStr);
-
-      const badge = document.getElementById("visitorBadgeLabel");
-      if (badge) badge.textContent = s.online ? "Live Global Sync" : "Offline";
-
-      const statusLabel = document.getElementById("supaStatusLabel");
-      if (statusLabel) statusLabel.textContent = s.online ? "Connected" : "Reconnecting...";
-
-      const lastInfo = document.getElementById("lastGeneratedInfo");
-      if (lastInfo) {
-        lastInfo.textContent = s.online
-          ? "Sync: " + new Date(s.lastSync || Date.now()).toLocaleTimeString('id-ID')
-          : "Menunggu koneksi...";
-      }
-
-      const upStatus = document.getElementById("uptimeLiveStatus");
-      if (upStatus) {
-        upStatus.textContent = s.online
-          ? "Status: Terkoneksi & Berjalan Normal"
-          : "Status: Mode Offline";
-      }
-    }
-
-    // ============================================================
-    // RENDER RECENT ACTIVATION
-    // ============================================================
     function renderRecentActivationUI() {
       const container = document.getElementById("recentActivationList");
       const recentCountText = document.getElementById("recentCountText");
+
       if (!container) return;
 
       if (recentCountText) {
@@ -1709,7 +1430,7 @@
       if (activeRecentList.length === 0) {
         container.innerHTML = `
           <div style="text-align: center; color: var(--text-muted); padding: 18px; font-size: 12px; background: var(--card-inner); border: 1px dashed var(--border-color); border-radius: 12px;">
-            Belum ada aktivitas lisensi terbaru.
+            Belum ada aktivitas lisensi terbaru. Selesaikan aktivasi akun untuk menampilkan data secara real-time.
           </div>
         `;
         return;
@@ -1718,7 +1439,8 @@
       let htmlContent = "";
       activeRecentList.forEach((item) => {
         const masked = maskEmailAddress(item.email);
-        const firstLetter = (item.email && item.email.charAt(0) ? item.email.charAt(0) : "A").toUpperCase();
+        const firstLetter = (item.email.charAt(0) || "A").toUpperCase();
+
         htmlContent += `
           <div class="recent-act-item">
             <div class="recent-act-user">
@@ -1734,144 +1456,14 @@
           </div>
         `;
       });
+
       container.innerHTML = htmlContent;
     }
 
-    // ============================================================
-    // TERAPKAN BARIS DATABASE KE STATE + UI (MURNI DARI DB)
-    // ============================================================
-    function applyStatsRow(row) {
-      if (!row) return;
-
-      window.ayakaStats.total = Number(row.total_generated || 0);
-      window.ayakaStats.daily = Number(row.daily_generated || 0);
-      window.ayakaStats.visitors = Number(row.visitors || 0);
-      window.ayakaStats.serverStartTime = Number(row.server_start_time || 0);
-      window.ayakaStats.online = true;
-      window.ayakaStats.loaded = true;
-      window.ayakaStats.lastSync = Date.now();
-
-      // Simpan start time global
-      if (window.ayakaStats.serverStartTime > 0) {
-        localStorage.setItem("ayaka_global_server_start_time", String(window.ayakaStats.serverStartTime));
-      }
-
-      if (Array.isArray(row.recent_activations)) {
-        activeRecentList = row.recent_activations;
-        renderRecentActivationUI();
-      }
-
-      renderGlobalStatsUI();
-    }
-
-    // ============================================================
-    // PASTIKAN BARIS site_stats id=1 SELALU ADA
-    // ============================================================
-    async function ensureSiteStatsRow() {
-      const sb = window.supabaseClient;
-      if (!sb) throw new Error("Supabase client tidak tersedia");
-
-      const { data, error } = await sb
-        .from('site_stats')
-        .select('*')
-        .eq('id', 1)
-        .maybeSingle();
-
-      if (error) throw error;
-
-      if (!data) {
-        const payload = {
-          id: 1,
-          visitors: 0,
-          total_generated: 0,
-          daily_generated: 0,
-          last_reset_date: ayakaTodayISO(),
-          server_start_time: Date.now(),
-          recent_activations: []
-        };
-        const { data: inserted, error: insErr } = await sb
-          .from('site_stats')
-          .upsert(payload, { onConflict: 'id' })
-          .select()
-          .maybeSingle();
-        if (insErr) throw insErr;
-        return { row: inserted, created: true };
-      }
-
-      return { row: data, created: false };
-    }
-
-    // ============================================================
-    // SINKRONISASI GLOBAL (SELURUH PERANGKAT BACA DATA YANG SAMA)
-    // ============================================================
-    async function syncGlobalStats() {
-      const sb = window.supabaseClient;
-
-      if (!sb) {
-        window.ayakaStats.online = false;
-        renderGlobalStatsUI();
-        return;
-      }
-
-      try {
-        let { row, created } = await ensureSiteStatsRow();
-        const todayStr = ayakaTodayISO();
-
-        // Reset harian global
-        if (row && row.last_reset_date !== todayStr) {
-          const { data: resetRow, error: resetErr } = await sb
-            .from('site_stats')
-            .update({ daily_generated: 0, last_reset_date: todayStr })
-            .eq('id', 1)
-            .select()
-            .maybeSingle();
-          if (!resetErr && resetRow) row = resetRow;
-        }
-
-        // Hitung pengunjung unik per perangkat (global counter)
-        const visitorKey = "ayaka_global_visitor_id";
-        const isNewDeviceVisitor = !localStorage.getItem(visitorKey);
-
-        if (isNewDeviceVisitor) {
-          localStorage.setItem(visitorKey, "v_" + Date.now() + "_" + Math.random().toString(36).substring(2, 7));
-          if (!created) {
-            const newVisitorCount = Number(row.visitors || 0) + 1;
-            const { data: updRow, error: updErr } = await sb
-              .from('site_stats')
-              .update({ visitors: newVisitorCount })
-              .eq('id', 1)
-              .select()
-              .maybeSingle();
-            if (!updErr && updRow) row = updRow;
-          }
-        }
-
-        // Set server_start_time global kalau masih kosong
-        if (row && !row.server_start_time) {
-          const startTs = Date.now();
-          const { data: startRow } = await sb
-            .from('site_stats')
-            .update({ server_start_time: startTs })
-            .eq('id', 1)
-            .select()
-            .maybeSingle();
-          if (startRow) row = startRow;
-        }
-
-        applyStatsRow(row);
-      } catch (err) {
-        console.warn("⚠️ Sinkronisasi Supabase gagal:", err && err.message ? err.message : err);
-        window.ayakaStats.online = false;
-        renderGlobalStatsUI();
-      }
-    }
-
-    // ============================================================
-    // TAMBAH RIWAYAT AKTIVASI LIVE (GLOBAL)
-    // ============================================================
+    // FUNGSI MENAMBAHKAN & MENGAMBIL AKTIVASI LIVE REALTIME DARI SUPABASE
     window.addLiveRecentActivation = async function(rawEmail, planType) {
       if (!rawEmail) rawEmail = "user" + Math.floor(1000 + Math.random() * 9000) + "@gmail.com";
-
+      
       const newItem = {
         email: rawEmail,
         type: planType || "AM Premium Annual 1 Year",
@@ -1880,118 +1472,102 @@
       };
 
       activeRecentList.unshift(newItem);
-      if (activeRecentList.length > 20) activeRecentList = activeRecentList.slice(0, 20);
+      if (activeRecentList.length > 20) {
+        activeRecentList.pop();
+      }
+
+      // Simpan juga ke localStorage agar aman saat halaman dibuka ulang
+      try {
+        localStorage.setItem("ayaka_saved_recent_activations", JSON.stringify(activeRecentList));
+      } catch (e) {}
+
       renderRecentActivationUI();
 
-      if (window.supabaseClient) {
+      if (typeof window.supabaseClient !== 'undefined' && window.supabaseClient) {
         try {
           await window.supabaseClient
             .from('site_stats')
             .update({ recent_activations: activeRecentList })
             .eq('id', 1);
         } catch (err) {
-          console.warn("Gagal simpan riwayat live recent:", err);
+          console.warn("Gagal menyimpan riwayat live recent ke Supabase:", err);
         }
       }
     };
 
-    // ============================================================
-    // INCREMENT GLOBAL — SEMUA PERANGKAT LIHAT ANGKA SAMA
-    // ============================================================
-    window.incrementAyakaActivationStats = async function(incrementCount = 1, userEmail = "", planName = "AM Premium Annual 1 Year", skipRecent = false) {
-      incrementCount = Math.max(1, parseInt(incrementCount, 10) || 1);
-
-      if (!userEmail) {
-        userEmail = document.getElementById("emailInput")?.value
-                 || document.getElementById("emailInputV2")?.value
-                 || "ayaka_user@gmail.com";
-      }
-
-      if (!skipRecent) {
-        await window.addLiveRecentActivation(userEmail, planName);
-      }
-
-      const sb = window.supabaseClient;
-      if (!sb) return;
-
-      // Retry 3x untuk menjamin update terkirim ke database
-      for (let attempt = 1; attempt <= 3; attempt++) {
-        try {
-          const { row } = await ensureSiteStatsRow();
-          const todayStr = ayakaTodayISO();
-
-          const baseTotal = Number(row.total_generated || 0);
-          const baseDaily = (row.last_reset_date === todayStr)
-            ? Number(row.daily_generated || 0)
-            : 0;
-
-          const newTotal = baseTotal + incrementCount;
-          const newDaily = baseDaily + incrementCount;
-
-          const { data: updated, error: updErr } = await sb
-            .from('site_stats')
-            .update({
-              total_generated: newTotal,
-              daily_generated: newDaily,
-              last_reset_date: todayStr,
-              recent_activations: activeRecentList
-            })
-            .eq('id', 1)
-            .select()
-            .maybeSingle();
-
-          if (updErr) throw updErr;
-
-          if (updated) {
-            applyStatsRow(updated);
-          } else {
-            window.ayakaStats.total = newTotal;
-            window.ayakaStats.daily = newDaily;
-            renderGlobalStatsUI();
-          }
-          return;
-        } catch (err) {
-          console.warn(`⚠️ Update statistik (percobaan ${attempt}/3):`, err && err.message ? err.message : err);
-          await new Promise(r => setTimeout(r, 350 * attempt));
-        }
-      }
-      console.warn("❌ Update statistik global gagal setelah 3 percobaan.");
-    };
-
-    // ============================================================
-    // BOOTSTRAP: UPTIME, WIDGET, BATERAI, SINKRONISASI GLOBAL
-    // ============================================================
+    // SISTEM SINKRONISASI SERVER UPTIME & STATISTIK YANG STABIL (TIDAK RESET / MELOMPAT)
     document.addEventListener("DOMContentLoaded", async () => {
+      let globalServerStartTime = null;
 
-      // ---- Sinkronisasi pertama + berkala (SEMUA PERANGKAT BACA DATA YANG SAMA) ----
-      await syncGlobalStats();
-      setInterval(syncGlobalStats, 5000);
+      window.ayakaGlobalTotalGen = parseInt(localStorage.getItem("ayaka_local_total_gen") || "0");
+      window.ayakaGlobalDailyGen = parseInt(localStorage.getItem("ayaka_local_daily_gen") || "0");
 
-      // ---- Realtime listener Supabase ----
-      if (window.supabaseClient) {
+      // Pulihkan riwayat live recent dari localStorage saat pertama kali buka web agar tidak hilang
+      try {
+        const savedLocalRecent = localStorage.getItem("ayaka_saved_recent_activations");
+        if (savedLocalRecent) {
+          const parsedLocal = JSON.parse(savedLocalRecent);
+          if (Array.isArray(parsedLocal) && parsedLocal.length > 0) {
+            activeRecentList = parsedLocal;
+            renderRecentActivationUI();
+          }
+        }
+      } catch (e) {}
+
+      // Inisialisasi waktu awal yang aman dan diprioritaskan dari localStorage agar counter tidak melompat-lompat
+      function getOrInitBaseStartTime(dbTime) {
+        let localSaved = localStorage.getItem("ayaka_global_server_start_time");
+        if (localSaved && !isNaN(localSaved) && parseInt(localSaved) > 0) {
+          return parseInt(localSaved);
+        }
+
+        if (dbTime && !isNaN(dbTime) && parseInt(dbTime) > 0) {
+          localStorage.setItem("ayaka_global_server_start_time", dbTime);
+          return parseInt(dbTime);
+        }
+
+        const now = Date.now();
+        localStorage.setItem("ayaka_global_server_start_time", now);
+        return now;
+      }
+
+      // Set nilai awal uptime segera setelah DOM dimuat agar tidak menunggu respons async
+      globalServerStartTime = getOrInitBaseStartTime(null);
+
+      function renderStatsUI(total, daily, visitors) {
+        window.ayakaGlobalTotalGen = Math.max(window.ayakaGlobalTotalGen || 0, Number(total || 0));
+        window.ayakaGlobalDailyGen = Math.max(window.ayakaGlobalDailyGen || 0, Number(daily || 0));
+
+        // Simpan ke localStorage agar cache lokal selalu terjaga
         try {
-          window.supabaseClient
-            .channel('public:site_stats_realtime')
-            .on('postgres_changes', {
-              event: 'UPDATE',
-              schema: 'public',
-              table: 'site_stats',
-              filter: 'id=eq.1'
-            }, payload => {
-              if (payload && payload.new) {
-                applyStatsRow(payload.new);
-              }
-            })
-            .subscribe();
-        } catch (e) {
-          console.warn("Realtime listener fallback aktif:", e);
+          localStorage.setItem("ayaka_local_total_gen", window.ayakaGlobalTotalGen);
+          localStorage.setItem("ayaka_local_daily_gen", window.ayakaGlobalDailyGen);
+        } catch (e) {}
+
+        const totalGenEl = document.getElementById("totalGeneratedCounter");
+        const statSuksesEl = document.getElementById("statTotalSukses");
+        const globalTotalAktivasiEl = document.getElementById("globalTotalAktivasi");
+        const globalHariIniAktivasiEl = document.getElementById("globalHariIniAktivasi");
+        const visitorCounterEl = document.getElementById("totalVisitorsCounter");
+
+        const formattedTotal = window.ayakaGlobalTotalGen.toLocaleString("id-ID");
+        const formattedDaily = window.ayakaGlobalDailyGen.toLocaleString("id-ID");
+
+        if (totalGenEl) totalGenEl.textContent = formattedTotal;
+        if (statSuksesEl) statSuksesEl.textContent = formattedTotal;
+        if (globalTotalAktivasiEl) globalTotalAktivasiEl.textContent = formattedTotal;
+        if (globalHariIniAktivasiEl) globalHariIniAktivasiEl.textContent = formattedDaily;
+        if (visitorCounterEl && visitors !== undefined) {
+          visitorCounterEl.textContent = Number(visitors || 0).toLocaleString("id-ID");
         }
       }
 
-      // ============================================================
-      // UPTIME GLOBAL — PAKAI server_start_time DARI DATABASE
-      // ============================================================
+      // Perhitungan Uptime yang mulus dan kontinu
       function updateGlobalUptimeUI() {
+        if (!globalServerStartTime) {
+          globalServerStartTime = getOrInitBaseStartTime(null);
+        }
+
         const uptimeCounterEl = document.getElementById("serverUptimeCounter");
         const uptimeDaysEl = document.getElementById("uptimeDays");
         const uptimeHoursEl = document.getElementById("uptimeHours");
@@ -1999,45 +1575,55 @@
         const uptimeSecondsEl = document.getElementById("uptimeSeconds");
         const widgetUptimeVal = document.getElementById("widgetUptimeVal");
 
-        let startTime = window.ayakaStats.serverStartTime;
-        if (!startTime) startTime = Number(localStorage.getItem("ayaka_global_server_start_time") || Date.now());
+        const currentMillis = Date.now();
+        let diffSec = Math.floor((currentMillis - globalServerStartTime) / 1000);
+        if (diffSec < 0) diffSec = 0;
 
-        const diffSec = Math.max(0, Math.floor((Date.now() - startTime) / 1000));
         const hoursTotal = Math.floor(diffSec / 3600);
         const days = Math.floor(diffSec / (3600 * 24));
         const remSec = diffSec % (3600 * 24);
         const hours = Math.floor(remSec / 3600);
         const minutes = Math.floor((remSec % 3600) / 60);
-        const seconds = diffSec % 60;
 
-        const formattedSeconds = String(seconds).padStart(2, "0") + "s";
+        const formattedDays = days + "d";
+        const formattedHours = String(hours).padStart(2, "0") + "h";
+        const formattedMinutes = String(minutes).padStart(2, "0") + "m";
+        const formattedSeconds = String(diffSec % 60).padStart(2, "0") + "s";
 
         if (uptimeCounterEl) {
           uptimeCounterEl.textContent = `${days}d ${String(hours).padStart(2, "0")}h ${String(minutes).padStart(2, "0")}m ${formattedSeconds}`;
         }
-        if (uptimeDaysEl) uptimeDaysEl.textContent = days + "d";
-        if (uptimeHoursEl) uptimeHoursEl.textContent = String(hours).padStart(2, "0") + "h";
-        if (uptimeMinutesEl) uptimeMinutesEl.textContent = String(minutes).padStart(2, "0") + "m";
+        if (uptimeDaysEl) uptimeDaysEl.textContent = formattedDays;
+        if (uptimeHoursEl) uptimeHoursEl.textContent = formattedHours;
+        if (uptimeMinutesEl) uptimeMinutesEl.textContent = formattedMinutes;
         if (uptimeSecondsEl) uptimeSecondsEl.textContent = formattedSeconds;
-        if (widgetUptimeVal) widgetUptimeVal.textContent = `${hoursTotal}j...`;
-
-        const uptimeDaysCountEl = document.getElementById("uptimeDaysCount");
-        if (uptimeDaysCountEl) uptimeDaysCountEl.textContent = days;
+        
+        if (widgetUptimeVal) {
+          widgetUptimeVal.textContent = `${hoursTotal}j...`;
+        }
       }
 
+      // Langsung jalankan ticker uptime agar berjalan mulus sejak detik pertama
       if (!window.globalUptimeTicker) {
         updateGlobalUptimeUI();
         window.globalUptimeTicker = setInterval(updateGlobalUptimeUI, 1000);
       }
 
-      // ---- Widget Tanggal & Jam Live ----
+      // Widget Tanggal & Jam Live
       function updateLiveDateTimeWidget() {
         const dateEl = document.getElementById("widgetDateVal");
         const timeEl = document.getElementById("widgetTimeVal");
         const now = new Date();
 
         const daysShort = ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"];
-        if (dateEl) dateEl.textContent = `${daysShort[now.getDay()]}, ${now.getDate()}/${now.getMonth() + 1}`;
+        const dayStr = daysShort[now.getDay()];
+        const dateNum = now.getDate();
+        const monthNum = now.getMonth() + 1;
+
+        if (dateEl) {
+          dateEl.textContent = `${dayStr}, ${dateNum}/${monthNum}`;
+        }
+
         if (timeEl) {
           const hh = String(now.getHours()).padStart(2, "0");
           const mm = String(now.getMinutes()).padStart(2, "0");
@@ -2045,10 +1631,11 @@
           timeEl.textContent = `${hh}:${mm}:${ss}`;
         }
       }
+
       setInterval(updateLiveDateTimeWidget, 1000);
       updateLiveDateTimeWidget();
 
-      // ---- Battery API ----
+      // Battery API Reader
       function initDashboardBatteryStatus() {
         const batteryValEl = document.getElementById("widgetBatteryVal");
         const batteryIconEl = document.getElementById("widgetBatteryIcon");
@@ -2058,32 +1645,222 @@
             function updateAllBatteryInfo() {
               const level = Math.round(battery.level * 100);
               const isCharging = battery.charging;
+
               if (batteryValEl) batteryValEl.textContent = `${level}%`;
+
               if (batteryIconEl) {
-                if (isCharging) batteryIconEl.innerHTML = `<i class="fa-solid fa-battery-charging" style="color:#15803d;"></i>`;
-                else if (level <= 20) batteryIconEl.innerHTML = `<i class="fa-solid fa-battery-quarter" style="color:#dc2626;"></i>`;
-                else if (level <= 70) batteryIconEl.innerHTML = `<i class="fa-solid fa-battery-half"></i>`;
-                else batteryIconEl.innerHTML = `<i class="fa-solid fa-battery-full" style="color:#16a34a;"></i>`;
+                if (isCharging) {
+                  batteryIconEl.innerHTML = `<i class="fa-solid fa-battery-charging" style="color:#15803d;"></i>`;
+                } else if (level <= 20) {
+                  batteryIconEl.innerHTML = `<i class="fa-solid fa-battery-quarter" style="color:#dc2626;"></i>`;
+                } else if (level <= 70) {
+                  batteryIconEl.innerHTML = `<i class="fa-solid fa-battery-half"></i>`;
+                } else {
+                  batteryIconEl.innerHTML = `<i class="fa-solid fa-battery-full" style="color:#16a34a;"></i>`;
+                }
               }
             }
+
             updateAllBatteryInfo();
             battery.addEventListener('levelchange', updateAllBatteryInfo);
             battery.addEventListener('chargingchange', updateAllBatteryInfo);
-          }).catch(() => { if (batteryValEl) batteryValEl.textContent = "N/A"; });
+          }).catch(err => {
+            if (batteryValEl) batteryValEl.textContent = "N/A";
+          });
         } else {
           if (batteryValEl) batteryValEl.textContent = "N/A";
         }
       }
+
       initDashboardBatteryStatus();
 
-      // ============================================================
-      // HUBUNGKAN TOMBOL-Tombol AKTIVASI KE ENGINE GLOBAL
-      // ============================================================
+      // MENGAMBIL & MENAMBAHKAN PENGUNJUNG BARU DENGAN IDENTITAS PERANGKAT LOKAL
+      async function fetchAndUpdateStats() {
+        try {
+          if (typeof window.supabaseClient !== 'undefined' && window.supabaseClient) {
+            const visitorBadgeLabel = document.getElementById("visitorBadgeLabel");
+            
+            const visitorKey = "ayaka_global_visitor_id";
+            const isNewDeviceVisitor = !localStorage.getItem(visitorKey);
+
+            let { data: statsData, error } = await window.supabaseClient
+              .from('site_stats')
+              .select('visitors, total_generated, daily_generated, last_reset_date, server_start_time, recent_activations')
+              .eq('id', 1)
+              .single();
+
+            if (statsData) {
+              let currentVisitors = statsData.visitors || 0;
+              let dbTotal = statsData.total_generated || 0;
+              let dbDaily = statsData.daily_generated || 0;
+              let lastResetDate = statsData.last_reset_date || '';
+
+              // Sinkronkan data riwayat aktivitas live dari database jika tersedia
+              if (statsData.recent_activations && Array.isArray(statsData.recent_activations) && statsData.recent_activations.length > 0) {
+                activeRecentList = statsData.recent_activations;
+                try {
+                  localStorage.setItem("ayaka_saved_recent_activations", JSON.stringify(activeRecentList));
+                } catch (e) {}
+                renderRecentActivationUI();
+              }
+
+              // Set base start time jika database menyediakan dan belum tersimpan secara lokal
+              if (statsData.server_start_time && !localStorage.getItem("ayaka_global_server_start_time")) {
+                globalServerStartTime = getOrInitBaseStartTime(statsData.server_start_time);
+              } else if (!statsData.server_start_time && globalServerStartTime) {
+                await window.supabaseClient
+                  .from('site_stats')
+                  .update({ server_start_time: globalServerStartTime })
+                  .eq('id', 1);
+              }
+
+              const todayStr = new Date().toISOString().split('T')[0];
+              if (lastResetDate !== todayStr) {
+                dbDaily = 0;
+                await window.supabaseClient
+                  .from('site_stats')
+                  .update({ daily_generated: 0, last_reset_date: todayStr })
+                  .eq('id', 1);
+              }
+
+              if (isNewDeviceVisitor) {
+                localStorage.setItem(visitorKey, "v_" + Date.now() + "_" + Math.random().toString(36).substring(2, 7));
+                currentVisitors += 1;
+                await window.supabaseClient
+                  .from('site_stats')
+                  .update({ visitors: currentVisitors })
+                  .eq('id', 1);
+              }
+
+              if (visitorBadgeLabel) visitorBadgeLabel.textContent = "Live Online";
+
+              // Ambil nilai tertinggi antara lokal dan database agar tidak pernah kembali jadi 0
+              const finalTotal = Math.max(dbTotal, window.ayakaGlobalTotalGen || 0);
+              const finalDaily = Math.max(dbDaily, window.ayakaGlobalDailyGen || 0);
+
+              renderStatsUI(finalTotal, finalDaily, currentVisitors);
+            }
+          }
+        } catch (err) {
+          console.warn("Gagal sinkronisasi data Supabase:", err);
+          // Fallback menggunakan cache lokal agar counter tetap tampil normal walau offline
+          renderStatsUI(window.ayakaGlobalTotalGen, window.ayakaGlobalDailyGen, 1);
+        }
+      }
+
+      await fetchAndUpdateStats();
+      setInterval(fetchAndUpdateStats, 5000);
+
+      // REALTIME LISTENER SUPABASE
+      if (typeof window.supabaseClient !== 'undefined' && window.supabaseClient) {
+        try {
+          window.supabaseClient
+            .channel('public:site_stats_realtime')
+            .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'site_stats', filter: 'id=eq.1' }, payload => {
+              if (payload && payload.new) {
+                const newTotal = payload.new.total_generated || 0;
+                const newDaily = payload.new.daily_generated || 0;
+                const newVisitors = payload.new.visitors || 0;
+                if (payload.new.recent_activations && Array.isArray(payload.new.recent_activations) && payload.new.recent_activations.length > 0) {
+                  activeRecentList = payload.new.recent_activations;
+                  try {
+                    localStorage.setItem("ayaka_saved_recent_activations", JSON.stringify(activeRecentList));
+                  } catch (e) {}
+                  renderRecentActivationUI();
+                }
+                renderStatsUI(newTotal, newDaily, newVisitors);
+              }
+            })
+            .subscribe();
+        } catch (e) {
+          console.warn("Realtime listener active fallback", e);
+        }
+      }
+
+      // FUNGSI UTAMA PENAMBAH AKTIVASI GLOBAL SINKRONISASI SUPABASE & LOCALSTORAGE
+      window.incrementAyakaActivationStats = async function(incrementCount = 1, userEmail = "", planName = "AM Premium Annual 1 Year") {
+        try {
+          if (!userEmail) {
+            userEmail = document.getElementById("emailInput")?.value || document.getElementById("emailInputV2")?.value || "ayaka_user@gmail.com";
+          }
+
+          // Tambah ke live recent activation dan simpan
+          await window.addLiveRecentActivation(userEmail, planName);
+
+          window.ayakaGlobalTotalGen = (window.ayakaGlobalTotalGen || 0) + incrementCount;
+          window.ayakaGlobalDailyGen = (window.ayakaGlobalDailyGen || 0) + incrementCount;
+
+          renderStatsUI(window.ayakaGlobalTotalGen, window.ayakaGlobalDailyGen);
+
+          if (typeof window.supabaseClient !== 'undefined' && window.supabaseClient) {
+            const todayStr = new Date().toISOString().split('T')[0];
+
+            let { data: statsData } = await window.supabaseClient
+              .from('site_stats')
+              .select('total_generated, daily_generated, last_reset_date, recent_activations')
+              .eq('id', 1)
+              .single();
+
+            let targetTotal = window.ayakaGlobalTotalGen;
+            let targetDaily = window.ayakaGlobalDailyGen;
+
+            if (statsData) {
+              if (statsData.last_reset_date === todayStr) {
+                targetDaily = Math.max(statsData.daily_generated || 0, window.ayakaGlobalDailyGen);
+              }
+              targetTotal = Math.max(statsData.total_generated || 0, window.ayakaGlobalTotalGen);
+            }
+
+            window.ayakaGlobalTotalGen = targetTotal;
+            window.ayakaGlobalDailyGen = targetDaily;
+            renderStatsUI(targetTotal, targetDaily);
+
+            await window.supabaseClient
+              .from('site_stats')
+              .update({ 
+                total_generated: targetTotal, 
+                daily_generated: targetDaily,
+                last_reset_date: todayStr,
+                recent_activations: activeRecentList
+              })
+              .eq('id', 1);
+          }
+        } catch (err) {
+          console.warn("Gagal memperbarui increment aktivasi:", err);
+        }
+      };
+
+      // MENCEGAH NILAI COUNTER BERKURANG / RESET KE ANGKA NOL
+      setInterval(() => {
+        if (window.ayakaGlobalTotalGen > 0) {
+          const el1 = document.getElementById("globalTotalAktivasi");
+          const el2 = document.getElementById("globalHariIniAktivasi");
+          const el3 = document.getElementById("totalGeneratedCounter");
+          const el4 = document.getElementById("statTotalSukses");
+
+          if (el1 && (parseInt(el1.textContent.replace(/\D/g, '')) || 0) < window.ayakaGlobalTotalGen) {
+            el1.textContent = window.ayakaGlobalTotalGen.toLocaleString("id-ID");
+          }
+          if (el2 && (parseInt(el2.textContent.replace(/\D/g, '')) || 0) < window.ayakaGlobalDailyGen) {
+            el2.textContent = window.ayakaGlobalDailyGen.toLocaleString("id-ID");
+          }
+          if (el3 && (parseInt(el3.textContent.replace(/\D/g, '')) || 0) < window.ayakaGlobalTotalGen) {
+            el3.textContent = window.ayakaGlobalTotalGen.toLocaleString("id-ID");
+          }
+          if (el4 && (parseInt(el4.textContent.replace(/\D/g, '')) || 0) < window.ayakaGlobalTotalGen) {
+            el4.textContent = window.ayakaGlobalTotalGen.toLocaleString("id-ID");
+          }
+        }
+      }, 300);
+
+      // HUBUNGKAN TOMBOL-TOMBOL AKTIVASI DENGAN FUNGSI SINKRONISASI DATABASE
       const proceedStep3Btn = document.getElementById("proceedToStep3Btn");
       if (proceedStep3Btn) {
         proceedStep3Btn.addEventListener("click", () => {
           const emailVal = document.getElementById("emailInput")?.value || "";
-          window.incrementAyakaActivationStats(1, emailVal, "AM Premium Annual 1 Year");
+          if (typeof window.incrementAyakaActivationStats === 'function') {
+            window.incrementAyakaActivationStats(1, emailVal, "AM Premium Annual 1 Year");
+          }
         });
       }
 
@@ -2093,29 +1870,30 @@
           const emailValV2 = document.getElementById("emailInputV2")?.value || "";
           const sel = document.getElementById("v2ProductSelect");
           const planText = sel ? sel.options[sel.selectedIndex].text : "AM Premium V2";
-          window.incrementAyakaActivationStats(1, emailValV2, planText);
+          if (typeof window.incrementAyakaActivationStats === 'function') {
+            window.incrementAyakaActivationStats(1, emailValV2, planText);
+          }
         });
       }
 
       const startBulkBtn = document.getElementById("startBulkBtn");
       if (startBulkBtn) {
-        startBulkBtn.addEventListener("click", async () => {
+        startBulkBtn.addEventListener("click", () => {
           const textarea = document.getElementById("bulkDataInput");
-          if (!textarea || textarea.value.trim() === "") return;
-
-          const lines = textarea.value.trim().split("\n").filter(l => l.trim().length > 0);
-          if (lines.length === 0) return;
-
-          for (const line of lines) {
-            const parts = line.split(/[|,]/);
-            const em = parts[0] ? parts[0].trim() : "";
-            if (em) await window.addLiveRecentActivation(em, "AM Premium Bulk");
+          if (textarea && textarea.value.trim() !== "") {
+            const lines = textarea.value.trim().split("\n").filter(l => l.trim().length > 0);
+            if (lines.length > 0 && typeof window.incrementAyakaActivationStats === 'function') {
+              lines.forEach((line) => {
+                const parts = line.split(/[|,]/);
+                const em = parts[0] ? parts[0].trim() : "";
+                window.incrementAyakaActivationStats(1, em, "AM Premium Bulk");
+              });
+            }
           }
-
-          window.incrementAyakaActivationStats(lines.length, "", "AM Premium Bulk", true);
         });
       }
 
+      // Reset Form V1
       const resetV1Btn = document.getElementById("resetAmFormV1Btn");
       if (resetV1Btn) {
         resetV1Btn.addEventListener("click", () => {
@@ -2123,13 +1901,18 @@
           const magicInput = document.getElementById("magicInput");
           if (emailInput) emailInput.value = "";
           if (magicInput) magicInput.value = "";
+
           document.querySelectorAll("#view-am-generator .am-step-card").forEach(el => el.classList.remove("active"));
           document.querySelectorAll("#view-am-generator .am-step-content-panel").forEach(el => el.classList.remove("active"));
-          document.getElementById("amStepTab1")?.classList.add("active");
-          document.getElementById("amPanel1")?.classList.add("active");
+
+          const tab1 = document.getElementById("amStepTab1");
+          const panel1 = document.getElementById("amPanel1");
+          if (tab1) tab1.classList.add("active");
+          if (panel1) panel1.classList.add("active");
         });
       }
 
+      // Reset Form V2
       const resetV2Btn = document.getElementById("resetAmFormV2Btn");
       if (resetV2Btn) {
         resetV2Btn.addEventListener("click", () => {
@@ -2139,10 +1922,14 @@
           if (emailInputV2) emailInputV2.value = "";
           if (magicInputV2) magicInputV2.value = "";
           if (prefixInputV2) prefixInputV2.value = "GPA";
+
           document.querySelectorAll("#view-am-generator-v2 .am-step-card").forEach(el => el.classList.remove("active"));
           document.querySelectorAll("#view-am-generator-v2 .am-step-content-panel").forEach(el => el.classList.remove("active"));
-          document.getElementById("amV2StepTab1")?.classList.add("active");
-          document.getElementById("amV2Panel1")?.classList.add("active");
+
+          const tabV2_1 = document.getElementById("amV2StepTab1");
+          const panelV2_1 = document.getElementById("amV2Panel1");
+          if (tabV2_1) tabV2_1.classList.add("active");
+          if (panelV2_1) panelV2_1.classList.add("active");
         });
       }
     });
