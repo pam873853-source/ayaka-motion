@@ -13,35 +13,17 @@
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-  <!-- ============================================================
-       LIBRARY ASTRONOMI REAL-TIME (SunCalc)
-       Menghitung posisi Matahari & Bulan + Fase Bulan sesungguhnya
-       ============================================================ -->
   <script src="https://cdn.jsdelivr.net/npm/suncalc@1.9.0/suncalc.min.js"></script>
 
-  <!-- ============================================================
-       KONFIGURASI SUPABASE GLOBAL (Next.js-style Environment)
-       ============================================================ -->
   <script>
-    // ---- Environment Variables (setara .env / Next.js NEXT_PUBLIC_*) ----
     window.NEXT_PUBLIC_SUPABASE_URL = 'https://jbzykcuhpfkrgnimjtxx.supabase.co';
     window.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_Usw8tFE0HQyAJo7NyvIvTA_fHfXGGZ-';
 
-    // ---- Kredensial Global (untuk kompatibilitas modul script lain) ----
     const SUPABASE_URL = window.NEXT_PUBLIC_SUPABASE_URL;
     const SUPABASE_PUBLISHABLE_KEY = window.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
     window.SUPABASE_URL = SUPABASE_URL;
     window.SUPABASE_PUBLISHABLE_KEY = SUPABASE_PUBLISHABLE_KEY;
 
-    // ================================================================
-    // import { createClient } from '@supabase/supabase-js'
-    // export const supabase = createClient(
-    //   process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    //   process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!
-    // )
-    // (Diadaptasi ke browser via CDN window.supabase.createClient)
-    // ================================================================
     if (window.supabase && typeof window.supabase.createClient === 'function') {
       window.supabaseClient = window.supabase.createClient(
         window.NEXT_PUBLIC_SUPABASE_URL,
@@ -55,7 +37,6 @@
 
   <link rel="stylesheet" href="style.css">
   <style>
-    /* Styling khusus untuk merapatkan angka System Uptime */
     .uptime-digits-row {
       display: flex;
       gap: 6px !important;
@@ -72,8 +53,6 @@
       border-radius: 6px;
       white-space: nowrap;
     }
-
-    /* Penyesuaian Kotak Total Aktivasi & Hari Ini */
     .custom-stats-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 240px));
@@ -108,9 +87,7 @@
       transform: translateY(-2px);
       box-shadow: 6px 6px 0px #000000;
     }
-    .custom-stat-square-box.yellow-box {
-      background: #ffeb3b;
-    }
+    .custom-stat-square-box.yellow-box { background: #ffeb3b; }
     .custom-stat-header-row {
       display: flex;
       justify-content: space-between;
@@ -124,14 +101,8 @@
       letter-spacing: 1px;
       color: #333333;
     }
-    .custom-stat-icon-elem {
-      font-size: 24px;
-      color: #b0b0b0;
-    }
-    .yellow-box .custom-stat-icon-elem {
-      color: #795548;
-      opacity: 0.85;
-    }
+    .custom-stat-icon-elem { font-size: 24px; color: #b0b0b0; }
+    .yellow-box .custom-stat-icon-elem { color: #795548; opacity: 0.85; }
     .custom-stat-number-val {
       font-family: 'Space Grotesk', sans-serif;
       font-size: 34px;
@@ -139,8 +110,6 @@
       color: #000000;
       line-height: 1;
     }
-
-    /* KOTAK WIDGET MINIMALIS PRESISI */
     .widget-info-row {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -149,14 +118,12 @@
       width: 100%;
       max-width: 720px;
     }
-
     @media (max-width: 640px) {
       .widget-info-row {
         grid-template-columns: repeat(2, 1fr);
         gap: 10px;
       }
     }
-
     .widget-mini-card {
       border: 3px solid #000000;
       border-radius: 16px;
@@ -169,31 +136,11 @@
       box-sizing: border-box;
       transition: transform 0.15s ease;
     }
-
-    .widget-mini-card:hover {
-      transform: translateY(-2px);
-    }
-
-    .widget-mini-card.bg-white {
-      background-color: #ffffff;
-      color: #111111;
-    }
-
-    .widget-mini-card.bg-yellow {
-      background-color: #fde047;
-      color: #111111;
-    }
-
-    .widget-mini-card.bg-green {
-      background-color: #a3e635;
-      color: #111111;
-    }
-
-    .widget-mini-card.bg-blue {
-      background-color: #bae6fd;
-      color: #111111;
-    }
-
+    .widget-mini-card:hover { transform: translateY(-2px); }
+    .widget-mini-card.bg-white { background-color: #ffffff; color: #111111; }
+    .widget-mini-card.bg-yellow { background-color: #fde047; color: #111111; }
+    .widget-mini-card.bg-green { background-color: #a3e635; color: #111111; }
+    .widget-mini-card.bg-blue { background-color: #bae6fd; color: #111111; }
     .widget-header-text {
       font-family: 'Space Grotesk', sans-serif;
       font-size: 11px;
@@ -203,13 +150,7 @@
       text-transform: uppercase;
       margin-bottom: 2px;
     }
-
-    .widget-body-content {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
+    .widget-body-content { display: flex; align-items: center; gap: 8px; }
     .widget-icon {
       font-size: 20px;
       color: #374151;
@@ -218,7 +159,6 @@
       justify-content: center;
       width: 24px;
     }
-
     .widget-value-text {
       font-family: 'Space Grotesk', sans-serif;
       font-size: 15px;
@@ -228,8 +168,6 @@
       overflow: hidden;
       text-overflow: ellipsis;
     }
-
-    /* STYLING UNTUK BOTTOM NAVIGATION BAR */
     .bottom-nav-container {
       position: fixed;
       bottom: 20px;
@@ -247,7 +185,6 @@
       z-index: 9999;
       backdrop-filter: blur(12px);
     }
-
     .bottom-nav-item {
       display: flex;
       flex-direction: column;
@@ -263,41 +200,21 @@
       max-width: 110px;
       user-select: none;
     }
-
-    .bottom-nav-item i {
-      font-size: 22px;
-      margin-bottom: 4px;
-      transition: transform 0.2s ease;
-    }
-
+    .bottom-nav-item i { font-size: 22px; margin-bottom: 4px; transition: transform 0.2s ease; }
     .bottom-nav-item span {
       font-family: 'Plus Jakarta Sans', sans-serif;
       font-size: 13px;
       font-weight: 800;
       letter-spacing: -0.2px;
     }
-
     .bottom-nav-item.active {
       background: #000000;
       color: #ffffff !important;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
-
-    .bottom-nav-item.active i {
-      color: #ffffff !important;
-      transform: scale(1.05);
-    }
-
-    .bottom-nav-item:hover:not(.active) {
-      background: rgba(0, 0, 0, 0.05);
-      color: #000000;
-    }
-
-    .content-container {
-      padding-bottom: 110px !important;
-    }
-
-    /* KOTAK DONASI TANPA PRATINJAU QR CODE */
+    .bottom-nav-item.active i { color: #ffffff !important; transform: scale(1.05); }
+    .bottom-nav-item:hover:not(.active) { background: rgba(0, 0, 0, 0.05); color: #000000; }
+    .content-container { padding-bottom: 110px !important; }
     .donation-square-card {
       background: #ffffff;
       border: 3px solid #000000;
@@ -312,19 +229,11 @@
       position: relative;
       transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
-
-    .donation-square-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 8px 8px 0px #000000;
-    }
-
-    /* POPUP MODAL QR CODE DONASI */
+    .donation-square-card:hover { transform: translateY(-2px); box-shadow: 8px 8px 0px #000000; }
     .qr-modal-overlay {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
       background: rgba(0, 0, 0, 0.75);
       backdrop-filter: blur(8px);
       display: flex;
@@ -337,12 +246,7 @@
       padding: 16px;
       box-sizing: border-box;
     }
-
-    .qr-modal-overlay.active {
-      opacity: 1;
-      visibility: visible;
-    }
-
+    .qr-modal-overlay.active { opacity: 1; visibility: visible; }
     .qr-modal-card {
       background: #fffbdf;
       border: 3.5px solid #000000;
@@ -357,11 +261,7 @@
       transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
       box-sizing: border-box;
     }
-
-    .qr-modal-overlay.active .qr-modal-card {
-      transform: scale(1);
-    }
-
+    .qr-modal-overlay.active .qr-modal-card { transform: scale(1); }
     .qr-modal-close-btn {
       position: absolute;
       top: 12px;
@@ -378,11 +278,7 @@
       font-size: 14px;
       transition: transform 0.15s ease;
     }
-
-    .qr-modal-close-btn:hover {
-      transform: scale(1.1);
-    }
-
+    .qr-modal-close-btn:hover { transform: scale(1.1); }
     .qr-code-modal-img {
       max-width: 220px;
       width: 100%;
@@ -394,8 +290,6 @@
       margin: 12px 0;
       box-shadow: 3px 3px 0px #000000;
     }
-
-    /* STYLING PEMUTAR VIDEO TUTORIAL */
     .tutorial-video-card {
       background: var(--card-inner);
       border: 1px solid var(--border-color);
@@ -434,8 +328,6 @@
       transform: translateZ(0);
       background: #000000;
     }
-
-    /* STYLING LIVE RECENT ACTIVATION */
     .recent-act-badge {
       display: inline-flex;
       align-items: center;
@@ -476,15 +368,8 @@
       from { opacity: 0; transform: translateY(-8px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    .recent-act-item:hover {
-      border-color: #f472b6;
-      background: rgba(244, 114, 182, 0.05);
-    }
-    .recent-act-user {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
+    .recent-act-item:hover { border-color: #f472b6; background: rgba(244, 114, 182, 0.05); }
+    .recent-act-user { display: flex; align-items: center; gap: 12px; }
     .recent-act-avatar {
       width: 38px;
       height: 38px;
@@ -498,20 +383,14 @@
       font-size: 14px;
       box-shadow: 0 2px 8px rgba(236, 72, 153, 0.3);
     }
-    .recent-act-info-text {
-      display: flex;
-      flex-direction: column;
-    }
+    .recent-act-info-text { display: flex; flex-direction: column; }
     .recent-act-email {
       font-weight: 700;
       font-size: 13px;
       color: #ffffff;
       font-family: 'Space Grotesk', sans-serif;
     }
-    .recent-act-plan {
-      font-size: 11px;
-      color: var(--text-muted);
-    }
+    .recent-act-plan { font-size: 11px; color: var(--text-muted); }
     .recent-act-time {
       font-size: 11px;
       font-weight: 600;
@@ -521,11 +400,6 @@
       border-radius: 8px;
       border: 1px solid rgba(16, 185, 129, 0.2);
     }
-
-    /* ============================================================
-       ANIMASI LANGIT REAL-TIME ASTRONOMIS (PAGI / SIANG / SORE / MALAM)
-       Menghitung posisi & fase Matahari/Bulan yang sesungguhnya
-       ============================================================ */
     .realtime-sky-bar {
       position: relative;
       width: 100%;
@@ -538,26 +412,11 @@
       transition: background 3s ease-in-out;
       isolation: isolate;
     }
-
-    /* Default: siang */
-    .realtime-sky-bar {
-      background: linear-gradient(180deg, #4facfe 0%, #a1c4fd 60%, #e0f2ff 100%);
-    }
-
-    .realtime-sky-bar.theme-morning {
-      background: linear-gradient(180deg, #ff9a8b 0%, #ffb47d 35%, #ffd89b 65%, #ffefd5 100%);
-    }
-    .realtime-sky-bar.theme-day {
-      background: linear-gradient(180deg, #4facfe 0%, #a1c4fd 60%, #e0f2ff 100%);
-    }
-    .realtime-sky-bar.theme-evening {
-      background: linear-gradient(180deg, #2c1e57 0%, #8a4d8e 35%, #ff7b54 70%, #ffb26b 100%);
-    }
-    .realtime-sky-bar.theme-night {
-      background: linear-gradient(180deg, #0b1026 0%, #14203f 40%, #1e2f57 70%, #2a4168 100%);
-    }
-
-    /* Label Indikator Waktu (MALAM/SIANG dll - tetap di dalam kotak) */
+    .realtime-sky-bar { background: linear-gradient(180deg, #4facfe 0%, #a1c4fd 60%, #e0f2ff 100%); }
+    .realtime-sky-bar.theme-morning { background: linear-gradient(180deg, #ff9a8b 0%, #ffb47d 35%, #ffd89b 65%, #ffefd5 100%); }
+    .realtime-sky-bar.theme-day { background: linear-gradient(180deg, #4facfe 0%, #a1c4fd 60%, #e0f2ff 100%); }
+    .realtime-sky-bar.theme-evening { background: linear-gradient(180deg, #2c1e57 0%, #8a4d8e 35%, #ff7b54 70%, #ffb26b 100%); }
+    .realtime-sky-bar.theme-night { background: linear-gradient(180deg, #0b1026 0%, #14203f 40%, #1e2f57 70%, #2a4168 100%); }
     .sky-time-label {
       position: absolute;
       top: 10px;
@@ -579,13 +438,7 @@
       transition: all 0.6s ease;
       text-transform: uppercase;
     }
-    .sky-time-label i {
-      font-size: 13px;
-    }
-
-    /* ============================================================
-       KOTAK INFO DI BAWAH ANIMASI (Lokasi + Fase Bulan)
-       ============================================================ */
+    .sky-time-label i { font-size: 13px; }
     .sky-info-row {
       display: flex;
       justify-content: space-between;
@@ -600,7 +453,6 @@
       font-family: 'Space Grotesk', sans-serif;
       flex-wrap: wrap;
     }
-
     .sky-loc-label {
       display: flex;
       align-items: center;
@@ -612,12 +464,7 @@
       text-transform: uppercase;
       white-space: nowrap;
     }
-
-    .sky-loc-label i {
-      color: #ec4899;
-      font-size: 13px;
-    }
-
+    .sky-loc-label i { color: #ec4899; font-size: 13px; }
     .sky-phase-label {
       display: flex;
       align-items: center;
@@ -633,29 +480,23 @@
       border: 1.5px solid #000000;
       white-space: nowrap;
     }
-
-    /* MATAHARI */
     .sky-sun {
       position: absolute;
       width: 42px;
       height: 42px;
       border-radius: 50%;
       background: radial-gradient(circle at 35% 35%, #fff8b0 0%, #ffd93d 45%, #ff9500 100%);
-      box-shadow: 0 0 30px 12px rgba(255, 217, 61, 0.75),
-                  0 0 60px 20px rgba(255, 149, 0, 0.35);
+      box-shadow: 0 0 30px 12px rgba(255, 217, 61, 0.75), 0 0 60px 20px rgba(255, 149, 0, 0.35);
       z-index: 5;
       transform: translate(-50%, -50%);
       transition: left 4.5s linear, top 4.5s linear, opacity 2s ease;
       animation: sunPulse 4s ease-in-out infinite;
       pointer-events: none;
     }
-
     @keyframes sunPulse {
       0%, 100% { box-shadow: 0 0 30px 12px rgba(255, 217, 61, 0.75), 0 0 60px 20px rgba(255, 149, 0, 0.35); }
       50%      { box-shadow: 0 0 40px 16px rgba(255, 217, 61, 0.9), 0 0 80px 26px rgba(255, 149, 0, 0.45); }
     }
-
-    /* BULAN - menampilkan fase sesungguhnya via SVG */
     .sky-moon {
       position: absolute;
       width: 46px;
@@ -663,18 +504,10 @@
       z-index: 5;
       transform: translate(-50%, -50%);
       transition: left 4.5s linear, top 4.5s linear, opacity 2s ease;
-      filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.65))
-              drop-shadow(0 0 16px rgba(180, 200, 255, 0.45));
+      filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.65)) drop-shadow(0 0 16px rgba(180, 200, 255, 0.45));
       pointer-events: none;
     }
-
-    .sky-moon svg {
-      width: 100%;
-      height: 100%;
-      display: block;
-    }
-
-    /* BINTANG - HANYA TAMPIL DI MALAM */
+    .sky-moon svg { width: 100%; height: 100%; display: block; }
     .sky-stars {
       position: absolute;
       inset: 0;
@@ -683,24 +516,17 @@
       transition: opacity 2s ease-in-out;
       pointer-events: none;
     }
-
-    .sky-stars.active {
-      opacity: 1;
-    }
-
+    .sky-stars.active { opacity: 1; }
     .sky-star {
       position: absolute;
       background: #ffffff;
       border-radius: 50%;
       animation: twinkle 2.4s ease-in-out infinite;
     }
-
     @keyframes twinkle {
       0%, 100% { opacity: 0.25; transform: scale(0.8); }
       50%      { opacity: 1;    transform: scale(1.15); }
     }
-
-    /* AWAN */
     .sky-cloud {
       position: absolute;
       background: rgba(255, 255, 255, 0.92);
@@ -709,7 +535,6 @@
       z-index: 4;
       transition: opacity 1.5s ease-in-out;
     }
-
     .sky-cloud::before,
     .sky-cloud::after {
       content: "";
@@ -717,63 +542,21 @@
       background: inherit;
       border-radius: 50%;
     }
-
-    .sky-cloud.cloud-1 {
-      width: 50px; height: 22px;
-      top: 30px; left: -80px;
-      animation: cloudDrift1 28s linear infinite;
-    }
-    .sky-cloud.cloud-1::before {
-      width: 28px; height: 28px; top: -12px; left: 8px;
-    }
-    .sky-cloud.cloud-1::after {
-      width: 22px; height: 22px; top: -8px; left: 26px;
-    }
-
-    .sky-cloud.cloud-2 {
-      width: 70px; height: 26px;
-      top: 62px; left: -120px;
-      animation: cloudDrift2 38s linear infinite;
-      opacity: 0.78;
-    }
-    .sky-cloud.cloud-2::before {
-      width: 36px; height: 36px; top: -18px; left: 12px;
-    }
-    .sky-cloud.cloud-2::after {
-      width: 26px; height: 26px; top: -12px; left: 40px;
-    }
-
-    .sky-cloud.cloud-3 {
-      width: 42px; height: 20px;
-      top: 15px; left: -100px;
-      animation: cloudDrift3 45s linear infinite;
-      opacity: 0.7;
-    }
-    .sky-cloud.cloud-3::before {
-      width: 24px; height: 24px; top: -11px; left: 8px;
-    }
-    .sky-cloud.cloud-3::after {
-      width: 20px; height: 20px; top: -7px; left: 22px;
-    }
-
-    @keyframes cloudDrift1 {
-      0%   { transform: translateX(0); }
-      100% { transform: translateX(calc(100vw + 200px)); }
-    }
-    @keyframes cloudDrift2 {
-      0%   { transform: translateX(0); }
-      100% { transform: translateX(calc(100vw + 260px)); }
-    }
-    @keyframes cloudDrift3 {
-      0%   { transform: translateX(0); }
-      100% { transform: translateX(calc(100vw + 220px)); }
-    }
-
-    /* GUNUNG / HORIZON SILUET - DIPERKECIL (hanya 18px) */
+    .sky-cloud.cloud-1 { width: 50px; height: 22px; top: 30px; left: -80px; animation: cloudDrift1 28s linear infinite; }
+    .sky-cloud.cloud-1::before { width: 28px; height: 28px; top: -12px; left: 8px; }
+    .sky-cloud.cloud-1::after { width: 22px; height: 22px; top: -8px; left: 26px; }
+    .sky-cloud.cloud-2 { width: 70px; height: 26px; top: 62px; left: -120px; animation: cloudDrift2 38s linear infinite; opacity: 0.78; }
+    .sky-cloud.cloud-2::before { width: 36px; height: 36px; top: -18px; left: 12px; }
+    .sky-cloud.cloud-2::after { width: 26px; height: 26px; top: -12px; left: 40px; }
+    .sky-cloud.cloud-3 { width: 42px; height: 20px; top: 15px; left: -100px; animation: cloudDrift3 45s linear infinite; opacity: 0.7; }
+    .sky-cloud.cloud-3::before { width: 24px; height: 24px; top: -11px; left: 8px; }
+    .sky-cloud.cloud-3::after { width: 20px; height: 20px; top: -7px; left: 22px; }
+    @keyframes cloudDrift1 { 0% { transform: translateX(0); } 100% { transform: translateX(calc(100vw + 200px)); } }
+    @keyframes cloudDrift2 { 0% { transform: translateX(0); } 100% { transform: translateX(calc(100vw + 260px)); } }
+    @keyframes cloudDrift3 { 0% { transform: translateX(0); } 100% { transform: translateX(calc(100vw + 220px)); } }
     .sky-horizon {
       position: absolute;
-      bottom: 0;
-      left: 0;
+      bottom: 0; left: 0;
       width: 100%;
       height: 18px;
       z-index: 6;
@@ -781,7 +564,6 @@
       pointer-events: none;
       opacity: 0.85;
     }
-
     .sky-horizon::before,
     .sky-horizon::after {
       content: "";
@@ -789,35 +571,25 @@
       bottom: 0;
       background: inherit;
     }
-
     .sky-horizon::before {
-      width: 55%;
-      height: 100%;
-      left: -4%;
+      width: 55%; height: 100%; left: -4%;
       clip-path: polygon(0 100%, 22% 42%, 40% 68%, 60% 25%, 80% 55%, 100% 100%);
     }
-
     .sky-horizon::after {
-      width: 60%;
-      height: 100%;
-      right: -4%;
+      width: 60%; height: 100%; right: -4%;
       clip-path: polygon(0 100%, 18% 60%, 34% 32%, 52% 55%, 70% 38%, 88% 60%, 100% 100%);
     }
-
     .theme-morning .sky-horizon { background: #b5714b; }
     .theme-day     .sky-horizon { background: #4f7d54; }
     .theme-evening .sky-horizon { background: #3b1e42; }
     .theme-night   .sky-horizon { background: #131c33; }
-
     .theme-night .sky-time-label {
       background: rgba(255, 255, 255, 0.14);
       border-color: rgba(180, 210, 255, 0.5);
       color: #dbeafe;
     }
-
     .theme-night .sky-cloud { opacity: 0.15 !important; }
     .theme-evening .sky-cloud { opacity: 0.55; }
-
     @media (max-width: 600px) {
       .realtime-sky-bar { height: 125px; border-radius: 14px; }
       .sky-sun, .sky-moon { width: 34px; height: 34px; }
@@ -901,18 +673,9 @@
   <div class="main-wrapper">
     <div class="content-container">
 
-      <!-- ============================================================
-           BAR ATAS - ANIMASI LANGIT REAL-TIME ASTRONOMIS
-           (Full animation, tanpa strip hitam di dalam kotak)
-           ============================================================ -->
       <div class="realtime-sky-bar" id="realtimeSkyBar">
-        <!-- Bintang (hanya muncul saat malam) -->
         <div class="sky-stars" id="skyStars"></div>
-
-        <!-- Matahari -->
         <div class="sky-sun" id="skySun" style="left: 12%; top: 25%;"></div>
-
-        <!-- Bulan dengan SVG untuk menampilkan fase sesungguhnya -->
         <div class="sky-moon" id="skyMoon" style="left: 15%; top: 22%; opacity: 0;">
           <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
             <defs>
@@ -922,34 +685,24 @@
                 <stop offset="100%" stop-color="#a9b7d0"/>
               </radialGradient>
             </defs>
-            <!-- Disk gelap (bagian bulan yang tidak terkena cahaya) -->
             <circle cx="50" cy="50" r="45" fill="#1c2740" opacity="0.85"/>
-            <!-- Bagian bulan yang bercahaya (fase dinamis) -->
             <path id="moonLitPath" d="" fill="url(#moonSurfaceGrad)"/>
-            <!-- Kawah kecil untuk tekstur -->
             <circle cx="38" cy="42" r="4" fill="rgba(140,155,180,0.35)"/>
             <circle cx="60" cy="58" r="5" fill="rgba(140,155,180,0.3)"/>
             <circle cx="55" cy="32" r="3" fill="rgba(140,155,180,0.3)"/>
             <circle cx="35" cy="65" r="3.5" fill="rgba(140,155,180,0.3)"/>
           </svg>
         </div>
-
-        <!-- Awan -->
         <div class="sky-cloud cloud-1"></div>
         <div class="sky-cloud cloud-2"></div>
         <div class="sky-cloud cloud-3"></div>
-
-        <!-- Horizon / Siluet Gunung (tipis saja) -->
         <div class="sky-horizon"></div>
-
-        <!-- Label waktu real-time -->
         <div class="sky-time-label" id="skyTimeLabel">
           <i class="fa-solid fa-sun" id="skyTimeIcon"></i>
           <span id="skyTimeText">Memuat...</span>
         </div>
       </div>
 
-      <!-- KOTAK INFO DI BAWAH ANIMASI: Lokasi + Fase Bulan -->
       <div class="sky-info-row">
         <div class="sky-loc-label" id="skyLocLabel">
           <i class="fa-solid fa-location-dot"></i> <span id="skyLocationText">REALTIME SKY</span>
@@ -1574,9 +1327,6 @@
         <h1 class="dash-title">Tutorial & Panduan</h1>
         <p class="dash-subtitle">Langkah Mudah Menggunakan Seluruh Layanan Otomasi AYAKA STORE</p>
 
-        <!-- =====================================================
-             VIDEO TUTORIAL - MENGGUNAKAN TAG <video> (BUKAN <img>)
-             ===================================================== -->
         <div class="tutorial-video-card">
           <h4><i class="fa-solid fa-video" style="color: #f472b6;"></i> Video Tutorial Aktivasi AM Premium</h4>
           <div class="tutorial-video-wrapper">
@@ -1747,7 +1497,6 @@
         });
       });
 
-      // LOGIKA KONTROL POPUP MODAL QR DONASI
       const qrModal = document.getElementById("qrDonasiModal");
       const showQrBtn = document.getElementById("showQrBtn");
       const closeQrBtn = document.getElementById("closeQrModalBtn");
@@ -1772,9 +1521,7 @@
     });
 
     // ============================================================
-    // ANIMASI LANGIT ASTRONOMIS REAL-TIME
-    // Menggunakan SunCalc untuk posisi Matahari/Bulan yang akurat
-    // dan fase Bulan yang sesungguhnya sesuai dunia nyata
+    // ANIMASI LANGIT ASTRONOMIS REAL-TIME (SunCalc)
     // ============================================================
     document.addEventListener("DOMContentLoaded", async () => {
       const skyBar = document.getElementById("realtimeSkyBar");
@@ -1807,16 +1554,12 @@
           userLat = pos.coords.latitude;
           userLng = pos.coords.longitude;
           locationName = "LIVE GPS";
-          console.log("🌍 Lokasi terdeteksi:", userLat, userLng);
         } catch (e) {
-          console.warn("⚠️ Geolocation ditolak / gagal, menggunakan Jakarta sebagai default.");
           locationName = "JAKARTA (DEFAULT)";
         }
       }
 
-      if (skyLocationText) {
-        skyLocationText.textContent = locationName;
-      }
+      if (skyLocationText) skyLocationText.textContent = locationName;
 
       function generateStars() {
         if (!skyStars) return;
@@ -1977,25 +1720,13 @@
         skyBar.classList.remove("theme-morning", "theme-day", "theme-evening", "theme-night");
         skyBar.classList.add("theme-" + theme);
 
-        if (skyStars) {
-          skyStars.classList.toggle("active", theme === "night");
-        }
-
+        if (skyStars) skyStars.classList.toggle("active", theme === "night");
         if (skyTimeIcon) skyTimeIcon.className = icon;
         if (skyTimeText) skyTimeText.textContent = label;
       }
 
       updateSky();
       setInterval(updateSky, 5000);
-
-      if (hasSunCalc) {
-        const _now = new Date();
-        const _illum = window.SunCalc.getMoonIllumination(_now);
-        console.log(`🌙 SunCalc aktif | Lokasi: ${userLat.toFixed(3)}, ${userLng.toFixed(3)}`);
-        console.log(`🌙 Fase Bulan: ${getPhaseName(_illum.phase)} (${Math.round(_illum.fraction * 100)}%)`);
-      } else {
-        console.warn("⚠️ SunCalc tidak dimuat. Menggunakan mode waktu lokal sederhana.");
-      }
     });
 
     // SENSOR OTOMATIS EMAIL UNTUK MENJAGA PRIVASI
@@ -2016,7 +1747,10 @@
       return username.substring(0, 3) + "****" + username.substring(username.length - 1) + "@" + domain;
     }
 
+    // ============================================================
     // MANAJEMEN RIWAYAT LIVE RECENT ACTIVATION
+    // (Data tersimpan di Supabase, BUKAN localStorage)
+    // ============================================================
     let activeRecentList = [];
 
     function renderRecentActivationUI() {
@@ -2062,6 +1796,7 @@
       container.innerHTML = htmlContent;
     }
 
+    // Simpan riwayat aktivasi HANYA ke Supabase (tanpa localStorage)
     window.addLiveRecentActivation = async function(rawEmail, planType) {
       if (!rawEmail) rawEmail = "user" + Math.floor(1000 + Math.random() * 9000) + "@gmail.com";
       
@@ -2077,10 +1812,6 @@
         activeRecentList.pop();
       }
 
-      try {
-        localStorage.setItem("ayaka_saved_recent_activations", JSON.stringify(activeRecentList));
-      } catch (e) {}
-
       renderRecentActivationUI();
 
       if (typeof window.supabaseClient !== 'undefined' && window.supabaseClient) {
@@ -2095,38 +1826,22 @@
       }
     };
 
+    // ============================================================
     // SISTEM SINKRONISASI SERVER UPTIME & STATISTIK
+    // Semua data GLOBAL dibaca & ditulis ke Supabase
+    // ============================================================
     document.addEventListener("DOMContentLoaded", async () => {
       let globalServerStartTime = null;
+      let serverStartLoaded = false;
 
-      window.ayakaGlobalTotalGen = parseInt(localStorage.getItem("ayaka_local_total_gen") || "0");
-      window.ayakaGlobalDailyGen = parseInt(localStorage.getItem("ayaka_local_daily_gen") || "0");
-
-      try {
-        const savedLocalRecent = localStorage.getItem("ayaka_saved_recent_activations");
-        if (savedLocalRecent) {
-          const parsedLocal = JSON.parse(savedLocalRecent);
-          if (Array.isArray(parsedLocal) && parsedLocal.length > 0) {
-            activeRecentList = parsedLocal;
-            renderRecentActivationUI();
-          }
-        }
-      } catch (e) {}
+      window.ayakaGlobalTotalGen = 0;
+      window.ayakaGlobalDailyGen = 0;
 
       function getOrInitBaseStartTime(dbTime) {
-        let localSaved = localStorage.getItem("ayaka_global_server_start_time");
-        if (localSaved && !isNaN(localSaved) && parseInt(localSaved) > 0) {
-          return parseInt(localSaved);
-        }
-
         if (dbTime && !isNaN(dbTime) && parseInt(dbTime) > 0) {
-          localStorage.setItem("ayaka_global_server_start_time", dbTime);
           return parseInt(dbTime);
         }
-
-        const now = Date.now();
-        localStorage.setItem("ayaka_global_server_start_time", now);
-        return now;
+        return Date.now();
       }
 
       globalServerStartTime = getOrInitBaseStartTime(null);
@@ -2134,11 +1849,6 @@
       function renderStatsUI(total, daily, visitors) {
         window.ayakaGlobalTotalGen = Math.max(window.ayakaGlobalTotalGen || 0, Number(total || 0));
         window.ayakaGlobalDailyGen = Math.max(window.ayakaGlobalDailyGen || 0, Number(daily || 0));
-
-        try {
-          localStorage.setItem("ayaka_local_total_gen", window.ayakaGlobalTotalGen);
-          localStorage.setItem("ayaka_local_daily_gen", window.ayakaGlobalDailyGen);
-        } catch (e) {}
 
         const totalGenEl = document.getElementById("totalGeneratedCounter");
         const statSuksesEl = document.getElementById("statTotalSukses");
@@ -2160,7 +1870,7 @@
 
       function updateGlobalUptimeUI() {
         if (!globalServerStartTime) {
-          globalServerStartTime = getOrInitBaseStartTime(null);
+          globalServerStartTime = Date.now();
         }
 
         const uptimeCounterEl = document.getElementById("serverUptimeCounter");
@@ -2266,13 +1976,18 @@
 
       initDashboardBatteryStatus();
 
+      // ============================================================
+      // FETCH DATA DARI SUPABASE (Tanpa localStorage)
+      // ============================================================
       async function fetchAndUpdateStats() {
         try {
           if (typeof window.supabaseClient !== 'undefined' && window.supabaseClient) {
             const visitorBadgeLabel = document.getElementById("visitorBadgeLabel");
-            
-            const visitorKey = "ayaka_global_visitor_id";
-            const isNewDeviceVisitor = !localStorage.getItem(visitorKey);
+
+            // Gunakan sessionStorage untuk flag per-sesi (mencegah double-count
+            // dalam satu tab, TIDAK persist antar sesi/device).
+            const visitorSessionKey = "ayaka_visitor_session_flag";
+            const isNewSessionVisitor = !sessionStorage.getItem(visitorSessionKey);
 
             let { data: statsData, error } = await window.supabaseClient
               .from('site_stats')
@@ -2286,23 +2001,29 @@
               let dbDaily = statsData.daily_generated || 0;
               let lastResetDate = statsData.last_reset_date || '';
 
-              if (statsData.recent_activations && Array.isArray(statsData.recent_activations) && statsData.recent_activations.length > 0) {
+              // Muat riwayat aktivasi dari Supabase
+              if (statsData.recent_activations && Array.isArray(statsData.recent_activations)) {
                 activeRecentList = statsData.recent_activations;
-                try {
-                  localStorage.setItem("ayaka_saved_recent_activations", JSON.stringify(activeRecentList));
-                } catch (e) {}
                 renderRecentActivationUI();
               }
 
-              if (statsData.server_start_time && !localStorage.getItem("ayaka_global_server_start_time")) {
-                globalServerStartTime = getOrInitBaseStartTime(statsData.server_start_time);
-              } else if (!statsData.server_start_time && globalServerStartTime) {
+              // ==== SERVER START TIME (dari Supabase) ====
+              if (statsData.server_start_time &&
+                  !isNaN(parseInt(statsData.server_start_time)) &&
+                  parseInt(statsData.server_start_time) > 0) {
+                globalServerStartTime = parseInt(statsData.server_start_time);
+                serverStartLoaded = true;
+              } else if (!statsData.server_start_time) {
+                // Belum ada nilai di DB → simpan timestamp saat ini ke Supabase
+                globalServerStartTime = Date.now();
+                serverStartLoaded = true;
                 await window.supabaseClient
                   .from('site_stats')
                   .update({ server_start_time: globalServerStartTime })
                   .eq('id', 1);
               }
 
+              // Reset counter harian jika tanggal berubah
               const todayStr = new Date().toISOString().split('T')[0];
               if (lastResetDate !== todayStr) {
                 dbDaily = 0;
@@ -2312,8 +2033,9 @@
                   .eq('id', 1);
               }
 
-              if (isNewDeviceVisitor) {
-                localStorage.setItem(visitorKey, "v_" + Date.now() + "_" + Math.random().toString(36).substring(2, 7));
+              // Increment visitor sekali per sesi tab
+              if (isNewSessionVisitor) {
+                sessionStorage.setItem(visitorSessionKey, "1");
                 currentVisitors += 1;
                 await window.supabaseClient
                   .from('site_stats')
@@ -2331,13 +2053,15 @@
           }
         } catch (err) {
           console.warn("Gagal sinkronisasi data Supabase:", err);
-          renderStatsUI(window.ayakaGlobalTotalGen, window.ayakaGlobalDailyGen, 1);
         }
       }
 
       await fetchAndUpdateStats();
       setInterval(fetchAndUpdateStats, 5000);
 
+      // ============================================================
+      // REALTIME LISTENER SUPABASE (tanpa localStorage)
+      // ============================================================
       if (typeof window.supabaseClient !== 'undefined' && window.supabaseClient) {
         try {
           window.supabaseClient
@@ -2347,13 +2071,17 @@
                 const newTotal = payload.new.total_generated || 0;
                 const newDaily = payload.new.daily_generated || 0;
                 const newVisitors = payload.new.visitors || 0;
-                if (payload.new.recent_activations && Array.isArray(payload.new.recent_activations) && payload.new.recent_activations.length > 0) {
+
+                if (payload.new.recent_activations &&
+                    Array.isArray(payload.new.recent_activations)) {
                   activeRecentList = payload.new.recent_activations;
-                  try {
-                    localStorage.setItem("ayaka_saved_recent_activations", JSON.stringify(activeRecentList));
-                  } catch (e) {}
                   renderRecentActivationUI();
                 }
+
+                if (payload.new.server_start_time) {
+                  globalServerStartTime = parseInt(payload.new.server_start_time);
+                }
+
                 renderStatsUI(newTotal, newDaily, newVisitors);
               }
             })
@@ -2363,6 +2091,9 @@
         }
       }
 
+      // ============================================================
+      // INCREMENT AKTIVASI → UPDATE SUPABASE
+      // ============================================================
       window.incrementAyakaActivationStats = async function(incrementCount = 1, userEmail = "", planName = "AM Premium Annual 1 Year") {
         try {
           if (!userEmail) {
@@ -2370,11 +2101,6 @@
           }
 
           await window.addLiveRecentActivation(userEmail, planName);
-
-          window.ayakaGlobalTotalGen = (window.ayakaGlobalTotalGen || 0) + incrementCount;
-          window.ayakaGlobalDailyGen = (window.ayakaGlobalDailyGen || 0) + incrementCount;
-
-          renderStatsUI(window.ayakaGlobalTotalGen, window.ayakaGlobalDailyGen);
 
           if (typeof window.supabaseClient !== 'undefined' && window.supabaseClient) {
             const todayStr = new Date().toISOString().split('T')[0];
@@ -2385,14 +2111,14 @@
               .eq('id', 1)
               .single();
 
-            let targetTotal = window.ayakaGlobalTotalGen;
-            let targetDaily = window.ayakaGlobalDailyGen;
+            let targetTotal = incrementCount;
+            let targetDaily = incrementCount;
 
             if (statsData) {
               if (statsData.last_reset_date === todayStr) {
-                targetDaily = Math.max(statsData.daily_generated || 0, window.ayakaGlobalDailyGen);
+                targetDaily = (statsData.daily_generated || 0) + incrementCount;
               }
-              targetTotal = Math.max(statsData.total_generated || 0, window.ayakaGlobalTotalGen);
+              targetTotal = (statsData.total_generated || 0) + incrementCount;
             }
 
             window.ayakaGlobalTotalGen = targetTotal;
@@ -2414,28 +2140,9 @@
         }
       };
 
-      setInterval(() => {
-        if (window.ayakaGlobalTotalGen > 0) {
-          const el1 = document.getElementById("globalTotalAktivasi");
-          const el2 = document.getElementById("globalHariIniAktivasi");
-          const el3 = document.getElementById("totalGeneratedCounter");
-          const el4 = document.getElementById("statTotalSukses");
-
-          if (el1 && (parseInt(el1.textContent.replace(/\D/g, '')) || 0) < window.ayakaGlobalTotalGen) {
-            el1.textContent = window.ayakaGlobalTotalGen.toLocaleString("id-ID");
-          }
-          if (el2 && (parseInt(el2.textContent.replace(/\D/g, '')) || 0) < window.ayakaGlobalDailyGen) {
-            el2.textContent = window.ayakaGlobalDailyGen.toLocaleString("id-ID");
-          }
-          if (el3 && (parseInt(el3.textContent.replace(/\D/g, '')) || 0) < window.ayakaGlobalTotalGen) {
-            el3.textContent = window.ayakaGlobalTotalGen.toLocaleString("id-ID");
-          }
-          if (el4 && (parseInt(el4.textContent.replace(/\D/g, '')) || 0) < window.ayakaGlobalTotalGen) {
-            el4.textContent = window.ayakaGlobalTotalGen.toLocaleString("id-ID");
-          }
-        }
-      }, 300);
-
+      // ============================================================
+      // EVENT HANDLER AKTIVASI
+      // ============================================================
       const proceedStep3Btn = document.getElementById("proceedToStep3Btn");
       if (proceedStep3Btn) {
         proceedStep3Btn.addEventListener("click", () => {
