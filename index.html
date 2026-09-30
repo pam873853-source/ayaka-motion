@@ -19,8 +19,9 @@
 
   <!-- KONFIGURASI SUPABASE -->
   <script>
-    window.NEXT_PUBLIC_SUPABASE_URL = 'https://ztgmlujvdatlrhzdnbgw.supabase.co;
-    window.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp0Z21sdWp2ZGF0bHJoemRuYmd3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA3NjQ5ODQsImV4cCI6MjEwNjM0MDk4NH0.TCSm4YMMWZB8SAoBM9jPPmc-DXldgYcDtpy7CBfUlV4;
+    // ⚠️ GANTI BAGIAN INI DENGAN MILIK PROYEK BARU (ayaka-generator) ⚠️
+    window.NEXT_PUBLIC_SUPABASE_URL = 'https://ztgmlujvdatlrhzdnbgw.supabase.co';
+    window.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp0Z21sdWp2ZGF0bHJoemRuYmd3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA3NjQ5ODQsImV4cCI6MjEwNjM0MDk4NH0.TCSm4YMMWZB8SAoBM9jPPmc-DXldgYcDtpy7CBfUlV4';
 
     const SUPABASE_URL = window.NEXT_PUBLIC_SUPABASE_URL;
     const SUPABASE_PUBLISHABLE_KEY = window.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
@@ -653,7 +654,7 @@
         } else {
           window.ayakaProductsData = data || [];
           console.log('%c🌐 WEB GLOBAL', 'font-size:20px;font-weight:900;color:#22c55e;');
-          console.log('%c✅ Connected to: jbzykcuhpfkrgnimjtxx.supabase.co', 'color:#22c55e;font-weight:700;');
+          console.log('%c✅ Connected to: ' + window.NEXT_PUBLIC_SUPABASE_URL, 'color:#22c55e;font-weight:700;');
           console.log('%c📦 Products loaded: ' + (data ? data.length : 0), 'color:#38bdf8;font-weight:700;');
           console.log('%c🚀 Supabase LIVE!', 'color:#ec4899;font-weight:800;');
         }
@@ -711,7 +712,7 @@
     });
 
     // ============================================================
-    // ANIMASI LANGIT ASTRONOMIS REAL-TIME
+    // ANIMASI LANGIT ASTRONOMIS REAL-TIME (DENGAN UPDATE WAKTU)
     // ============================================================
     document.addEventListener("DOMContentLoaded", async () => {
       const skyBar = document.getElementById("realtimeSkyBar");
@@ -785,25 +786,53 @@
 
       function updateSky() {
         const now = new Date();
+        const hour = now.getHours();
+        
+        // 1. TENTUKAN LABEL BERDASARKAN JAM LOKAL (SESUAI PERMINTAAN USER)
+        let label = "";
+        let iconClass = "fa-solid fa-sun";
+        
+        if (hour >= 4 && hour < 6) {
+          label = "Subuh";
+          iconClass = "fa-solid fa-cloud-moon";
+        } else if (hour >= 6 && hour < 12) {
+          label = "Pagi";
+          iconClass = "fa-solid fa-sun";
+        } else if (hour >= 12 && hour < 16) {
+          label = "Siang";
+          iconClass = "fa-solid fa-sun";
+        } else if (hour >= 16 && hour < 18) {
+          label = "Sore";
+          iconClass = "fa-solid fa-cloud-sun";
+        } else {
+          label = "Malam";
+          iconClass = "fa-solid fa-moon";
+        }
+        
+        if (skyTimeText) skyTimeText.textContent = label;
+        if (skyTimeIcon) skyTimeIcon.className = iconClass;
+        
+        // 2. JIKA SUN CALC GAGAL DIMUAT (FALLBACK)
         if (!hasSunCalc) {
-          const hour = now.getHours(); let theme = "day", label = "Siang", icon = "fa-solid fa-sun";
-          if (hour >= 5 && hour < 10) { theme = "morning"; label = "Pagi"; }
-          else if (hour >= 10 && hour < 15) { theme = "day"; label = "Siang"; }
-          else if (hour >= 15 && hour < 18) { theme = "evening"; label = "Sore"; icon = "fa-solid fa-cloud-sun"; }
-          else { theme = "night"; label = "Malam"; icon = "fa-solid fa-moon"; }
+          let theme = "day";
+          if (hour >= 4 && hour < 10) { theme = "morning"; } 
+          else if (hour >= 10 && hour < 15) { theme = "day"; } 
+          else if (hour >= 15 && hour < 18) { theme = "evening"; } 
+          else { theme = "night"; }
+          
           skyBar.classList.remove("theme-morning", "theme-day", "theme-evening", "theme-night");
           skyBar.classList.add("theme-" + theme);
           if (skyStars) skyStars.classList.toggle("active", theme === "night");
-          if (skyTimeIcon) skyTimeIcon.className = icon;
-          if (skyTimeText) skyTimeText.textContent = label;
           return;
         }
+        
+        // 3. LOGIKA POSISI MATAHARI & BULAN (SUN CALC)
         const sunPos = window.SunCalc.getPosition(now, userLat, userLng);
         const moonPos = window.SunCalc.getMoonPosition(now, userLat, userLng);
         const moonIllum = window.SunCalc.getMoonIllumination(now);
         const sunAltDeg = sunPos.altitude * 180 / Math.PI;
         const moonAltDeg = moonPos.altitude * 180 / Math.PI;
-
+        
         if (skySun) {
           if (sunAltDeg > -3) {
             skySun.style.left = azimuthToXPercent(sunPos.azimuth) + "%";
@@ -811,6 +840,7 @@
             skySun.style.opacity = sunAltDeg > 0 ? "1" : "0.45";
           } else { skySun.style.opacity = "0"; }
         }
+        
         if (skyMoon && moonLitPath) {
           if (moonAltDeg > -3) {
             skyMoon.style.left = azimuthToXPercent(moonPos.azimuth) + "%";
@@ -820,22 +850,31 @@
           const pathD = getMoonPath(moonIllum.fraction, moonIllum.phase, 45);
           moonLitPath.setAttribute("d", pathD);
         }
+        
         if (skyPhaseLabel) {
           const phaseEmoji = getPhaseEmoji(moonIllum.phase);
           const phaseName = getPhaseName(moonIllum.phase);
           const fractionPct = Math.round(moonIllum.fraction * 100);
           skyPhaseLabel.textContent = `${phaseEmoji} ${phaseName} • ${fractionPct}%`;
         }
-        const isRising = sunPos.azimuth < 0; let theme, label, icon;
-        if (sunAltDeg > 10) { theme = "day"; label = "Siang"; icon = "fa-solid fa-sun"; }
-        else if (sunAltDeg > 0) { if (isRising) { theme = "morning"; label = "Pagi"; icon = "fa-solid fa-sun"; } else { theme = "evening"; label = "Sore"; icon = "fa-solid fa-cloud-sun"; } }
-        else if (sunAltDeg > -6) { if (isRising) { theme = "morning"; label = "Fajar"; icon = "fa-solid fa-sun"; } else { theme = "evening"; label = "Senja"; icon = "fa-solid fa-cloud-moon"; } }
-        else { theme = "night"; label = "Malam"; icon = "fa-solid fa-moon"; }
+        
+        // 4. TENTUKAN TEMA BACKGROUND (SINKRON DENGAN JAM LOKAL)
+        const isRising = sunPos.azimuth < 0; 
+        let theme;
+        if (sunAltDeg > 10) { theme = "day"; } 
+        else if (sunAltDeg > 0) { theme = isRising ? "morning" : "evening"; } 
+        else if (sunAltDeg > -6) { theme = isRising ? "morning" : "evening"; } 
+        else { theme = "night"; }
+        
+        // Override tema berdasarkan jam sesuai permintaan user agar sinkron dengan teks
+        if (hour >= 4 && hour < 8) theme = "morning";
+        else if (hour >= 8 && hour < 16) theme = "day";
+        else if (hour >= 16 && hour < 18) theme = "evening";
+        else theme = "night";
+        
         skyBar.classList.remove("theme-morning", "theme-day", "theme-evening", "theme-night");
         skyBar.classList.add("theme-" + theme);
         if (skyStars) { skyStars.classList.toggle("active", theme === "night"); }
-        if (skyTimeIcon) skyTimeIcon.className = icon;
-        if (skyTimeText) skyTimeText.textContent = label;
       }
       updateSky(); setInterval(updateSky, 5000);
     });
@@ -915,7 +954,6 @@
 
       globalServerStartTime = getOrInitBaseStartTime(null);
 
-      // FUNGSI INI MENARIK SEMUA DATA DARI SERVER (MULAI DARI 0)
       function renderStatsUI(total, daily, visitors) {
         window.ayakaGlobalTotalGen = Number(total || 0);
         window.ayakaGlobalDailyGen = Number(daily || 0);
@@ -929,7 +967,6 @@
         const formattedTotal = window.ayakaGlobalTotalGen.toLocaleString("id-ID");
         const formattedDaily = window.ayakaGlobalDailyGen.toLocaleString("id-ID");
 
-        // Memastikan semua elemen yang di lingkari terupdate dari database
         if (totalGenEl) totalGenEl.textContent = formattedTotal;
         if (statSuksesEl) statSuksesEl.textContent = formattedTotal;
         if (globalTotalAktivasiEl) globalTotalAktivasiEl.textContent = formattedTotal;
@@ -1048,7 +1085,6 @@
                 await window.supabaseClient.from('site_stats').update({ visitors: currentVisitors }).eq('id', 1);
               }
 
-              // SEMUA STATISTIK DIAMBIL MURNI DARI SERVER, DIMULAI DARI 0
               renderStatsUI(dbTotal, dbDaily, currentVisitors);
             }
           }
@@ -1087,7 +1123,6 @@
             userEmail = document.getElementById("emailInput")?.value || document.getElementById("emailInputV2")?.value || "ayaka_user@gmail.com";
           }
           
-          // Update UI secara instan agar tidak terlihat macet
           window.ayakaGlobalTotalGen += incrementCount;
           window.ayakaGlobalDailyGen += incrementCount;
           renderStatsUI(window.ayakaGlobalTotalGen, window.ayakaGlobalDailyGen);
