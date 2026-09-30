@@ -14,17 +14,18 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+  <!-- LIBRARY ASTRONOMI REAL-TIME (SunCalc) -->
   <script src="https://cdn.jsdelivr.net/npm/suncalc@1.9.0/suncalc.min.js"></script>
 
+  <!-- KONFIGURASI SUPABASE -->
   <script>
-    // ---- Environment Variables ----
-    window.NEXT_PUBLIC_SUPABASE_URL = 'https://jbzykcuhpfkrgnimjtxx.supabase.co';
-    window.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_Usw8tFE0HQyAJo7NyvIvTA_fHfXGGZ-';
+    window.NEXT_PUBLIC_SUPABASE_URL = 'https://popkdktekxyxwncaromq.supabase.co;
+    window.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_iEafzUFXGWLHZjm2p3_TXw_gb9onfJy';
 
     const SUPABASE_URL = window.NEXT_PUBLIC_SUPABASE_URL;
     const SUPABASE_PUBLISHABLE_KEY = window.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
-    window.SUPABASE_URL = https://popkdktekxyxwncaromq.supabase.co;
-    window.SUPABASE_PUBLISHABLE_KEY = sb_publishable_iEafzUFXGWLHZjm2p3_TXw_gb9onfJy;
+    window.SUPABASE_URL = SUPABASE_URL;
+    window.SUPABASE_PUBLISHABLE_KEY = SUPABASE_PUBLISHABLE_KEY;
 
     if (window.supabase && typeof window.supabase.createClient === 'function') {
       window.supabaseClient = window.supabase.createClient(
@@ -291,7 +292,7 @@
                 <h3>Total Pengunjung Global</h3>
                 <span style="font-size: 11px; font-weight: 700; color: #f59e0b; background: rgba(245, 158, 11, 0.1); padding: 2px 8px; border-radius: 20px; white-space: nowrap;" id="visitorBadgeLabel">Database Connected</span>
               </div>
-              <p style="font-size: 20px; font-family: 'Space Grotesk', sans-serif; margin-top: 4px; color: #fff;" id="totalVisitorsCounter">Loading...</p>
+              <p style="font-size: 20px; font-family: 'Space Grotesk', sans-serif; margin-top: 4px; color: #fff;" id="totalVisitorsCounter">0</p>
               <div class="stat-desc" id="visitorStatusDesc">Sinkronisasi otomatis global setiap tautan dibagikan</div>
             </div>
           </div>
@@ -321,7 +322,7 @@
             <div class="db-status-row" style="justify-content: space-between;">
               <div style="display: flex; align-items: center; gap: 10px;">
                 <div class="db-blink-dot" style="background-color: #f472b6; box-shadow: 0 0 10px #f472b6;"></div>
-                <span id="totalGeneratedCounter" style="font-size: 24px; font-weight: 800; color: #fff; font-family: 'Space Grotesk', sans-serif;">Loading...</span>
+                <span id="totalGeneratedCounter" style="font-size: 24px; font-weight: 800; color: #fff; font-family: 'Space Grotesk', sans-serif;">0</span>
               </div>
               <span id="lastGeneratedInfo" style="font-size: 11px; color: var(--text-muted);">Sinkronisasi aktif</span>
             </div>
@@ -914,7 +915,7 @@
 
       globalServerStartTime = getOrInitBaseStartTime(null);
 
-      // FUNGSI INI SUDAH DIPERBAIKI: TIDAK LAGI MENGGUNAKAN Math.max
+      // FUNGSI INI MENARIK SEMUA DATA DARI SERVER (MULAI DARI 0)
       function renderStatsUI(total, daily, visitors) {
         window.ayakaGlobalTotalGen = Number(total || 0);
         window.ayakaGlobalDailyGen = Number(daily || 0);
@@ -928,6 +929,7 @@
         const formattedTotal = window.ayakaGlobalTotalGen.toLocaleString("id-ID");
         const formattedDaily = window.ayakaGlobalDailyGen.toLocaleString("id-ID");
 
+        // Semua elemen ini sekarang terhubung ke database, mulai dari 0
         if (totalGenEl) totalGenEl.textContent = formattedTotal;
         if (statSuksesEl) statSuksesEl.textContent = formattedTotal;
         if (globalTotalAktivasiEl) globalTotalAktivasiEl.textContent = formattedTotal;
@@ -1046,7 +1048,7 @@
                 await window.supabaseClient.from('site_stats').update({ visitors: currentVisitors }).eq('id', 1);
               }
 
-              // TAMPILKAN DATA DARI SERVER SECARA MUTLAK
+              // SEMUA STATISTIK DIAMBIL MURNI DARI SERVER, DIMULAI DARI 0
               renderStatsUI(dbTotal, dbDaily, currentVisitors);
             }
           }
@@ -1079,17 +1081,13 @@
         } catch (e) { console.warn("Realtime listener active fallback", e); }
       }
 
-      // FUNGSI INCREMENT SUDAH MENGGUNAKAN RPC
       window.incrementAyakaActivationStats = async function(incrementCount = 1, userEmail = "", planName = "AM Premium Annual 1 Year") {
         try {
           if (!userEmail) {
             userEmail = document.getElementById("emailInput")?.value || document.getElementById("emailInputV2")?.value || "ayaka_user@gmail.com";
           }
-
-          // 1. Simpan riwayat aktivasi lokal & ke tabel
           await window.addLiveRecentActivation(userEmail, planName);
 
-          // 2. Panggil RPC untuk update angka total & harian di server
           if (typeof window.supabaseClient !== 'undefined' && window.supabaseClient) {
             const { error } = await window.supabaseClient.rpc('increment_stats');
             if (error) {
