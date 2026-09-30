@@ -19,7 +19,7 @@
 
   <!-- KONFIGURASI SUPABASE -->
   <script>
-    window.NEXT_PUBLIC_SUPABASE_URL = 'https://popkdktekxyxwncaromq.supabase.co;
+    window.NEXT_PUBLIC_SUPABASE_URL = 'https://popkdktekxyxwncaromq.supabase.co';
     window.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_iEafzUFXGWLHZjm2p3_TXw_gb9onfJy';
 
     const SUPABASE_URL = window.NEXT_PUBLIC_SUPABASE_URL;
@@ -929,7 +929,7 @@
         const formattedTotal = window.ayakaGlobalTotalGen.toLocaleString("id-ID");
         const formattedDaily = window.ayakaGlobalDailyGen.toLocaleString("id-ID");
 
-        // Semua elemen ini sekarang terhubung ke database, mulai dari 0
+        // Memastikan semua elemen yang di lingkari terupdate dari database
         if (totalGenEl) totalGenEl.textContent = formattedTotal;
         if (statSuksesEl) statSuksesEl.textContent = formattedTotal;
         if (globalTotalAktivasiEl) globalTotalAktivasiEl.textContent = formattedTotal;
@@ -1086,6 +1086,12 @@
           if (!userEmail) {
             userEmail = document.getElementById("emailInput")?.value || document.getElementById("emailInputV2")?.value || "ayaka_user@gmail.com";
           }
+          
+          // Update UI secara instan agar tidak terlihat macet
+          window.ayakaGlobalTotalGen += incrementCount;
+          window.ayakaGlobalDailyGen += incrementCount;
+          renderStatsUI(window.ayakaGlobalTotalGen, window.ayakaGlobalDailyGen);
+          
           await window.addLiveRecentActivation(userEmail, planName);
 
           if (typeof window.supabaseClient !== 'undefined' && window.supabaseClient) {
