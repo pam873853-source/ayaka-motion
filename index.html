@@ -9,11 +9,23 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  
+
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/suncalc@1.9.0/suncalc.min.js"></script>
+
+  <!-- ============================================================
+       KONFIGURASI UPSTASH REDIS
+       ============================================================ -->
+  <script>
+    // ==========================================================
+    // ⚙️ GANTI 2 BARIS DI BAWAH INI DENGAN MILIK KAMU
+    // ==========================================================
+    window.UPSTASH_URL   = "https://adequate-worm-234162.upstash.io";        // ← GANTI
+    window.UPSTASH_TOKEN = "gQAAAAAAA5KyAAIgcDFmNWE3NDE0ZmVhN2Y0ZmI0ODIyYmIwNmU0YjQxYjdiZQ";    // ← GANTI
+    // ==========================================================
+  </script>
 
   <script>
     window.NEXT_PUBLIC_SUPABASE_URL = 'https://jbzykcuhpfkrgnimjtxx.supabase.co';
@@ -791,7 +803,7 @@
             </div>
             <div class="stat-info" style="width: 100%; min-width: 0;">
               <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px;">
-                <h3>Server Uptime (Global Database Sync)</h3>
+                <h3>Server Uptime (Global Redis Sync)</h3>
                 <span id="uptimePercentage" style="font-size: 12px; font-weight: 700; color: var(--success);">100.00%</span>
               </div>
               <p style="font-size: 18px; font-family: 'Space Grotesk', sans-serif; margin-top: 4px;" id="serverUptimeCounter">0d 00h 00m 00s</p>
@@ -809,11 +821,11 @@
               <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px;">
                 <h3>Total Pengunjung Global</h3>
                 <span style="font-size: 11px; font-weight: 700; color: #f59e0b; background: rgba(245, 158, 11, 0.1); padding: 2px 8px; border-radius: 20px; white-space: nowrap;" id="visitorBadgeLabel">
-                  Database Connected
+                  Redis Connected
                 </span>
               </div>
               <p style="font-size: 20px; font-family: 'Space Grotesk', sans-serif; margin-top: 4px; color: #fff;" id="totalVisitorsCounter">Loading...</p>
-              <div class="stat-desc" id="visitorStatusDesc">Sinkronisasi otomatis global setiap tautan dibagikan</div>
+              <div class="stat-desc" id="visitorStatusDesc">Sinkronisasi otomatis global via Upstash Redis</div>
             </div>
           </div>
         </div>
@@ -865,7 +877,7 @@
               </div>
               <div class="db-text-group">
                 <div class="db-title">Database</div>
-                <div class="db-subtitle">Supabase PostgreSQL</div>
+                <div class="db-subtitle">Supabase PostgreSQL + Upstash Redis</div>
               </div>
             </div>
             <div class="db-status-row">
@@ -881,7 +893,7 @@
               </div>
               <div class="db-text-group">
                 <div class="db-title">System Uptime Global</div>
-                <div class="db-subtitle">Waktu aktif sistem global</div>
+                <div class="db-subtitle">Waktu aktif sistem global (Redis)</div>
               </div>
             </div>
             <div class="uptime-digits-row" id="systemUptimeCustomDisplay">
@@ -1416,6 +1428,68 @@
   
   <script>
     // ============================================================
+    // 🌐 UPSTASH REDIS REST API CLIENT
+    // ============================================================
+    const UPSTASH_URL   = window.UPSTASH_URL;
+    const UPSTASH_TOKEN = window.UPSTASH_TOKEN;
+
+    const UPSTASH_HEADERS = {
+      Authorization: `Bearer ${UPSTASH_TOKEN}`,
+    };
+
+    async function redisGet(key) {
+      try {
+        const res = await fetch(`${UPSTASH_URL}/get/${encodeURIComponent(key)}`, {
+          headers: UPSTASH_HEADERS,
+        });
+        const json = await res.json();
+        return json.result;
+      } catch (e) {
+        console.warn("redisGet error:", e);
+        return null;
+      }
+    }
+
+    async function redisSet(key, value) {
+      try {
+        const res = await fetch(`${UPSTASH_URL}/set/${encodeURIComponent(key)}/${encodeURIComponent(value)}`, {
+          headers: UPSTASH_HEADERS,
+        });
+        const json = await res.json();
+        return json.result;
+      } catch (e) {
+        console.warn("redisSet error:", e);
+        return null;
+      }
+    }
+
+    async function redisIncr(key) {
+      try {
+        const res = await fetch(`${UPSTASH_URL}/incr/${encodeURIComponent(key)}`, {
+          headers: UPSTASH_HEADERS,
+        });
+        const json = await res.json();
+        return json.result;
+      } catch (e) {
+        console.warn("redisIncr error:", e);
+        return null;
+      }
+    }
+
+    async function redisExpire(key, seconds) {
+      try {
+        const res = await fetch(`${UPSTASH_URL}/expire/${encodeURIComponent(key)}/${seconds}`, {
+          headers: UPSTASH_HEADERS,
+        });
+        const json = await res.json();
+        return json.result;
+      } catch (e) {
+        console.warn("redisExpire error:", e);
+        return null;
+      }
+    }
+
+    // ============================================================
     // KONEKSI LANGSUNG KE DATABASE SUPABASE
     // ============================================================
     document.addEventListener("DOMContentLoaded", async () => {
@@ -1442,7 +1516,7 @@
         }
 
         const visitorBadgeLabel = document.getElementById("visitorBadgeLabel");
-        if (visitorBadgeLabel) visitorBadgeLabel.textContent = "Live Online";
+        if (visitorBadgeLabel) visitorBadgeLabel.textContent = "Redis + Supabase";
       } catch (e) {
         console.warn("Supabase connection test failed:", e);
       }
@@ -1827,39 +1901,82 @@
     };
 
     // ============================================================
-    // SISTEM SINKRONISASI SERVER UPTIME & STATISTIK
-    // PERBAIKAN: Uptime TIDAK reset ke 0 saat buka ulang web
-    // Menggunakan kombinasi localStorage + Supabase
+    // 🚀 SISTEM UPTIME & VISITOR GLOBAL VIA UPSTASH REDIS
+    // Tidak pakai localStorage lagi. Semua dari Redis.
     // ============================================================
     document.addEventListener("DOMContentLoaded", async () => {
-      const LS_UPTIME_KEY = "ayaka_server_start_time_v1";
 
       let globalServerStartTime = null;
-      let serverStartLoaded = false;
 
       window.ayakaGlobalTotalGen = 0;
       window.ayakaGlobalDailyGen = 0;
 
-      // ========================================================
-      // FUNGSI: Ambil / inisialisasi base start time
-      // Prioritas: localStorage (paling persisten) > DB > sekarang
-      // ========================================================
-      function getOrInitBaseStartTime(dbTime) {
-        const lsRaw = localStorage.getItem(LS_UPTIME_KEY);
-        const lsTime = lsRaw && !isNaN(parseInt(lsRaw)) && parseInt(lsRaw) > 0 ? parseInt(lsRaw) : 0;
-        const dbTimeNum = dbTime && !isNaN(parseInt(dbTime)) && parseInt(dbTime) > 0 ? parseInt(dbTime) : 0;
+      // --------------------------------------------------------
+      // FUNGSI 1: Ambil / inisialisasi server_start_time dari Redis
+      // --------------------------------------------------------
+      async function initServerStartTime() {
+        try {
+          let startTimeRaw = await redisGet("server_start_time");
+          let startTimeNum = startTimeRaw ? parseInt(startTimeRaw) : 0;
 
-        // Jika keduanya ada → ambil yang PALING AWAL (agar uptime tidak reset)
-        if (lsTime && dbTimeNum) return Math.min(lsTime, dbTimeNum);
-        if (lsTime) return lsTime;
-        if (dbTimeNum) return dbTimeNum;
-        return Date.now();
+          if (!startTimeNum || isNaN(startTimeNum) || startTimeNum <= 0) {
+            // Belum ada → set pertama kali
+            startTimeNum = Date.now();
+            await redisSet("server_start_time", startTimeNum);
+            console.log("🌱 Redis: server_start_time dibuat pertama kali →", startTimeNum);
+          } else {
+            console.log("📡 Redis: server_start_time dimuat →", startTimeNum);
+          }
+
+          globalServerStartTime = startTimeNum;
+        } catch (err) {
+          console.warn("initServerStartTime error:", err);
+          globalServerStartTime = Date.now();
+        }
       }
 
-      // Inisialisasi awal: pakai localStorage jika ada (biar sebelum DB load udah benar)
-      globalServerStartTime = getOrInitBaseStartTime(null);
-      localStorage.setItem(LS_UPTIME_KEY, String(globalServerStartTime));
+      // --------------------------------------------------------
+      // FUNGSI 2: Track visitor via IP + Redis (1 IP = 1 hit / jam)
+      // --------------------------------------------------------
+      async function trackVisitor() {
+        try {
+          let ip = "unknown";
 
+          // Ambil IP user
+          try {
+            const ipRes = await fetch("https://api.ipify.org?format=json");
+            const ipData = await ipRes.json();
+            if (ipData && ipData.ip) ip = ipData.ip;
+          } catch (e) {
+            console.warn("Gagal ambil IP:", e);
+          }
+
+          const visitorKey = `visitor:${ip}`;
+          const exists = await redisGet(visitorKey);
+
+          if (!exists) {
+            // Belum pernah berkunjung → increment total + set visitor flag
+            await redisIncr("total_visitors");
+            await redisSet(visitorKey, "1");
+            await redisExpire(visitorKey, 3600); // 1 jam
+            console.log("🆕 Visitor baru tercatat:", ip);
+          } else {
+            console.log("👤 Visitor sudah tercatat dalam 1 jam terakhir:", ip);
+          }
+
+          // Ambil total pengunjung terkini
+          const totalRaw = await redisGet("total_visitors");
+          const total = parseInt(totalRaw) || 0;
+          return total;
+        } catch (err) {
+          console.warn("trackVisitor error:", err);
+          return null;
+        }
+      }
+
+      // --------------------------------------------------------
+      // FUNGSI 3: Render UI statistik
+      // --------------------------------------------------------
       function renderStatsUI(total, daily, visitors) {
         window.ayakaGlobalTotalGen = Math.max(window.ayakaGlobalTotalGen || 0, Number(total || 0));
         window.ayakaGlobalDailyGen = Math.max(window.ayakaGlobalDailyGen || 0, Number(daily || 0));
@@ -1877,16 +1994,16 @@
         if (statSuksesEl) statSuksesEl.textContent = formattedTotal;
         if (globalTotalAktivasiEl) globalTotalAktivasiEl.textContent = formattedTotal;
         if (globalHariIniAktivasiEl) globalHariIniAktivasiEl.textContent = formattedDaily;
-        if (visitorCounterEl && visitors !== undefined) {
+        if (visitorCounterEl && visitors !== undefined && visitors !== null) {
           visitorCounterEl.textContent = Number(visitors || 0).toLocaleString("id-ID");
         }
       }
 
+      // --------------------------------------------------------
+      // FUNGSI 4: Update ticker uptime di UI
+      // --------------------------------------------------------
       function updateGlobalUptimeUI() {
-        if (!globalServerStartTime) {
-          globalServerStartTime = getOrInitBaseStartTime(null);
-          localStorage.setItem(LS_UPTIME_KEY, String(globalServerStartTime));
-        }
+        if (!globalServerStartTime) return;
 
         const uptimeCounterEl = document.getElementById("serverUptimeCounter");
         const uptimeDaysEl = document.getElementById("uptimeDays");
@@ -1923,11 +2040,6 @@
         }
       }
 
-      if (!window.globalUptimeTicker) {
-        updateGlobalUptimeUI();
-        window.globalUptimeTicker = setInterval(updateGlobalUptimeUI, 1000);
-      }
-
       function updateLiveDateTimeWidget() {
         const dateEl = document.getElementById("widgetDateVal");
         const timeEl = document.getElementById("widgetTimeVal");
@@ -1949,9 +2061,6 @@
           timeEl.textContent = `${hh}:${mm}:${ss}`;
         }
       }
-
-      setInterval(updateLiveDateTimeWidget, 1000);
-      updateLiveDateTimeWidget();
 
       function initDashboardBatteryStatus() {
         const batteryValEl = document.getElementById("widgetBatteryVal");
@@ -1989,72 +2098,64 @@
         }
       }
 
+      // --------------------------------------------------------
+      // INIT SEMUA
+      // --------------------------------------------------------
+      await initServerStartTime();
+      updateGlobalUptimeUI();
+      if (!window.globalUptimeTicker) {
+        window.globalUptimeTicker = setInterval(updateGlobalUptimeUI, 1000);
+      }
+
+      // Visitor tracking (sekali per load, dengan proteksi Redis)
+      const visitorCount = await trackVisitor();
+      if (visitorCount !== null) {
+        renderStatsUI(window.ayakaGlobalTotalGen, window.ayakaGlobalDailyGen, visitorCount);
+      }
+
+      // Clock & battery
+      setInterval(updateLiveDateTimeWidget, 1000);
+      updateLiveDateTimeWidget();
       initDashboardBatteryStatus();
 
-      // ============================================================
-      // FETCH DATA DARI SUPABASE
-      // ============================================================
+      // --------------------------------------------------------
+      // REFRESH REALTIME (tiap 5 detik) — Visitor + Uptime sync
+      // --------------------------------------------------------
+      setInterval(async () => {
+        // Refresh server_start_time (jaga-jaga kalau ada HP lain yang reset / admin ubah)
+        const latestStart = await redisGet("server_start_time");
+        const latestStartNum = latestStart ? parseInt(latestStart) : 0;
+        if (latestStartNum && latestStartNum !== globalServerStartTime) {
+          // Pilih yang lebih AWAL supaya tidak reset ke 0
+          globalServerStartTime = Math.min(globalServerStartTime || latestStartNum, latestStartNum);
+        }
+
+        // Refresh total visitor
+        const totalRaw = await redisGet("total_visitors");
+        const total = parseInt(totalRaw) || 0;
+        renderStatsUI(window.ayakaGlobalTotalGen, window.ayakaGlobalDailyGen, total);
+      }, 5000);
+
+      // --------------------------------------------------------
+      // FETCH DATA DARI SUPABASE (untuk stats aktivasi & recent)
+      // --------------------------------------------------------
       async function fetchAndUpdateStats() {
         try {
           if (typeof window.supabaseClient !== 'undefined' && window.supabaseClient) {
-            const visitorBadgeLabel = document.getElementById("visitorBadgeLabel");
-
-            const visitorSessionKey = "ayaka_visitor_session_flag";
-            const isNewSessionVisitor = !sessionStorage.getItem(visitorSessionKey);
-
             let { data: statsData, error } = await window.supabaseClient
               .from('site_stats')
-              .select('visitors, total_generated, daily_generated, last_reset_date, server_start_time, recent_activations')
+              .select('total_generated, daily_generated, last_reset_date, recent_activations')
               .eq('id', 1)
               .single();
 
             if (statsData) {
-              let currentVisitors = statsData.visitors || 0;
               let dbTotal = statsData.total_generated || 0;
               let dbDaily = statsData.daily_generated || 0;
               let lastResetDate = statsData.last_reset_date || '';
 
-              // Muat riwayat aktivasi dari Supabase
               if (statsData.recent_activations && Array.isArray(statsData.recent_activations)) {
                 activeRecentList = statsData.recent_activations;
                 renderRecentActivationUI();
-              }
-
-              // ==== SERVER START TIME (FIX: TIDAK RESET KE 0) ====
-              // Ambil dari localStorage & DB, pilih yang PALING AWAL
-              const lsRaw = localStorage.getItem(LS_UPTIME_KEY);
-              const lsTime = lsRaw && !isNaN(parseInt(lsRaw)) && parseInt(lsRaw) > 0 ? parseInt(lsRaw) : 0;
-              const dbTime = statsData.server_start_time && !isNaN(parseInt(statsData.server_start_time)) && parseInt(statsData.server_start_time) > 0
-                ? parseInt(statsData.server_start_time)
-                : 0;
-
-              let chosenStartTime;
-              if (lsTime && dbTime) {
-                chosenStartTime = Math.min(lsTime, dbTime);
-              } else if (lsTime) {
-                chosenStartTime = lsTime;
-              } else if (dbTime) {
-                chosenStartTime = dbTime;
-              } else {
-                chosenStartTime = Date.now();
-              }
-
-              globalServerStartTime = chosenStartTime;
-              serverStartLoaded = true;
-
-              // Selalu simpan ke localStorage → agar reload tidak reset
-              localStorage.setItem(LS_UPTIME_KEY, String(chosenStartTime));
-
-              // Sinkronkan ke DB jika belum sama / belum ada
-              if (dbTime !== chosenStartTime) {
-                try {
-                  await window.supabaseClient
-                    .from('site_stats')
-                    .update({ server_start_time: chosenStartTime })
-                    .eq('id', 1);
-                } catch (updErr) {
-                  console.warn("Gagal sinkron server_start_time ke DB:", updErr);
-                }
               }
 
               // Reset counter harian jika tanggal berubah
@@ -2067,22 +2168,13 @@
                   .eq('id', 1);
               }
 
-              // Increment visitor sekali per sesi tab
-              if (isNewSessionVisitor) {
-                sessionStorage.setItem(visitorSessionKey, "1");
-                currentVisitors += 1;
-                await window.supabaseClient
-                  .from('site_stats')
-                  .update({ visitors: currentVisitors })
-                  .eq('id', 1);
-              }
-
-              if (visitorBadgeLabel) visitorBadgeLabel.textContent = "Live Online";
-
               const finalTotal = Math.max(dbTotal, window.ayakaGlobalTotalGen || 0);
               const finalDaily = Math.max(dbDaily, window.ayakaGlobalDailyGen || 0);
 
-              renderStatsUI(finalTotal, finalDaily, currentVisitors);
+              // Ambil visitors dari Redis (bukan Supabase)
+              const totalRaw = await redisGet("total_visitors");
+              const totalVisitors = parseInt(totalRaw) || 0;
+              renderStatsUI(finalTotal, finalDaily, totalVisitors);
             }
           }
         } catch (err) {
@@ -2093,18 +2185,17 @@
       await fetchAndUpdateStats();
       setInterval(fetchAndUpdateStats, 5000);
 
-      // ============================================================
-      // REALTIME LISTENER SUPABASE
-      // ============================================================
+      // --------------------------------------------------------
+      // REALTIME LISTENER SUPABASE (untuk aktivasi)
+      // --------------------------------------------------------
       if (typeof window.supabaseClient !== 'undefined' && window.supabaseClient) {
         try {
           window.supabaseClient
             .channel('public:site_stats_realtime')
-            .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'site_stats', filter: 'id=eq.1' }, payload => {
+            .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'site_stats', filter: 'id=eq.1' }, async payload => {
               if (payload && payload.new) {
                 const newTotal = payload.new.total_generated || 0;
                 const newDaily = payload.new.daily_generated || 0;
-                const newVisitors = payload.new.visitors || 0;
 
                 if (payload.new.recent_activations &&
                     Array.isArray(payload.new.recent_activations)) {
@@ -2112,19 +2203,9 @@
                   renderRecentActivationUI();
                 }
 
-                // FIX: Saat realtime update, pilih yang PALING AWAL juga
-                if (payload.new.server_start_time) {
-                  const dbTime = parseInt(payload.new.server_start_time);
-                  if (!isNaN(dbTime) && dbTime > 0) {
-                    const lsRaw = localStorage.getItem(LS_UPTIME_KEY);
-                    const lsTime = lsRaw && !isNaN(parseInt(lsRaw)) && parseInt(lsRaw) > 0 ? parseInt(lsRaw) : 0;
-                    const chosen = lsTime ? Math.min(lsTime, dbTime) : dbTime;
-                    globalServerStartTime = chosen;
-                    localStorage.setItem(LS_UPTIME_KEY, String(chosen));
-                  }
-                }
-
-                renderStatsUI(newTotal, newDaily, newVisitors);
+                const totalRaw = await redisGet("total_visitors");
+                const totalVisitors = parseInt(totalRaw) || 0;
+                renderStatsUI(newTotal, newDaily, totalVisitors);
               }
             })
             .subscribe();
@@ -2133,9 +2214,9 @@
         }
       }
 
-      // ============================================================
+      // --------------------------------------------------------
       // INCREMENT AKTIVASI → UPDATE SUPABASE
-      // ============================================================
+      // --------------------------------------------------------
       window.incrementAyakaActivationStats = async function(incrementCount = 1, userEmail = "", planName = "AM Premium Annual 1 Year") {
         try {
           if (!userEmail) {
@@ -2182,9 +2263,9 @@
         }
       };
 
-      // ============================================================
+      // --------------------------------------------------------
       // EVENT HANDLER AKTIVASI
-      // ============================================================
+      // --------------------------------------------------------
       const proceedStep3Btn = document.getElementById("proceedToStep3Btn");
       if (proceedStep3Btn) {
         proceedStep3Btn.addEventListener("click", () => {
@@ -2261,6 +2342,7 @@
           if (panelV2_1) panelV2_1.classList.add("active");
         });
       }
+
     });
   </script>
 </body>
