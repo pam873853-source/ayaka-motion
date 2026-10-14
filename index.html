@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="google-site-verification" content="-slmDiv0Kk6tYoNbi-JY9gLE39Bjz6psf0gqom0FFZk" />
-  <title>AYAKA STORE - Dashboard & Monitoring Baterai</title>
+  <title>AYAKA STORE - Home & Monitoring Baterai</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
@@ -610,6 +610,52 @@
       .sky-phase-label { font-size: 10px; padding: 3px 8px; }
       .sky-info-row { padding: 8px 10px; }
     }
+
+    /* ============================================================
+       AKTIVITAS SUB-TABS (V1 & V2)
+       ============================================================ */
+    .aktivitas-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 18px;
+      background: var(--card-inner, #1a1a2e);
+      padding: 6px;
+      border-radius: 16px;
+      border: 2px solid #000;
+      box-shadow: 4px 4px 0px #000;
+      max-width: 480px;
+    }
+    .aktivitas-tab {
+      flex: 1;
+      padding: 12px 14px;
+      border-radius: 12px;
+      background: transparent;
+      border: none;
+      color: #a0a0b0;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-transform: uppercase;
+    }
+    .aktivitas-tab:hover:not(.active) {
+      background: rgba(255, 255, 255, 0.06);
+      color: #fff;
+    }
+    .aktivitas-tab.active {
+      background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(236, 72, 153, 0.4);
+      transform: translateY(-1px);
+    }
+    .aktivitas-panel { display: none; }
+    .aktivitas-panel.active { display: block; animation: fadeInSlide 0.3s ease-out; }
   </style>
 </head>
 <body>
@@ -633,33 +679,25 @@
     </div>
 
     <div class="sidebar-menu">
-      <div class="nav-item active" id="nav-dashboard" data-view="dashboard">
+      <div class="nav-item active" id="nav-home" data-view="home">
         <i class="fa-solid fa-house"></i>
-        <span>Dashboard</span>
+        <span>Home</span>
       </div>
-      <div class="nav-item" id="nav-server-status" data-view="server-status">
-        <i class="fa-solid fa-signal"></i>
-        <span>Server Status</span>
+      <div class="nav-item" id="nav-aktivitas" data-view="aktivitas">
+        <i class="fa-solid fa-bolt"></i>
+        <span>Aktivitas</span>
       </div>
-      <div class="nav-item" id="nav-statistik" data-view="statistik">
-        <i class="fa-solid fa-chart-line"></i>
-        <span>Statistik Store</span>
+      <div class="nav-item" id="nav-am-bulk" data-view="am-bulk">
+        <i class="fa-solid fa-layer-group"></i>
+        <span>Bulk Akun AM</span>
       </div>
       <div class="nav-item" id="nav-temp-mail" data-view="temp-mail">
         <i class="fa-solid fa-envelope-open-text"></i>
         <span>Auto Temp Mail</span>
       </div>
-      <div class="nav-item" id="nav-am-generator" data-view="am-generator">
-        <i class="fa-solid fa-wand-magic-sparkles"></i>
-        <span>AM Generator</span>
-      </div>
-      <div class="nav-item" id="nav-am-generator-v2" data-view="am-generator-v2">
-        <i class="fa-solid fa-bolt-lightning"></i>
-        <span>AM Generator V2</span>
-      </div>
-      <div class="nav-item" id="nav-am-bulk" data-view="am-bulk">
-        <i class="fa-solid fa-layer-group"></i>
-        <span>Bulk Akun AM</span>
+      <div class="nav-item" id="nav-statistik" data-view="statistik">
+        <i class="fa-solid fa-chart-line"></i>
+        <span>Statistik Store</span>
       </div>
       <div class="nav-item" id="nav-dukung" data-view="dukung">
         <i class="fa-solid fa-heart"></i>
@@ -730,13 +768,16 @@
         <div style="font-size: 28px;">🌸❄️</div>
       </div>
 
-      <section id="view-dashboard">
+      <!-- ============================================================
+           VIEW: HOME (Pengganti Dashboard)
+           ============================================================ -->
+      <section id="view-home">
         <div class="status-badge-inline">
           <div class="status-ping-dot"></div>
           <span>Ayaka Online / <span id="realtimePing">Measuring...</span></span>
         </div>
 
-        <h1 class="dash-title">Dashboard Overview</h1>
+        <h1 class="dash-title">Home Overview</h1>
         <p class="dash-subtitle">Selamat datang di Panel Kontrol AYAKA STORE - Edisi Genshin Impact</p>
 
         <div class="widget-info-row">
@@ -798,22 +839,6 @@
 
         <div class="stats-grid" style="margin-top: -6px;">
           <div class="stat-card" style="grid-column: 1 / -1;">
-            <div class="stat-icon" style="background: rgba(219, 39, 119, 0.15); color: #f472b6;">
-              <i class="fa-solid fa-clock-rotate-left"></i>
-            </div>
-            <div class="stat-info" style="width: 100%; min-width: 0;">
-              <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px;">
-                <h3>Server Uptime (Global Redis Sync)</h3>
-                <span id="uptimePercentage" style="font-size: 12px; font-weight: 700; color: var(--success);">100.00%</span>
-              </div>
-              <p style="font-size: 18px; font-family: 'Space Grotesk', sans-serif; margin-top: 4px;" id="serverUptimeCounter">0 Days</p>
-              <div class="stat-desc" id="uptimeLiveStatus">Status: Terkoneksi & Berjalan Normal</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="stats-grid" style="margin-top: -6px;">
-          <div class="stat-card" style="grid-column: 1 / -1;">
             <div class="stat-icon" style="background: rgba(245, 158, 11, 0.15); color: #f59e0b;">
               <i class="fa-solid fa-users"></i>
             </div>
@@ -846,66 +871,326 @@
         </div>
       </section>
 
-      <section id="view-server-status" style="display: none;">
-        <h1 class="dash-title">Server Status</h1>
-        <p class="dash-subtitle">Pemantauan Status Layanan & Database Realtime</p>
+      <!-- ============================================================
+           VIEW: AKTIVITAS (AM Generator V1 + V2)
+           ============================================================ -->
+      <section id="view-aktivitas" style="display: none;">
+        <h1 class="dash-title">Aktivitas</h1>
+        <p class="dash-subtitle">Pilih engine generator untuk verifikasi & aktivasi lisensi Alight Motion</p>
+
+        <div class="aktivitas-tabs">
+          <button type="button" class="aktivitas-tab active" data-tab="v1">
+            <i class="fa-solid fa-wand-magic-sparkles"></i> Generator V1
+          </button>
+          <button type="button" class="aktivitas-tab" data-tab="v2">
+            <i class="fa-solid fa-bolt-lightning"></i> Generator V2
+          </button>
+        </div>
+
+        <!-- ============ PANEL V1 ============ -->
+        <div class="aktivitas-panel active" data-panel="v1" id="aktivitas-v1">
+          <div class="am-steps-container">
+            <div class="am-step-card active" id="amStepTab1" data-step="1">
+              <div class="am-step-number">1</div>
+              <div class="am-step-label">Hubungkan&#10;Akun</div>
+            </div>
+            <div class="am-step-card" id="amStepTab2" data-step="2">
+              <div class="am-step-number">2</div>
+              <div class="am-step-label">Aktivasi&#10;Akun</div>
+            </div>
+            <div class="am-step-card" id="amStepTab3" data-step="3">
+              <div class="am-step-number">3</div>
+              <div class="am-step-label">Premium&#10;Aktif!</div>
+            </div>
+          </div>
+
+          <div class="dash-card">
+            <div id="msgBox" class="message"></div>
+
+            <div class="am-step-content-panel active" id="amPanel1">
+              <h3 style="font-size: 15px; font-weight: 800; color: #fbcfe8; margin-bottom: 12px;">Tahap 1: Hubungkan Akun Alight Motion</h3>
+
+              <div class="auth-form-group">
+                <label>Email Akun Alight Motion</label>
+                <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                  <input type="email" id="emailInput" class="auth-input" placeholder="nama@email.com" style="flex: 1; min-width: 180px;">
+                  <button type="button" id="sendBtn" class="btn-pink" style="width: auto; padding: 12px 16px; flex-shrink: 0;">Kirim Link</button>
+                </div>
+              </div>
+
+              <div class="auth-form-group">
+                <label>Magic Link / URL Verifikasi Email</label>
+                <input type="url" id="magicInput" class="auth-input" placeholder="Paste link dari email di sini...">
+              </div>
+
+              <button type="button" id="nextToStep2Btn" class="btn-pink">
+                <i class="fa-solid fa-arrow-right"></i> Lanjut ke Tahap 2 (Aktivasi Akun)
+              </button>
+            </div>
+
+            <div class="am-step-content-panel" id="amPanel2">
+              <h3 style="font-size: 15px; font-weight: 800; color: #fbcfe8; margin-bottom: 6px;">Tahap 2: Aktivasi Akun</h3>
+              <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">Selesaikan proses aktivasi untuk membuka lisensi premium permanen.</p>
+
+              <div style="display: flex; justify-content: space-between; gap: 10px; margin-top: 20px;">
+                <button type="button" class="btn-pink" style="background: transparent; border: 1px solid var(--border-color); color: #fff; width: auto;" id="backToStep1Btn">
+                  <i class="fa-solid fa-arrow-left"></i> Kembali
+                </button>
+                <button type="button" id="proceedToStep3Btn" class="btn-pink" style="flex: 1;">
+                  Lanjut ke Tahap 3 (Premium Aktif) <i class="fa-solid fa-arrow-right"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="am-step-content-panel" id="amPanel3">
+              <div class="am-landing-box" style="padding: 10px 0;">
+                <div style="width: 52px; height: 52px; border-radius: 50%; background: var(--success-bg); border: 2px solid var(--success); display: flex; align-items: center; justify-content: center; color: var(--success); font-size: 22px; margin-bottom: 12px;">
+                  <i class="fa-solid fa-check"></i>
+                </div>
+
+                <h2 class="am-hero-title">Premium Aktif!</h2>
+                <p class="am-hero-desc">Verifikasi akun telah selesai. Akun Alight Motion Anda kini resmi aktif.</p>
+
+                <div class="res-data-box">
+                  <div class="res-data-row">
+                    <span class="lbl">Email:</span>
+                    <span class="val" id="resEmail">-</span>
+                  </div>
+                  <div class="res-data-row">
+                    <span class="lbl">Order ID:</span>
+                    <span class="val" id="resOrderId">-</span>
+                  </div>
+                  <div class="res-data-row">
+                    <span class="lbl">Status Aktivasi:</span>
+                    <span class="val" style="color: var(--success);">SUCCESS</span>
+                  </div>
+                </div>
+
+                <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
+                  <button type="button" class="btn-pink" style="background: transparent; border: 1px solid var(--border-color); color: #fff; width: auto; padding: 10px 20px; font-size: 13px;" id="resetAmFormV1Btn">
+                    <i class="fa-solid fa-rotate-right"></i> Proses Akun Lain
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ PANEL V2 ============ -->
+        <div class="aktivitas-panel" data-panel="v2" id="aktivitas-v2">
+          <div class="am-steps-container">
+            <div class="am-step-card active" id="amV2StepTab1" data-step="1">
+              <div class="am-step-number">1</div>
+              <div class="am-step-label">Hubungkan&#10;Akun</div>
+            </div>
+            <div class="am-step-card" id="amV2StepTab2" data-step="2">
+              <div class="am-step-number">2</div>
+              <div class="am-step-label">Aktivasi&#10;Akun</div>
+            </div>
+            <div class="am-step-card" id="amV2StepTab3" data-step="3">
+              <div class="am-step-number">3</div>
+              <div class="am-step-label">Premium&#10;Aktif!</div>
+            </div>
+          </div>
+
+          <div class="dash-card">
+            <div id="msgBoxV2" class="message"></div>
+
+            <div class="am-step-content-panel active" id="amV2Panel1">
+              <h3 style="font-size: 15px; font-weight: 800; color: #fbcfe8; margin-bottom: 12px;">Tahap 1: Hubungkan Akun V2</h3>
+
+              <div class="auth-form-group">
+                <label>Paket / Durasi Premium</label>
+                <select id="v2ProductSelect" class="auth-select">
+                  <option value="am.full.sub.annual.19q4">Annual Sub (1 Tahun)</option>
+                  <option value="am.full.sub.monthly.19q4">Monthly Sub (1 Bulan)</option>
+                </select>
+              </div>
+
+              <div class="auth-form-group">
+                <label>Prefix Order ID (Opsional)</label>
+                <input type="text" id="v2PrefixInput" class="auth-input" value="GPA" placeholder="Contoh: GPA / AYAKA">
+              </div>
+
+              <div class="auth-form-group">
+                <label>Email Akun Alight Motion</label>
+                <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                  <input type="email" id="emailInputV2" class="auth-input" placeholder="nama@email.com" style="flex: 1; min-width: 180px;">
+                  <button type="button" id="sendBtnV2" class="btn-pink" style="width: auto; padding: 12px 16px; flex-shrink: 0;">Kirim Link</button>
+                </div>
+              </div>
+
+              <div class="auth-form-group">
+                <label>Magic Link / URL Verifikasi Email</label>
+                <input type="url" id="magicInputV2" class="auth-input" placeholder="Paste link dari email di sini...">
+              </div>
+
+              <button type="button" id="nextToAmV2Step2Btn" class="btn-pink">
+                <i class="fa-solid fa-arrow-right"></i> Lanjut ke Tahap 2 (Aktivasi Akun)
+              </button>
+            </div>
+
+            <div class="am-step-content-panel" id="amV2Panel2">
+              <h3 style="font-size: 15px; font-weight: 800; color: #fbcfe8; margin-bottom: 6px;">Tahap 2: Aktivasi Sistem V2</h3>
+              <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">Selesaikan proses Engine V2 untuk mengaktifkan langganan.</p>
+
+              <div style="display: flex; justify-content: space-between; gap: 10px; margin-top: 20px;">
+                <button type="button" class="btn-pink" style="background: transparent; border: 1px solid var(--border-color); color: #fff; width: auto;" id="backToAmV2Step1Btn">
+                  <i class="fa-solid fa-arrow-left"></i> Kembali
+                </button>
+                <button type="button" id="proceedToAmV2Step3Btn" class="btn-pink" style="flex: 1;">
+                  Aktivasi Lisensi Final <i class="fa-solid fa-arrow-right"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="am-step-content-panel" id="amV2Panel3">
+              <div class="am-landing-box" style="padding: 10px 0;">
+                <div style="width: 52px; height: 52px; border-radius: 50%; background: var(--success-bg); border: 2px solid var(--success); display: flex; align-items: center; justify-content: center; color: var(--success); font-size: 22px; margin-bottom: 12px;">
+                  <i class="fa-solid fa-check"></i>
+                </div>
+
+                <h2 class="am-hero-title">Aktivasi V2 Berhasil!</h2>
+                <p class="am-hero-desc">Akun Alight Motion Anda telah sukses ditingkatkan via Engine V2.</p>
+
+                <div class="res-data-box">
+                  <div class="res-data-row">
+                    <span class="lbl">Email:</span>
+                    <span class="val" id="resEmailV2">-</span>
+                  </div>
+                  <div class="res-data-row">
+                    <span class="lbl">Order ID:</span>
+                    <span class="val" id="resOrderIdV2">-</span>
+                  </div>
+                  <div class="res-data-row">
+                    <span class="lbl">Engine:</span>
+                    <span class="val" style="color: #f472b6;">AM DIRECT V2</span>
+                  </div>
+                  <div class="res-data-row">
+                    <span class="lbl">Status Aktivasi:</span>
+                    <span class="val" style="color: var(--success);">SUCCESS</span>
+                  </div>
+                </div>
+
+                <button type="button" class="btn-pink" style="background: transparent; border: 1px solid var(--border-color); color: #fff; width: auto; padding: 10px 20px; font-size: 13px;" id="resetAmFormV2Btn">
+                  <i class="fa-solid fa-rotate-right"></i> Proses Akun Lain
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ============================================================
+           VIEW: BULK AKUN AM
+           ============================================================ -->
+      <section id="view-am-bulk" style="display: none;">
+        <h1 class="dash-title">Bulk Akun AM</h1>
+        <p class="dash-subtitle">Aktivasi Lisensi Alight Motion Secara Massal Sekaligus</p>
 
         <div class="dash-card">
-          <div class="database-card-custom" id="totalGeneratedCardCustom">
-            <div class="db-card-header">
-              <div class="db-icon-box" style="color: #f472b6;">
-                <i class="fa-solid fa-wand-magic-sparkles"></i>
-              </div>
-              <div class="db-text-group">
-                <div class="db-title">Total Akun Premium Generated</div>
-                <div class="db-subtitle">Live Counter Global (Upstash Redis)</div>
-              </div>
-            </div>
-            <div class="db-status-row" style="justify-content: space-between;">
-              <div style="display: flex; align-items: center; gap: 10px;">
-                <div class="db-blink-dot" style="background-color: #f472b6; box-shadow: 0 0 10px #f472b6;"></div>
-                <span id="totalGeneratedCounter" style="font-size: 24px; font-weight: 800; color: #fff; font-family: 'Space Grotesk', sans-serif;">Loading...</span>
-              </div>
-              <span id="lastGeneratedInfo" style="font-size: 11px; color: var(--text-muted);">Sinkronisasi aktif</span>
-            </div>
+          <div id="msgBoxBulk" class="message"></div>
+
+          <div class="auth-form-group">
+            <label>Paket / Durasi Premium</label>
+            <select id="bulkProductSelect" class="auth-select">
+              <option value="am.full.sub.annual.19q4">Annual Sub (1 Tahun)</option>
+              <option value="am.full.sub.monthly.19q4">Monthly Sub (1 Bulan)</option>
+            </select>
           </div>
 
-          <div class="database-card-custom" id="dbCardCustom">
-            <div class="db-card-header">
-              <div class="db-icon-box">
-                <i class="fa-solid fa-database"></i>
-              </div>
-              <div class="db-text-group">
-                <div class="db-title">Database</div>
-                <div class="db-subtitle">Supabase PostgreSQL + Upstash Redis</div>
-              </div>
-            </div>
-            <div class="db-status-row">
-              <div class="db-blink-dot"></div>
-              <span id="supaStatusLabel">Connected</span>
-            </div>
+          <div class="auth-form-group">
+            <label>Daftar Akun (Format: <code>email | magic_link</code> atau <code>email,magic_link</code> per baris)</label>
+            <textarea id="bulkDataInput" class="auth-textarea" placeholder="user1@gmail.com | https://identitytoolkit.googleapis.com/...&#10;user2@gmail.com | https://identitytoolkit.googleapis.com/..."></textarea>
           </div>
 
-          <div class="system-uptime-card-custom">
-            <div class="db-card-header">
-              <div class="db-icon-box" style="color: #c084fc; background: #25132a; border-color: #583361;">
-                <i class="fa-solid fa-tv"></i>
-              </div>
-              <div class="db-text-group">
-                <div class="db-title">System Uptime Global</div>
-                <div class="db-subtitle">Waktu aktif sistem global (WIB)</div>
-              </div>
+          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <button type="button" id="startBulkBtn" class="btn-pink" style="flex: 1; min-width: 160px;">
+              <i class="fa-solid fa-play"></i> Mulai Proses Bulk
+            </button>
+            <button type="button" id="exportBulkBtn" class="btn-pink" style="background: transparent; border: 1px solid var(--border-color); color: #fff; width: auto; display: none;">
+              <i class="fa-solid fa-download"></i> Unduh Hasil (.txt)
+            </button>
+          </div>
+        </div>
+
+        <div id="bulkResultCard" class="dash-card" style="display: none;">
+          <h3 style="font-size: 15px; font-weight: 800; color: #fbcfe8; margin-bottom: 10px;">Hasil Pemrosesan Bulk</h3>
+          <div class="bulk-table-container">
+            <table class="bulk-table">
+              <thead>
+                <tr>
+                  <th>Perangkat / No</th>
+                  <th>Email</th>
+                  <th>Order ID</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="bulkTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================
+           VIEW: AUTO TEMP MAIL
+           ============================================================ -->
+      <section id="view-temp-mail" style="display: none;">
+        <div id="tempMailMsg" class="message"></div>
+
+        <div class="ss-replica-wrapper">
+          <div class="ss-top-header">
+            <span class="ss-label-title">ALAMAT EMAIL KAMU</span>
+            <button type="button" class="ss-outlook-btn" id="outlookReaderInfoBtn">
+              <i class="fa-solid fa-globe"></i> Outlook Reader
+            </button>
+          </div>
+
+          <div class="ss-email-box">
+            <div class="ss-email-left">
+              <i class="fa-regular fa-envelope ss-email-icon"></i>
+              <span id="tempMailAddress" class="ss-email-address">Membuat email...</span>
             </div>
-            <div class="uptime-digits-row" id="systemUptimeCustomDisplay">
-              <span id="uptimeDays">0d</span>
-              <span id="uptimeHours">00h</span>
-              <span id="uptimeMinutes">00m</span>
-              <span id="uptimeSeconds">00s</span>
+            <button type="button" class="ss-copy-btn" id="copyTempMailBtn" title="Salin Email">
+              <i class="fa-regular fa-copy"></i>
+            </button>
+          </div>
+
+          <div class="ss-domain-approved-box">
+            <i class="fa-solid fa-check"></i>
+            <span>Domain approved (uptime <span id="uptimeDaysCount">14</span> days)</span>
+          </div>
+
+          <button type="button" class="ss-custom-btn" id="customTempMailBtn">
+            <i class="fa-solid fa-pen"></i> Custom
+          </button>
+
+          <div class="ss-action-row">
+            <button type="button" class="ss-refresh-btn" id="refreshTempMailBtn">
+              <i class="fa-solid fa-rotate" id="refreshInboxIcon"></i> Refresh
+            </button>
+            <button type="button" class="ss-new-btn" id="newTempMailBtn">
+              <i class="fa-solid fa-plus"></i> Buat Baru
+            </button>
+          </div>
+
+          <div class="ss-inbox-section-title">
+            Kotak Masuk <span id="inboxCountBadge">(0)</span>
+            <span id="clearInboxBtn">Bersihkan</span>
+          </div>
+
+          <div id="tempMailInboxList" class="inbox-list">
+            <div style="text-align: center; color: var(--text-muted); padding: 16px 10px; font-size: 12px; background: var(--card-inner); border: 1px dashed var(--border-color); border-radius: 10px;">
+              Belum ada pesan masuk. Email akan muncul di sini secara real-time.
             </div>
           </div>
         </div>
       </section>
 
+      <!-- ============================================================
+           VIEW: STATISTIK STORE
+           ============================================================ -->
       <section id="view-statistik" style="display: none;">
         <h1 class="dash-title">Statistik Store & Aktivasi</h1>
         <p class="dash-subtitle">Analisis Grafik Aktivasi Akun, Pengunjung, & Performa Layanan</p>
@@ -1010,305 +1295,9 @@
         </div>
       </section>
 
-      <section id="view-temp-mail" style="display: none;">
-        <div id="tempMailMsg" class="message"></div>
-
-        <div class="ss-replica-wrapper">
-          <div class="ss-top-header">
-            <span class="ss-label-title">ALAMAT EMAIL KAMU</span>
-            <button type="button" class="ss-outlook-btn" id="outlookReaderInfoBtn">
-              <i class="fa-solid fa-globe"></i> Outlook Reader
-            </button>
-          </div>
-
-          <div class="ss-email-box">
-            <div class="ss-email-left">
-              <i class="fa-regular fa-envelope ss-email-icon"></i>
-              <span id="tempMailAddress" class="ss-email-address">Membuat email...</span>
-            </div>
-            <button type="button" class="ss-copy-btn" id="copyTempMailBtn" title="Salin Email">
-              <i class="fa-regular fa-copy"></i>
-            </button>
-          </div>
-
-          <div class="ss-domain-approved-box">
-            <i class="fa-solid fa-check"></i>
-            <span>Domain approved (uptime <span id="uptimeDaysCount">14</span> days)</span>
-          </div>
-
-          <button type="button" class="ss-custom-btn" id="customTempMailBtn">
-            <i class="fa-solid fa-pen"></i> Custom
-          </button>
-
-          <div class="ss-action-row">
-            <button type="button" class="ss-refresh-btn" id="refreshTempMailBtn">
-              <i class="fa-solid fa-rotate" id="refreshInboxIcon"></i> Refresh
-            </button>
-            <button type="button" class="ss-new-btn" id="newTempMailBtn">
-              <i class="fa-solid fa-plus"></i> Buat Baru
-            </button>
-          </div>
-
-          <div class="ss-inbox-section-title">
-            Kotak Masuk <span id="inboxCountBadge">(0)</span>
-            <span id="clearInboxBtn">Bersihkan</span>
-          </div>
-
-          <div id="tempMailInboxList" class="inbox-list">
-            <div style="text-align: center; color: var(--text-muted); padding: 16px 10px; font-size: 12px; background: var(--card-inner); border: 1px dashed var(--border-color); border-radius: 10px;">
-              Belum ada pesan masuk. Email akan muncul di sini secara real-time.
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="view-am-generator" style="display: none;">
-        <h1 class="dash-title">AM Generator</h1>
-        <p class="dash-subtitle">Verifikasi & Aktivasi Lisensi Alight Motion (3 Langkah Mudah)</p>
-
-        <div class="am-steps-container">
-          <div class="am-step-card active" id="amStepTab1" data-step="1">
-            <div class="am-step-number">1</div>
-            <div class="am-step-label">Hubungkan&#10;Akun</div>
-          </div>
-          <div class="am-step-card" id="amStepTab2" data-step="2">
-            <div class="am-step-number">2</div>
-            <div class="am-step-label">Aktivasi&#10;Akun</div>
-          </div>
-          <div class="am-step-card" id="amStepTab3" data-step="3">
-            <div class="am-step-number">3</div>
-            <div class="am-step-label">Premium&#10;Aktif!</div>
-          </div>
-        </div>
-
-        <div class="dash-card">
-          <div id="msgBox" class="message"></div>
-
-          <div class="am-step-content-panel active" id="amPanel1">
-            <h3 style="font-size: 15px; font-weight: 800; color: #fbcfe8; margin-bottom: 12px;">Tahap 1: Hubungkan Akun Alight Motion</h3>
-            
-            <div class="auth-form-group">
-              <label>Email Akun Alight Motion</label>
-              <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                <input type="email" id="emailInput" class="auth-input" placeholder="nama@email.com" style="flex: 1; min-width: 180px;">
-                <button type="button" id="sendBtn" class="btn-pink" style="width: auto; padding: 12px 16px; flex-shrink: 0;">Kirim Link</button>
-              </div>
-            </div>
-
-            <div class="auth-form-group">
-              <label>Magic Link / URL Verifikasi Email</label>
-              <input type="url" id="magicInput" class="auth-input" placeholder="Paste link dari email di sini...">
-            </div>
-
-            <button type="button" id="nextToStep2Btn" class="btn-pink">
-              <i class="fa-solid fa-arrow-right"></i> Lanjut ke Tahap 2 (Aktivasi Akun)
-            </button>
-          </div>
-
-          <div class="am-step-content-panel" id="amPanel2">
-            <h3 style="font-size: 15px; font-weight: 800; color: #fbcfe8; margin-bottom: 6px;">Tahap 2: Aktivasi Akun</h3>
-            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">Selesaikan proses aktivasi untuk membuka lisensi premium permanen.</p>
-
-            <div style="display: flex; justify-content: space-between; gap: 10px; margin-top: 20px;">
-              <button type="button" class="btn-pink" style="background: transparent; border: 1px solid var(--border-color); color: #fff; width: auto;" id="backToStep1Btn">
-                <i class="fa-solid fa-arrow-left"></i> Kembali
-              </button>
-              <button type="button" id="proceedToStep3Btn" class="btn-pink" style="flex: 1;">
-                Lanjut ke Tahap 3 (Premium Aktif) <i class="fa-solid fa-arrow-right"></i>
-              </button>
-            </div>
-          </div>
-
-          <div class="am-step-content-panel" id="amPanel3">
-            <div class="am-landing-box" style="padding: 10px 0;">
-              <div style="width: 52px; height: 52px; border-radius: 50%; background: var(--success-bg); border: 2px solid var(--success); display: flex; align-items: center; justify-content: center; color: var(--success); font-size: 22px; margin-bottom: 12px;">
-                <i class="fa-solid fa-check"></i>
-              </div>
-
-              <h2 class="am-hero-title">Premium Aktif!</h2>
-              <p class="am-hero-desc">Verifikasi akun telah selesai. Akun Alight Motion Anda kini resmi aktif.</p>
-
-              <div class="res-data-box">
-                <div class="res-data-row">
-                  <span class="lbl">Email:</span>
-                  <span class="val" id="resEmail">-</span>
-                </div>
-                <div class="res-data-row">
-                  <span class="lbl">Order ID:</span>
-                  <span class="val" id="resOrderId">-</span>
-                </div>
-                <div class="res-data-row">
-                  <span class="lbl">Status Aktivasi:</span>
-                  <span class="val" style="color: var(--success);">SUCCESS</span>
-                </div>
-              </div>
-
-              <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
-                <button type="button" class="btn-pink" style="background: transparent; border: 1px solid var(--border-color); color: #fff; width: auto; padding: 10px 20px; font-size: 13px;" id="resetAmFormV1Btn">
-                  <i class="fa-solid fa-rotate-right"></i> Proses Akun Lain
-                </button>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </section>
-
-      <section id="view-am-generator-v2" style="display: none;">
-        <h1 class="dash-title">AM Generator V2</h1>
-        <p class="dash-subtitle">Verifikasi & Aktivasi Lisensi Alight Motion Advanced API (V2)</p>
-
-        <div class="am-steps-container">
-          <div class="am-step-card active" id="amV2StepTab1" data-step="1">
-            <div class="am-step-number">1</div>
-            <div class="am-step-label">Hubungkan&#10;Akun</div>
-          </div>
-          <div class="am-step-card" id="amV2StepTab2" data-step="2">
-            <div class="am-step-number">2</div>
-            <div class="am-step-label">Aktivasi&#10;Akun</div>
-          </div>
-          <div class="am-step-card" id="amV2StepTab3" data-step="3">
-            <div class="am-step-number">3</div>
-            <div class="am-step-label">Premium&#10;Aktif!</div>
-          </div>
-        </div>
-
-        <div class="dash-card">
-          <div id="msgBoxV2" class="message"></div>
-
-          <div class="am-step-content-panel active" id="amV2Panel1">
-            <h3 style="font-size: 15px; font-weight: 800; color: #fbcfe8; margin-bottom: 12px;">Tahap 1: Hubungkan Akun V2</h3>
-
-            <div class="auth-form-group">
-              <label>Paket / Durasi Premium</label>
-              <select id="v2ProductSelect" class="auth-select">
-                <option value="am.full.sub.annual.19q4">Annual Sub (1 Tahun)</option>
-                <option value="am.full.sub.monthly.19q4">Monthly Sub (1 Bulan)</option>
-              </select>
-            </div>
-
-            <div class="auth-form-group">
-              <label>Prefix Order ID (Opsional)</label>
-              <input type="text" id="v2PrefixInput" class="auth-input" value="GPA" placeholder="Contoh: GPA / AYAKA">
-            </div>
-
-            <div class="auth-form-group">
-              <label>Email Akun Alight Motion</label>
-              <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                <input type="email" id="emailInputV2" class="auth-input" placeholder="nama@email.com" style="flex: 1; min-width: 180px;">
-                <button type="button" id="sendBtnV2" class="btn-pink" style="width: auto; padding: 12px 16px; flex-shrink: 0;">Kirim Link</button>
-              </div>
-            </div>
-
-            <div class="auth-form-group">
-              <label>Magic Link / URL Verifikasi Email</label>
-              <input type="url" id="magicInputV2" class="auth-input" placeholder="Paste link dari email di sini...">
-            </div>
-
-            <button type="button" id="nextToAmV2Step2Btn" class="btn-pink">
-              <i class="fa-solid fa-arrow-right"></i> Lanjut ke Tahap 2 (Aktivasi Akun)
-            </button>
-          </div>
-
-          <div class="am-step-content-panel" id="amV2Panel2">
-            <h3 style="font-size: 15px; font-weight: 800; color: #fbcfe8; margin-bottom: 6px;">Tahap 2: Aktivasi Sistem V2</h3>
-            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">Selesaikan proses Engine V2 untuk mengaktifkan langganan.</p>
-
-            <div style="display: flex; justify-content: space-between; gap: 10px; margin-top: 20px;">
-              <button type="button" class="btn-pink" style="background: transparent; border: 1px solid var(--border-color); color: #fff; width: auto;" id="backToAmV2Step1Btn">
-                <i class="fa-solid fa-arrow-left"></i> Kembali
-              </button>
-              <button type="button" id="proceedToAmV2Step3Btn" class="btn-pink" style="flex: 1;">
-                Aktivasi Lisensi Final <i class="fa-solid fa-arrow-right"></i>
-              </button>
-            </div>
-          </div>
-
-          <div class="am-step-content-panel" id="amV2Panel3">
-            <div class="am-landing-box" style="padding: 10px 0;">
-              <div style="width: 52px; height: 52px; border-radius: 50%; background: var(--success-bg); border: 2px solid var(--success); display: flex; align-items: center; justify-content: center; color: var(--success); font-size: 22px; margin-bottom: 12px;">
-                <i class="fa-solid fa-check"></i>
-              </div>
-
-              <h2 class="am-hero-title">Aktivasi V2 Berhasil!</h2>
-              <p class="am-hero-desc">Akun Alight Motion Anda telah sukses ditingkatkan via Engine V2.</p>
-
-              <div class="res-data-box">
-                <div class="res-data-row">
-                  <span class="lbl">Email:</span>
-                  <span class="val" id="resEmailV2">-</span>
-                </div>
-                <div class="res-data-row">
-                  <span class="lbl">Order ID:</span>
-                  <span class="val" id="resOrderIdV2">-</span>
-                </div>
-                <div class="res-data-row">
-                  <span class="lbl">Engine:</span>
-                  <span class="val" style="color: #f472b6;">AM DIRECT V2</span>
-                </div>
-                <div class="res-data-row">
-                  <span class="lbl">Status Aktivasi:</span>
-                  <span class="val" style="color: var(--success);">SUCCESS</span>
-                </div>
-              </div>
-
-              <button type="button" class="btn-pink" style="background: transparent; border: 1px solid var(--border-color); color: #fff; width: auto; padding: 10px 20px; font-size: 13px;" id="resetAmFormV2Btn">
-                <i class="fa-solid fa-rotate-right"></i> Proses Akun Lain
-              </button>
-            </div>
-          </div>
-
-        </div>
-      </section>
-
-      <section id="view-am-bulk" style="display: none;">
-        <h1 class="dash-title">Bulk Akun AM</h1>
-        <p class="dash-subtitle">Aktivasi Lisensi Alight Motion Secara Massal Sekaligus</p>
-
-        <div class="dash-card">
-          <div id="msgBoxBulk" class="message"></div>
-
-          <div class="auth-form-group">
-            <label>Paket / Durasi Premium</label>
-            <select id="bulkProductSelect" class="auth-select">
-              <option value="am.full.sub.annual.19q4">Annual Sub (1 Tahun)</option>
-              <option value="am.full.sub.monthly.19q4">Monthly Sub (1 Bulan)</option>
-            </select>
-          </div>
-
-          <div class="auth-form-group">
-            <label>Daftar Akun (Format: <code>email | magic_link</code> atau <code>email,magic_link</code> per baris)</label>
-            <textarea id="bulkDataInput" class="auth-textarea" placeholder="user1@gmail.com | https://identitytoolkit.googleapis.com/...&#10;user2@gmail.com | https://identitytoolkit.googleapis.com/..."></textarea>
-          </div>
-
-          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-            <button type="button" id="startBulkBtn" class="btn-pink" style="flex: 1; min-width: 160px;">
-              <i class="fa-solid fa-play"></i> Mulai Proses Bulk
-            </button>
-            <button type="button" id="exportBulkBtn" class="btn-pink" style="background: transparent; border: 1px solid var(--border-color); color: #fff; width: auto; display: none;">
-              <i class="fa-solid fa-download"></i> Unduh Hasil (.txt)
-            </button>
-          </div>
-        </div>
-
-        <div id="bulkResultCard" class="dash-card" style="display: none;">
-          <h3 style="font-size: 15px; font-weight: 800; color: #fbcfe8; margin-bottom: 10px;">Hasil Pemrosesan Bulk</h3>
-          <div class="bulk-table-container">
-            <table class="bulk-table">
-              <thead>
-                <tr>
-                  <th>Perangkat / No</th>
-                  <th>Email</th>
-                  <th>Order ID</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody id="bulkTableBody"></tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-
+      <!-- ============================================================
+           VIEW: DUKUNG / DONASI
+           ============================================================ -->
       <section id="view-dukung" style="display: none;">
         <h1 class="dash-title">Dukung / Donasi</h1>
         <p class="dash-subtitle">Bantu Dukung Server AYAKA STORE Agar Tetap Berjalan Gratis & Stabil</p>
@@ -1335,6 +1324,9 @@
         </div>
       </section>
 
+      <!-- ============================================================
+           VIEW: TUTORIAL
+           ============================================================ -->
       <section id="view-tutorial" style="display: none;">
         <h1 class="dash-title">Tutorial & Panduan</h1>
         <p class="dash-subtitle">Langkah Mudah Menggunakan Seluruh Layanan Otomasi AYAKA STORE</p>
@@ -1362,7 +1354,7 @@
           
           <div style="display: grid; gap: 14px;">
             <div style="background: var(--card-inner); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px;">
-              <h4 style="color: #fff; font-size: 14px; margin-bottom: 6px;">1. Buka Menu Aktivasi / AM Generator</h4>
+              <h4 style="color: #fff; font-size: 14px; margin-bottom: 6px;">1. Buka Menu Aktivitas / AM Generator</h4>
               <p style="font-size: 12px; color: var(--text-muted);">Masukkan email akun Alight Motion Anda pada kolom yang telah disediakan, lalu klik <b>Kirim Link</b>.</p>
             </div>
 
@@ -1404,13 +1396,13 @@
   </div>
 
   <div class="bottom-nav-container">
-    <div class="bottom-nav-item active" data-view="dashboard">
+    <div class="bottom-nav-item active" data-view="home">
       <i class="fa-solid fa-house"></i>
-      <span>Dashboard</span>
+      <span>Home</span>
     </div>
-    <div class="bottom-nav-item" data-view="am-generator">
-      <i class="fa-solid fa-percent"></i>
-      <span>Aktivasi</span>
+    <div class="bottom-nav-item" data-view="aktivitas">
+      <i class="fa-solid fa-bolt"></i>
+      <span>Aktivitas</span>
     </div>
     <div class="bottom-nav-item" data-view="dukung">
       <i class="fa-solid fa-heart"></i>
@@ -1564,16 +1556,6 @@
     // ============================================================
     // ⏱️ SERVER UPTIME — AUTO START TIME (MONOTONIC, ANTI-TURUN)
     // ============================================================
-    // Start time TIDAK di-hardcode. Diambil otomatis dari:
-    //   1. localStorage (paling cepat & paling awal diketahui)
-    //   2. Upstash Redis (global, tersinkron antar device)
-    //   3. Date.now() (fallback pertama kali saja, lalu di-SETNX ke Redis)
-    //
-    // Logika anti-turun:
-    //   - Ambil timestamp start PALING AWAL (paling lama uptime-nya)
-    //   - Simpan nilai uptime maksimum di localStorage — kalau nilai baru lebih
-    //     kecil, pakai nilai maksimum (tidak pernah turun).
-
     const UPTIME_REDIS_KEY       = "ayaka:server_start_ms";
     const UPTIME_LOCAL_START_KEY = "ayaka:server_start_ms_local";
     const UPTIME_LOCAL_MAX_KEY   = "ayaka:uptime_max_seconds";
@@ -1582,7 +1564,6 @@
     let __maxUptimeSeconds  = 0;
     let __uptimeInitialized = false;
 
-    // Muat dari localStorage dulu (sinkron, cepat)
     try {
       const localStart = localStorage.getItem(UPTIME_LOCAL_START_KEY);
       if (localStart) {
@@ -1596,29 +1577,21 @@
       }
     } catch (e) { /* ignore */ }
 
-    /**
-     * Inisialisasi server start time.
-     * Prioritas: paling AWAL di antara {Redis, localStorage, Date.now()}.
-     */
     async function initServerStartTime() {
-      // 1. Cek Redis
       const res = await redisGet(UPTIME_REDIS_KEY);
       if (res && !res.__error && res.value) {
         const n = parseInt(res.value, 10);
         if (!isNaN(n) && n > 0) {
-          // Ambil yang PALING AWAL (uptime paling lama)
           if (__serverStartMs === null || n < __serverStartMs) {
             __serverStartMs = n;
           }
         }
       } else if (res && !res.__error && !res.value) {
-        // Redis kosong → seed pakai nilai lokal atau sekarang
         const seed = __serverStartMs || Date.now();
         const setnxRes = await redisSetNX(UPTIME_REDIS_KEY, seed);
         if (setnxRes === 1 || setnxRes === "1") {
           __serverStartMs = seed;
         } else {
-          // Race: device lain baru set → ambil lagi
           const r2 = await redisGet(UPTIME_REDIS_KEY);
           if (r2 && !r2.__error && r2.value) {
             const n2 = parseInt(r2.value, 10);
@@ -1631,12 +1604,10 @@
         }
       }
 
-      // 2. Fallback terakhir
       if (!__serverStartMs || isNaN(__serverStartMs) || __serverStartMs <= 0) {
         __serverStartMs = Date.now();
       }
 
-      // 3. Simpan ke localStorage (pakai yang paling awal)
       try {
         const localStart = localStorage.getItem(UPTIME_LOCAL_START_KEY);
         if (localStart) {
@@ -1652,12 +1623,6 @@
       console.log("🕒 Server start time initialized:", new Date(__serverStartMs).toISOString());
     }
 
-    /**
-     * Hitung uptime dalam DETIK dari __serverStartMs.
-     * - Pakai Math.floor
-     * - Tidak pernah negatif
-     * - Anti-turun: kalau diffSec < max sebelumnya → pakai max sebelumnya
-     */
     function computeStableUptimeSeconds() {
       if (!__serverStartMs) return __maxUptimeSeconds || 0;
 
@@ -1673,7 +1638,6 @@
       return diffSec;
     }
 
-    // Expose untuk debug
     window.computeStableUptimeSeconds = computeStableUptimeSeconds;
     window.getServerStartMs = () => __serverStartMs;
     window.isUptimeReady = () => __uptimeInitialized;
@@ -1691,7 +1655,6 @@
       return `${y}-${m}-${day}`;
     }
 
-    // Ambil komponen waktu WIB
     function getWIBDateParts(dateObj) {
       const d = dateObj || new Date();
       const wib = new Date(d.toLocaleString("en-US", { timeZone: WIB_TZ }));
@@ -1797,6 +1760,22 @@
         item.addEventListener("click", () => {
           const targetView = item.getAttribute("data-view");
           if (targetView) switchView(targetView);
+        });
+      });
+
+      // ========================================================
+      // SUB-TABS AKTIVITAS (V1 & V2)
+      // ========================================================
+      const aktivitasTabs = document.querySelectorAll(".aktivitas-tab");
+      const aktivitasPanels = document.querySelectorAll(".aktivitas-panel");
+
+      aktivitasTabs.forEach(tab => {
+        tab.addEventListener("click", () => {
+          const target = tab.getAttribute("data-tab");
+          aktivitasTabs.forEach(t => t.classList.toggle("active", t === tab));
+          aktivitasPanels.forEach(p => {
+            p.classList.toggle("active", p.getAttribute("data-panel") === target);
+          });
         });
       });
 
@@ -2173,12 +2152,8 @@
     // ============================================================
     document.addEventListener("DOMContentLoaded", async () => {
 
-      // 🔑 Key aktivasi
       const KEY_TOTAL_AKTIVASI = "ayaka:total_aktivasi";
 
-      // --------------------------------------------------------
-      // Track visitor via IP
-      // --------------------------------------------------------
       async function trackVisitor() {
         try {
           let ip = "unknown";
@@ -2221,9 +2196,6 @@
         }
       }
 
-      // --------------------------------------------------------
-      // Fetch TOTAL AKTIVASI & HARI INI dari Redis
-      // --------------------------------------------------------
       async function fetchAktivasiStatsFromRedis() {
         try {
           const todayStr = getLocalDateStr();
@@ -2261,42 +2233,35 @@
 
       window.fetchAktivasiStatsFromRedis = fetchAktivasiStatsFromRedis;
 
-      // --------------------------------------------------------
-      // ✅ UPDATE UPTIME UI — AUTO START, MONOTONIC (anti-turun)
-      // --------------------------------------------------------
       function updateGlobalUptimeUI() {
         const diffSec = computeStableUptimeSeconds();
 
-        const uptimeCounterEl   = document.getElementById("serverUptimeCounter");
-        const uptimeDaysEl      = document.getElementById("uptimeDays");
-        const uptimeHoursEl     = document.getElementById("uptimeHours");
-        const uptimeMinutesEl   = document.getElementById("uptimeMinutes");
-        const uptimeSecondsEl   = document.getElementById("uptimeSeconds");
-        const widgetUptimeVal   = document.getElementById("widgetUptimeVal");
-        const uptimeDaysCountEl = document.getElementById("uptimeDaysCount");
+        const uptimeCounterEl   = document.getElementById("serverUptimeCounter"); // mungkin null (dihapus)
+        const uptimeDaysEl      = document.getElementById("uptimeDays");           // mungkin null
+        const uptimeHoursEl     = document.getElementById("uptimeHours");          // mungkin null
+        const uptimeMinutesEl   = document.getElementById("uptimeMinutes");        // mungkin null
+        const uptimeSecondsEl   = document.getElementById("uptimeSeconds");        // mungkin null
+        const widgetUptimeVal   = document.getElementById("widgetUptimeVal");      // ada di home widget
+        const uptimeDaysCountEl = document.getElementById("uptimeDaysCount");      // ada di temp-mail
 
-        const totalDays  = Math.floor(diffSec / 86400);              // Math.floor — hanya naik
+        const totalDays  = Math.floor(diffSec / 86400);
         const hours      = Math.floor((diffSec % 86400) / 3600);
         const minutes    = Math.floor((diffSec % 3600) / 60);
         const seconds    = diffSec % 60;
 
-        // 🔹 HEADER utama → format "XX Days"
         if (uptimeCounterEl) {
           uptimeCounterEl.textContent = `${totalDays.toLocaleString("id-ID")} Days`;
         }
 
-        // 🔹 Split display di Server Status
         if (uptimeDaysEl)    uptimeDaysEl.textContent    = totalDays + "d";
         if (uptimeHoursEl)   uptimeHoursEl.textContent   = String(hours).padStart(2, "0") + "h";
         if (uptimeMinutesEl) uptimeMinutesEl.textContent = String(minutes).padStart(2, "0") + "m";
         if (uptimeSecondsEl) uptimeSecondsEl.textContent = String(seconds).padStart(2, "0") + "s";
 
-        // 🔹 Widget dashboard → format "XX Days"
         if (widgetUptimeVal) {
           widgetUptimeVal.textContent = `${totalDays} Days`;
         }
 
-        // 🔹 Info uptime kecil di Auto Temp Mail
         if (uptimeDaysCountEl) {
           uptimeDaysCountEl.textContent = totalDays;
         }
@@ -2322,9 +2287,6 @@
         tick();
       }
 
-      // --------------------------------------------------------
-      // 🔥 Live DateTime Widget — pakai WIB (Asia/Jakarta)
-      // --------------------------------------------------------
       function updateLiveDateTimeWidget() {
         const dateEl = document.getElementById("widgetDateVal");
         const timeEl = document.getElementById("widgetTimeVal");
@@ -2384,7 +2346,6 @@
       // --------------------------------------------------------
       // INIT SEMUA
       // --------------------------------------------------------
-      // ⏱️ Inisialisasi start time (dari Redis + localStorage)
       await initServerStartTime();
 
       updateGlobalUptimeUI();
@@ -2403,13 +2364,7 @@
       updateLiveDateTimeWidget();
       initDashboardBatteryStatus();
 
-      // --------------------------------------------------------
-      // Refresh periodik (5 detik) — visitor, aktivasi, recent.
-      // Uptime TIDAK di-sync via Redis karena start time sudah permanen
-      // (anti-turun). Cukup pakai computeStableUptimeSeconds().
-      // --------------------------------------------------------
       setInterval(async () => {
-        // Visitor
         const totalResult = await redisGet("total_visitors");
         if (totalResult && !totalResult.__error && totalResult.value) {
           const total = parseInt(totalResult.value) || 0;
@@ -2417,16 +2372,10 @@
           if (el) el.textContent = total.toLocaleString("id-ID");
         }
 
-        // Aktivasi stats
         await fetchAktivasiStatsFromRedis();
-
-        // Recent aktivasi
         await fetchRecentActivationsFromRedis();
       }, 5000);
 
-      // --------------------------------------------------------
-      // 🔥 INCREMENT AKTIVASI → REDIS + recent
-      // --------------------------------------------------------
       window.incrementAyakaActivationStats = async function(incrementCount = 1, userEmail = "", planName = "AM Premium Annual 1 Year") {
         try {
           if (!userEmail) {
@@ -2452,9 +2401,6 @@
         }
       };
 
-      // --------------------------------------------------------
-      // EVENT HANDLER AKTIVASI
-      // --------------------------------------------------------
       const proceedStep3Btn = document.getElementById("proceedToStep3Btn");
       if (proceedStep3Btn) {
         proceedStep3Btn.addEventListener("click", () => {
@@ -2502,8 +2448,8 @@
           if (emailInput) emailInput.value = "";
           if (magicInput) magicInput.value = "";
 
-          document.querySelectorAll("#view-am-generator .am-step-card").forEach(el => el.classList.remove("active"));
-          document.querySelectorAll("#view-am-generator .am-step-content-panel").forEach(el => el.classList.remove("active"));
+          document.querySelectorAll("#aktivitas-v1 .am-step-card").forEach(el => el.classList.remove("active"));
+          document.querySelectorAll("#aktivitas-v1 .am-step-content-panel").forEach(el => el.classList.remove("active"));
 
           const tab1 = document.getElementById("amStepTab1");
           const panel1 = document.getElementById("amPanel1");
@@ -2522,8 +2468,8 @@
           if (magicInputV2) magicInputV2.value = "";
           if (prefixInputV2) prefixInputV2.value = "GPA";
 
-          document.querySelectorAll("#view-am-generator-v2 .am-step-card").forEach(el => el.classList.remove("active"));
-          document.querySelectorAll("#view-am-generator-v2 .am-step-content-panel").forEach(el => el.classList.remove("active"));
+          document.querySelectorAll("#aktivitas-v2 .am-step-card").forEach(el => el.classList.remove("active"));
+          document.querySelectorAll("#aktivitas-v2 .am-step-content-panel").forEach(el => el.classList.remove("active"));
 
           const tabV2_1 = document.getElementById("amV2StepTab1");
           const panelV2_1 = document.getElementById("amV2Panel1");
