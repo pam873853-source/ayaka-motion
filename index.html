@@ -1098,7 +1098,7 @@
             <div class="auth-form-group">
               <label>Magic Link / URL Firebase Alight Creative</label>
               <!-- Placeholder diubah sesuai permintaan -->
-              <input type="url" id="magicInput" class="auth-input" placeholder="https://firebase.alightcreative.com/...">
+              <input type="url" id="magicInput" class="auth-input" placeholder="https://alight-creative.firebaseapp.com/...">
             </div>
 
             <button type="button" id="nextToStep2Btn" class="btn-pink">
@@ -1204,7 +1204,7 @@
             <div class="auth-form-group">
               <label>Magic Link / URL Firebase Alight Creative</label>
               <!-- Placeholder diubah sesuai permintaan -->
-              <input type="url" id="magicInputV2" class="auth-input" placeholder="https://firebase.alightcreative.com/...">
+              <input type="url" id="magicInputV2" class="auth-input" placeholder="https://alight-creative.firebaseapp.com/...">
             </div>
 
             <button type="button" id="nextToAmV2Step2Btn" class="btn-pink">
@@ -2507,41 +2507,6 @@
           if (panelV2_1) panelV2_1.classList.add("active");
         });
       }
-
-      // ============================================================
-      // 🛠️ FUNGSI TAMBAHAN: SIMULASI KIRIM MAGIC LINK
-      // (Karena fungsi asli biasanya ada di auth.js, kita buat fallback di sini)
-      // ============================================================
-      function simulateSendMagicLink(email, msgBoxId) {
-        const msgBox = document.getElementById(msgBoxId);
-        if (!msgBox) return;
-
-        if (!email || !email.includes('@')) {
-          msgBox.textContent = "⚠️ Silakan masukkan alamat email yang valid terlebih dahulu.";
-          msgBox.style.color = "#f87171"; // Merah
-          msgBox.style.display = "block";
-          return;
-        }
-
-        msgBox.textContent = "⏳ Mengirim link verifikasi ke " + email + "...";
-        msgBox.style.color = "#fbbf24"; // Kuning
-        msgBox.style.display = "block";
-
-        setTimeout(() => {
-          msgBox.textContent = "✅ Link verifikasi berhasil dikirim ke " + email + ". Silakan periksa kotak masuk (Inbox/Spam) Anda.";
-          msgBox.style.color = "#4ade80"; // Hijau
-        }, 1500);
-      }
-
-      document.getElementById('sendBtn')?.addEventListener('click', () => {
-        const email = document.getElementById('emailInput')?.value;
-        simulateSendMagicLink(email, 'msgBox');
-      });
-
-      document.getElementById('sendBtnV2')?.addEventListener('click', () => {
-        const email = document.getElementById('emailInputV2')?.value;
-        simulateSendMagicLink(email, 'msgBoxV2');
-      });
 
     });
   </script>
