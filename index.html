@@ -1442,11 +1442,15 @@
         const res = await fetch(`${UPSTASH_URL}/get/${encodeURIComponent(key)}`, {
           headers: UPSTASH_HEADERS,
         });
+        if (!res.ok) {
+          console.warn("redisGet HTTP error:", res.status);
+          return { __error: true };
+        }
         const json = await res.json();
-        return json.result;
+        return { value: json.result };
       } catch (e) {
-        console.warn("redisGet error:", e);
-        return null;
+        console.warn("redisGet exception:", e);
+        return { __error: true };
       }
     }
 
@@ -1459,6 +1463,20 @@
         return json.result;
       } catch (e) {
         console.warn("redisSet error:", e);
+        return null;
+      }
+    }
+
+    // 🔥 SETNX — hanya set kalau key BELUM ADA. Ini mencegah reset uptime.
+    async function redisSetNX(key, value) {
+      try {
+        const res = await fetch(`${UPSTASH_URL}/setnx/${encodeURIComponent(key)}/${encodeURIComponent(value)}`, {
+          headers: UPSTASH_HEADERS,
+        });
+        const json = await res.json();
+        return json.result;
+      } catch (e) {
+        console.warn("redisSetNX error:", e);
         return null;
       }
     }
@@ -1823,7 +1841,6 @@
 
     // ============================================================
     // MANAJEMEN RIWAYAT LIVE RECENT ACTIVATION
-    // (Data tersimpan di Supabase)
     // ============================================================
     let activeRecentList = [];
 
@@ -1870,7 +1887,6 @@
       container.innerHTML = htmlContent;
     }
 
-    // Simpan riwayat aktivasi ke Supabase
     window.addLiveRecentActivation = async function(rawEmail, planType) {
       if (!rawEmail) rawEmail = "user" + Math.floor(1000 + Math.random() * 9000) + "@gmail.com";
       
@@ -1902,10 +1918,12 @@
 
     // ============================================================
     // 🚀 SISTEM UPTIME & VISITOR GLOBAL VIA UPSTASH REDIS
-    // Tidak pakai localStorage lagi. Semua dari Redis.
-    // 🔥 UPTIME SUDAH SMOOTH — pakai self-correcting timer
+    // 🔥 FIX BUG: pakai SETNX (anti-overwrite), new key, no reset
     // ============================================================
     document.addEventListener("DOMContentLoaded", async () => {
+
+      // 🔑 Key baru dengan versi — biar mulai fresh dari 0, tidak bawa data corrupt dari bug lama
+      const UPTIME_KEY = "ayaka_uptime_start_v2";
 
       let globalServerStartTime = null;
 
@@ -1913,25 +1931,59 @@
       window.ayakaGlobalDailyGen = 0;
 
       // --------------------------------------------------------
-      // FUNGSI 1: Ambil / inisialisasi server_start_time dari Redis
+      // FUNGSI 1: init server_start_time dengan SETNX (AMAN)
       // --------------------------------------------------------
       async function initServerStartTime() {
         try {
-          let startTimeRaw = await redisGet("server_start_time");
-          let startTimeNum = startTimeRaw ? parseInt(startTimeRaw) : 0;
+          // Step 1: coba GET dulu
+          const getResult = await redisGet(UPTIME_KEY);
 
-          if (!startTimeNum || isNaN(startTimeNum) || startTimeNum <= 0) {
-            // Belum ada → set pertama kali
-            startTimeNum = Date.now();
-            await redisSet("server_start_time", startTimeNum);
-            console.log("🌱 Redis: server_start_time dibuat pertama kali →", startTimeNum);
-          } else {
-            console.log("📡 Redis: server_start_time dimuat →", startTimeNum);
+          // Jika GET sukses dan ada value valid → pakai
+          if (getResult && !getResult.__error && getResult.value) {
+            const num = parseInt(getResult.value);
+            if (num > 0 && !isNaN(num)) {
+              globalServerStartTime = num;
+              console.log("📡 Uptime dimuat dari Redis:", new Date(num).toISOString());
+              return;
+            }
           }
 
-          globalServerStartTime = startTimeNum;
+          // Jika GET error (network) → JANGAN tulis apa-apa, pakai fallback lokal saja
+          // (lebih baik uptime lokal sesi ini saja daripada corrupt global)
+          if (getResult && getResult.__error) {
+            console.warn("⚠️ Redis GET error — pakai fallback lokal (tidak menulis ke Redis)");
+            globalServerStartTime = Date.now();
+            return;
+          }
+
+          // Step 2: value tidak ada (legit null) → coba SETNX
+          const now = Date.now();
+          const setnxResult = await redisSetNX(UPTIME_KEY, now);
+
+          if (setnxResult === 1 || setnxResult === "1") {
+            // Kita yang menang race → pakai timestamp kita
+            globalServerStartTime = now;
+            console.log("🌱 Uptime diinisialisasi pertama kali:", new Date(now).toISOString());
+            return;
+          }
+
+          // Step 3: SETNX gagal (ada yang set duluan) → GET lagi
+          const getResult2 = await redisGet(UPTIME_KEY);
+          if (getResult2 && !getResult2.__error && getResult2.value) {
+            const num2 = parseInt(getResult2.value);
+            if (num2 > 0 && !isNaN(num2)) {
+              globalServerStartTime = num2;
+              console.log("📡 Uptime dimuat setelah race:", new Date(num2).toISOString());
+              return;
+            }
+          }
+
+          // Step 4: Fallback terakhir
+          globalServerStartTime = now;
+          console.warn("⚠️ Fallback: pakai timestamp lokal");
+
         } catch (err) {
-          console.warn("initServerStartTime error:", err);
+          console.warn("initServerStartTime exception:", err);
           globalServerStartTime = Date.now();
         }
       }
@@ -1943,7 +1995,6 @@
         try {
           let ip = "unknown";
 
-          // Ambil IP user
           try {
             const ipRes = await fetch("https://api.ipify.org?format=json");
             const ipData = await ipRes.json();
@@ -1953,22 +2004,31 @@
           }
 
           const visitorKey = `visitor:${ip}`;
-          const exists = await redisGet(visitorKey);
+          const existsResult = await redisGet(visitorKey);
+
+          // Kalau error, skip (jangan dobel increment)
+          if (existsResult && existsResult.__error) {
+            console.warn("⚠️ Visitor check error — skip increment");
+            return null;
+          }
+
+          const exists = existsResult && existsResult.value;
 
           if (!exists) {
-            // Belum pernah berkunjung → increment total + set visitor flag
             await redisIncr("total_visitors");
             await redisSet(visitorKey, "1");
-            await redisExpire(visitorKey, 3600); // 1 jam
+            await redisExpire(visitorKey, 3600);
             console.log("🆕 Visitor baru tercatat:", ip);
           } else {
             console.log("👤 Visitor sudah tercatat dalam 1 jam terakhir:", ip);
           }
 
-          // Ambil total pengunjung terkini
-          const totalRaw = await redisGet("total_visitors");
-          const total = parseInt(totalRaw) || 0;
-          return total;
+          const totalResult = await redisGet("total_visitors");
+          if (totalResult && !totalResult.__error && totalResult.value) {
+            const total = parseInt(totalResult.value) || 0;
+            return total;
+          }
+          return null;
         } catch (err) {
           console.warn("trackVisitor error:", err);
           return null;
@@ -2001,8 +2061,7 @@
       }
 
       // --------------------------------------------------------
-      // FUNGSI 4: Update ticker uptime di UI
-      // 🔥 Menggunakan Math.round + drift-free calculation
+      // FUNGSI 4: Update ticker uptime di UI (SMOOTH)
       // --------------------------------------------------------
       function updateGlobalUptimeUI() {
         if (!globalServerStartTime) return;
@@ -2015,8 +2074,6 @@
         const widgetUptimeVal = document.getElementById("widgetUptimeVal");
 
         const currentMillis = Date.now();
-        // Gunakan pembulatan ke bawah dari selisih milidetik
-        // supaya transisi 45 → 46 → 47 terjadi tepat di batas detik
         let diffSec = Math.floor((currentMillis - globalServerStartTime) / 1000);
         if (diffSec < 0) diffSec = 0;
 
@@ -2046,33 +2103,30 @@
       }
 
       // --------------------------------------------------------
-      // 🔥 FUNGSI 5: DRIFT-FREE TIMER (self-correcting scheduler)
-      // Menjadwalkan update TEPAT di batas milidetik setiap detiknya
-      // sehingga angka detik bergerak mulus: 45 → 46 → 47 → 48
+      // 🔥 FUNGSI 5: DRIFT-FREE SMOOTH TICKER
+      // Menjadwalkan update TEPAT di batas milidetik detik berikutnya
       // --------------------------------------------------------
       function startSmoothUptimeTicker() {
-        function tick() {
-          updateGlobalUptimeUI();
-
-          // Hitung sisa milidetik menuju detik berikutnya
-          const now = Date.now();
-          const msIntoSecond = now % 1000;
-          let delay = 1000 - msIntoSecond;
-
-          // Tambah sedikit offset (5ms) supaya tidak "balapan" dengan boundary
-          delay = delay < 5 ? delay + 1000 : delay + 5;
-
-          // Simpan timer id global agar bisa di-clear jika perlu
-          window.__ayakaUptimeTimer = setTimeout(tick, delay);
-        }
-
         // Clear timer lama jika ada
         if (window.__ayakaUptimeTimer) {
           clearTimeout(window.__ayakaUptimeTimer);
           window.__ayakaUptimeTimer = null;
         }
 
-        // Jalankan tick pertama
+        function tick() {
+          updateGlobalUptimeUI();
+
+          // Hitung waktu tepat menuju boundary detik berikutnya
+          const now = Date.now();
+          const msIntoSecond = now % 1000;
+          let delay = 1000 - msIntoSecond;
+
+          // Kalau delay terlalu kecil (< 8ms) → tambah 1 detik biar tidak double-fire
+          if (delay < 8) delay += 1000;
+
+          window.__ayakaUptimeTimer = setTimeout(tick, delay);
+        }
+
         tick();
       }
 
@@ -2139,9 +2193,9 @@
       // --------------------------------------------------------
       await initServerStartTime();
       updateGlobalUptimeUI();
-      startSmoothUptimeTicker(); // 🔥 pakai timer mulus (bukan setInterval)
+      startSmoothUptimeTicker(); // 🔥 smooth ticker
 
-      // Visitor tracking (sekali per load, dengan proteksi Redis)
+      // Visitor tracking (sekali per load)
       const visitorCount = await trackVisitor();
       if (visitorCount !== null) {
         renderStatsUI(window.ayakaGlobalTotalGen, window.ayakaGlobalDailyGen, visitorCount);
@@ -2153,25 +2207,32 @@
       initDashboardBatteryStatus();
 
       // --------------------------------------------------------
-      // REFRESH REALTIME (tiap 5 detik) — Visitor + Uptime sync
+      // 🔥 REFRESH SAFE: hanya menerima nilai yang LEBIH AWAL (uptime tidak turun)
       // --------------------------------------------------------
       setInterval(async () => {
-        // Refresh server_start_time (jaga-jaga kalau ada HP lain yang reset / admin ubah)
-        const latestStart = await redisGet("server_start_time");
-        const latestStartNum = latestStart ? parseInt(latestStart) : 0;
-        if (latestStartNum && latestStartNum !== globalServerStartTime) {
-          // Pilih yang lebih AWAL supaya tidak reset ke 0
-          globalServerStartTime = Math.min(globalServerStartTime || latestStartNum, latestStartNum);
+        const getResult = await redisGet(UPTIME_KEY);
+        if (getResult && !getResult.__error && getResult.value) {
+          const num = parseInt(getResult.value);
+          if (num > 0 && !isNaN(num)) {
+            // HANYA update kalau nilai Redis LEBIH AWAL (uptime jadi lebih besar)
+            // Ini mencegah uptime reset ke bawah
+            if (!globalServerStartTime || num < globalServerStartTime) {
+              globalServerStartTime = num;
+              console.log("🔄 Uptime sync: pakai timestamp lebih awal dari Redis");
+            }
+          }
         }
 
         // Refresh total visitor
-        const totalRaw = await redisGet("total_visitors");
-        const total = parseInt(totalRaw) || 0;
-        renderStatsUI(window.ayakaGlobalTotalGen, window.ayakaGlobalDailyGen, total);
+        const totalResult = await redisGet("total_visitors");
+        if (totalResult && !totalResult.__error && totalResult.value) {
+          const total = parseInt(totalResult.value) || 0;
+          renderStatsUI(window.ayakaGlobalTotalGen, window.ayakaGlobalDailyGen, total);
+        }
       }, 5000);
 
       // --------------------------------------------------------
-      // FETCH DATA DARI SUPABASE (untuk stats aktivasi & recent)
+      // FETCH DATA DARI SUPABASE
       // --------------------------------------------------------
       async function fetchAndUpdateStats() {
         try {
@@ -2192,7 +2253,6 @@
                 renderRecentActivationUI();
               }
 
-              // Reset counter harian jika tanggal berubah
               const todayStr = new Date().toISOString().split('T')[0];
               if (lastResetDate !== todayStr) {
                 dbDaily = 0;
@@ -2205,9 +2265,10 @@
               const finalTotal = Math.max(dbTotal, window.ayakaGlobalTotalGen || 0);
               const finalDaily = Math.max(dbDaily, window.ayakaGlobalDailyGen || 0);
 
-              // Ambil visitors dari Redis (bukan Supabase)
-              const totalRaw = await redisGet("total_visitors");
-              const totalVisitors = parseInt(totalRaw) || 0;
+              const totalResult = await redisGet("total_visitors");
+              const totalVisitors = (totalResult && !totalResult.__error && totalResult.value)
+                ? parseInt(totalResult.value) || 0
+                : 0;
               renderStatsUI(finalTotal, finalDaily, totalVisitors);
             }
           }
@@ -2220,7 +2281,7 @@
       setInterval(fetchAndUpdateStats, 5000);
 
       // --------------------------------------------------------
-      // REALTIME LISTENER SUPABASE (untuk aktivasi)
+      // REALTIME LISTENER SUPABASE
       // --------------------------------------------------------
       if (typeof window.supabaseClient !== 'undefined' && window.supabaseClient) {
         try {
@@ -2237,8 +2298,10 @@
                   renderRecentActivationUI();
                 }
 
-                const totalRaw = await redisGet("total_visitors");
-                const totalVisitors = parseInt(totalRaw) || 0;
+                const totalResult = await redisGet("total_visitors");
+                const totalVisitors = (totalResult && !totalResult.__error && totalResult.value)
+                  ? parseInt(totalResult.value) || 0
+                  : 0;
                 renderStatsUI(newTotal, newDaily, totalVisitors);
               }
             })
@@ -2249,7 +2312,7 @@
       }
 
       // --------------------------------------------------------
-      // INCREMENT AKTIVASI → UPDATE SUPABASE
+      // INCREMENT AKTIVASI
       // --------------------------------------------------------
       window.incrementAyakaActivationStats = async function(incrementCount = 1, userEmail = "", planName = "AM Premium Annual 1 Year") {
         try {
