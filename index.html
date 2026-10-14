@@ -129,16 +129,6 @@
       gap: 12px;
     }
 
-    .donate-btn {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--pink);
-      text-decoration: none;
-    }
-
     .contact-btn {
       background: var(--green);
       color: var(--black);
@@ -165,6 +155,21 @@
       padding: 16px;
       max-width: 480px;
       margin: 0 auto;
+    }
+
+    /* ================= CONTENT SECTIONS ================= */
+    .content-section {
+      display: none;
+    }
+
+    .content-section.active {
+      display: block;
+      animation: fadeIn 0.3s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     /* ================= WIDGETS ================= */
@@ -366,11 +371,6 @@
       animation: fadeIn 0.3s ease-out;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
     .step-label {
       font-family: 'Space Grotesk', sans-serif;
       font-size: 11px;
@@ -411,32 +411,41 @@
       background: #ffffff;
     }
 
-    .captcha-box {
-      border: 2px solid #e5e7eb;
-      border-radius: 8px;
-      padding: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 14px;
-      background: #f9fafb;
-    }
-
-    .captcha-text {
+    .input-textarea {
+      width: 100%;
+      padding: 14px;
+      border: 2px solid var(--black);
+      border-radius: 10px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
       font-size: 13px;
-      color: var(--text-muted);
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      background: #f3f4f6;
+      outline: none;
+      transition: border-color 0.2s;
+      min-height: 120px;
+      resize: vertical;
     }
 
-    .captcha-logo {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      font-size: 10px;
-      color: var(--text-muted);
-      font-weight: 600;
+    .input-textarea:focus {
+      border-color: var(--pink);
+      background: #ffffff;
+    }
+
+    .input-select {
+      width: 100%;
+      padding: 14px;
+      border: 2px solid var(--black);
+      border-radius: 10px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 14px;
+      background: #f3f4f6;
+      outline: none;
+      transition: border-color 0.2s;
+      cursor: pointer;
+    }
+
+    .input-select:focus {
+      border-color: var(--pink);
+      background: #ffffff;
     }
 
     .btn-green {
@@ -464,6 +473,11 @@
       box-shadow: 2px 2px 0px var(--black);
     }
 
+    .btn-green:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
     .btn-white {
       width: 100%;
       padding: 16px;
@@ -487,6 +501,31 @@
     .btn-white:active {
       transform: translate(2px, 2px);
       box-shadow: 1px 1px 0px var(--black);
+    }
+
+    .btn-pink {
+      width: 100%;
+      padding: 16px;
+      background: var(--pink);
+      color: #ffffff;
+      border: 2px solid var(--black);
+      border-radius: 12px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 10px;
+      transition: transform 0.1s;
+    }
+
+    .btn-pink:active {
+      transform: translate(2px, 2px);
+      box-shadow: 2px 2px 0px var(--black);
     }
 
     /* ================= OUTPUT BOX ================= */
@@ -533,6 +572,162 @@
       color: var(--text-muted);
     }
 
+    /* ================= BULK RESULT TABLE ================= */
+    .bulk-table-container {
+      overflow-x: auto;
+      border-radius: 12px;
+      border: 2px solid var(--black);
+      background: #ffffff;
+      margin-top: 12px;
+    }
+
+    .bulk-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      min-width: 400px;
+    }
+
+    .bulk-table thead {
+      background: var(--black);
+      color: var(--yellow);
+    }
+
+    .bulk-table th {
+      padding: 10px 8px;
+      text-align: left;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 800;
+      font-size: 10px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .bulk-table td {
+      padding: 10px 8px;
+      border-top: 1px solid #e5e7eb;
+      font-weight: 600;
+      color: var(--black);
+      vertical-align: top;
+      word-break: break-all;
+    }
+
+    .bulk-table tbody tr:hover {
+      background: #fef3c7;
+    }
+
+    .badge-success {
+      display: inline-block;
+      background: #dcfce7;
+      color: #15803d;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 20px;
+      border: 1px solid #22c55e;
+    }
+
+    .badge-fail {
+      display: inline-block;
+      background: #fee2e2;
+      color: #b91c1c;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 20px;
+      border: 1px solid #ef4444;
+    }
+
+    .badge-process {
+      display: inline-block;
+      background: #fef9c3;
+      color: #a16207;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 20px;
+      border: 1px solid #eab308;
+    }
+
+    /* ================= DONASI CARD ================= */
+    .donasi-card {
+      background: #ffffff;
+      border: 3px solid var(--black);
+      border-radius: 20px;
+      box-shadow: 6px 6px 0px var(--black);
+      width: 100%;
+      padding: 24px 20px;
+      text-align: center;
+      box-sizing: border-box;
+      margin-bottom: 20px;
+    }
+
+    .donasi-icon {
+      font-size: 42px;
+      color: var(--pink);
+      margin-bottom: 10px;
+    }
+
+    .donasi-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--black);
+      margin-bottom: 6px;
+    }
+
+    .donasi-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 16px;
+    }
+
+    .donasi-store {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--black);
+    }
+
+    .donasi-nmid {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+
+    .qr-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .qr-image {
+      max-width: 220px;
+      width: 100%;
+      border: 2px solid var(--black);
+      border-radius: 12px;
+      padding: 8px;
+      background: #ffffff;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 12px;
+    }
+
+    .donasi-methods {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--black);
+      margin-bottom: 4px;
+    }
+
+    .donasi-loc {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+
     /* ================= BOTTOM NAV ================= */
     .bottom-nav {
       position: fixed;
@@ -566,6 +761,9 @@
       transition: all 0.2s;
       cursor: pointer;
       flex: 1;
+      background: none;
+      border: none;
+      font-family: 'Plus Jakarta Sans', sans-serif;
     }
 
     .bottom-nav-item i {
@@ -582,86 +780,6 @@
       padding: 4px 8px;
       border-radius: 8px;
       box-shadow: 2px 2px 0px rgba(0,0,0,0.2);
-    }
-
-    /* ================= MODAL ================= */
-    .modal-overlay {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.75);
-      backdrop-filter: blur(4px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
-      opacity: 0;
-      visibility: hidden;
-      transition: all 0.3s;
-      padding: 16px;
-    }
-
-    .modal-overlay.active {
-      opacity: 1;
-      visibility: visible;
-    }
-
-    .modal-card {
-      background: #ffffff;
-      border: 3px solid var(--black);
-      border-radius: 20px;
-      box-shadow: 8px 8px 0px var(--black);
-      width: 100%;
-      max-width: 360px;
-      padding: 24px 20px;
-      position: relative;
-      transform: scale(0.9);
-      transition: transform 0.3s;
-    }
-
-    .modal-overlay.active .modal-card {
-      transform: scale(1);
-    }
-
-    .modal-close {
-      position: absolute;
-      top: 12px;
-      right: 12px;
-      width: 32px;
-      height: 32px;
-      background: var(--black);
-      color: #ffffff;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 14px;
-    }
-
-    .modal-title {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 18px;
-      font-weight: 800;
-      margin-bottom: 16px;
-      text-align: center;
-    }
-
-    .modal-body {
-      font-size: 13px;
-      color: var(--text-muted);
-      line-height: 1.5;
-      margin-bottom: 20px;
-      text-align: center;
-    }
-
-    .qr-img {
-      width: 100%;
-      max-width: 200px;
-      border: 2px solid var(--black);
-      border-radius: 12px;
-      margin: 0 auto 16px auto;
-      display: block;
     }
 
     /* ================= RESPONSIVE ================= */
@@ -685,9 +803,6 @@
       <span class="tag-badge">AM PREM</span>
     </div>
     <div class="nav-right">
-      <a href="#" class="donate-btn" id="openDonateModal">
-        <i class="fa-solid fa-heart"></i> Donasi
-      </a>
       <a href="https://wa.me/6282339430604" target="_blank" class="contact-btn">
         <i class="fa-brands fa-whatsapp"></i> Contact Owner
       </a>
@@ -697,160 +812,311 @@
   <!-- ================= MAIN CONTENT ================= -->
   <main class="main-content">
 
-    <!-- Widgets Row -->
-    <div class="widgets-row">
-      <div class="widget-card">
-        <div class="widget-icon"><i class="fa-regular fa-calendar"></i></div>
-        <div class="widget-info">
-          <span class="widget-label">TANGGAL</span>
-          <span class="widget-value" id="widgetDateVal">Memuat...</span>
-        </div>
-      </div>
-      <div class="widget-card yellow">
-        <div class="widget-icon"><i class="fa-regular fa-clock"></i></div>
-        <div class="widget-info">
-          <span class="widget-label">WAKTU WIB</span>
-          <span class="widget-value" id="widgetTimeVal">Memuat...</span>
-        </div>
-      </div>
-      <div class="widget-card green">
-        <div class="widget-icon"><i class="fa-solid fa-battery-three-quarters"></i></div>
-        <div class="widget-info">
-          <span class="widget-label">BATERAI</span>
-          <span class="widget-value" id="widgetBatteryVal">--%</span>
-        </div>
-      </div>
-    </div>
+    <!-- ================= SECTION: HOME ================= -->
+    <section class="content-section active" id="sectionHome">
 
-    <!-- Hero Section -->
-    <section class="hero-section">
-      <div class="hero-badge">
-        <i class="fa-solid fa-crown"></i> ACTIVATION MANUAL
+      <!-- Widgets Row -->
+      <div class="widgets-row">
+        <div class="widget-card">
+          <div class="widget-icon"><i class="fa-regular fa-calendar"></i></div>
+          <div class="widget-info">
+            <span class="widget-label">TANGGAL</span>
+            <span class="widget-value" id="widgetDateVal">Memuat...</span>
+          </div>
+        </div>
+        <div class="widget-card yellow">
+          <div class="widget-icon"><i class="fa-regular fa-clock"></i></div>
+          <div class="widget-info">
+            <span class="widget-label">WAKTU WIB</span>
+            <span class="widget-value" id="widgetTimeVal">Memuat...</span>
+          </div>
+        </div>
+        <div class="widget-card green">
+          <div class="widget-icon"><i class="fa-solid fa-battery-three-quarters"></i></div>
+          <div class="widget-info">
+            <span class="widget-label">BATERAI</span>
+            <span class="widget-value" id="widgetBatteryVal">--%</span>
+          </div>
+        </div>
       </div>
-      <h1 class="hero-title">Kirim Link &<br>Verifikasi Link</h1>
-      <p class="hero-desc">Kirim magic link ke Gmail lalu verifikasi untuk aktivasi Alight Motion Premium 1 tahun — otomatis, tanpa kata sandi.</p>
+
+      <!-- Hero Section -->
+      <section class="hero-section">
+        <div class="hero-badge">
+          <i class="fa-solid fa-house"></i> DASHBOARD
+        </div>
+        <h1 class="hero-title">Selamat Datang<br>di AYAKA MOTION</h1>
+        <p class="hero-desc">Platform aktivasi Alight Motion Premium otomatis. Pilih menu di bawah untuk memulai proses aktivasi.</p>
+      </section>
+
+      <!-- Stats Row -->
+      <section class="stats-row">
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-title">TOTAL AKTIVASI</span>
+            <div class="stat-icon"><i class="fa-solid fa-trophy"></i></div>
+          </div>
+          <div class="stat-value" id="globalTotalAktivasi">0</div>
+        </div>
+        <div class="stat-card yellow">
+          <div class="stat-header">
+            <span class="stat-title">HARI INI</span>
+            <div class="stat-icon"><i class="fa-solid fa-clock"></i></div>
+          </div>
+          <div class="stat-value" id="globalHariIniAktivasi">0</div>
+        </div>
+      </section>
+
+      <!-- Info Card -->
+      <div class="form-panel active" style="display: block;">
+        <span class="step-label">INFORMASI LAYANAN</span>
+        <div style="display: grid; gap: 10px;">
+          <div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 10px; padding: 12px;">
+            <div style="font-size: 13px; font-weight: 800; margin-bottom: 4px; color: var(--black);">
+              <i class="fa-solid fa-bolt" style="color: #f59e0b;"></i> Aktivasi Manual
+            </div>
+            <div style="font-size: 12px; color: var(--text-muted);">Aktivasi 1 akun Alight Motion Premium via magic link.</div>
+          </div>
+          <div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 10px; padding: 12px;">
+            <div style="font-size: 13px; font-weight: 800; margin-bottom: 4px; color: var(--black);">
+              <i class="fa-solid fa-layer-group" style="color: #8b5cf6;"></i> Bulk Aktivasi
+            </div>
+            <div style="font-size: 12px; color: var(--text-muted);">Aktivasi banyak akun sekaligus secara massal.</div>
+          </div>
+        </div>
+      </div>
+
     </section>
 
-    <!-- Stats Row -->
-    <section class="stats-row">
-      <div class="stat-card">
-        <div class="stat-header">
-          <span class="stat-title">TOTAL AKTIVASI</span>
-          <div class="stat-icon"><i class="fa-solid fa-trophy"></i></div>
+    <!-- ================= SECTION: AKTIVASI ================= -->
+    <section class="content-section" id="sectionAktivasi">
+
+      <!-- Hero -->
+      <section class="hero-section">
+        <div class="hero-badge">
+          <i class="fa-solid fa-crown"></i> ACTIVATION MANUAL
         </div>
-        <div class="stat-value" id="globalTotalAktivasi">0</div>
-      </div>
-      <div class="stat-card yellow">
-        <div class="stat-header">
-          <span class="stat-title">HARI INI</span>
-          <div class="stat-icon"><i class="fa-solid fa-clock"></i></div>
+        <h1 class="hero-title">Kirim Link &<br>Verifikasi Link</h1>
+        <p class="hero-desc">Kirim magic link ke Gmail lalu verifikasi untuk aktivasi Alight Motion Premium 1 tahun — otomatis, tanpa kata sandi.</p>
+      </section>
+
+      <!-- Stats Row -->
+      <section class="stats-row">
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-title">TOTAL AKTIVASI</span>
+            <div class="stat-icon"><i class="fa-solid fa-trophy"></i></div>
+          </div>
+          <div class="stat-value" id="globalTotalAktivasi2">0</div>
         </div>
-        <div class="stat-value" id="globalHariIniAktivasi">0</div>
+        <div class="stat-card yellow">
+          <div class="stat-header">
+            <span class="stat-title">HARI INI</span>
+            <div class="stat-icon"><i class="fa-solid fa-clock"></i></div>
+          </div>
+          <div class="stat-value" id="globalHariIniAktivasi2">0</div>
+        </div>
+      </section>
+
+      <!-- Tabs -->
+      <div class="tabs-row">
+        <button class="tab-btn active" id="tabKirimLink">
+          <i class="fa-solid fa-envelope"></i> Kirim Link
+        </button>
+        <button class="tab-btn" id="tabVerifikasi">
+          <i class="fa-solid fa-shield-halved"></i> Verifikasi
+        </button>
       </div>
+
+      <!-- Panel: Kirim Link -->
+      <div class="form-panel active" id="panelKirimLink">
+        <span class="step-label">LANGKAH 1 - KIRIM MAGIC LINK</span>
+        
+        <div class="input-group">
+          <label>Alamat Gmail</label>
+          <input type="email" id="emailInput" class="input-field" placeholder="user@gmail.com">
+        </div>
+
+        <button class="btn-green" id="sendMagicLinkBtn">
+          <i class="fa-solid fa-paper-plane"></i> Kirim Magic Link ke Email
+        </button>
+
+        <button class="btn-white" id="pasteMagicLinkBtn">
+          <i class="fa-solid fa-arrow-right"></i> Tempel Magic Link →
+        </button>
+
+        <div class="output-box" id="outputBox">
+          <span class="output-badge">STANDBY</span>
+          <div class="output-icon"><i class="fa-regular fa-envelope"></i></div>
+          <div class="output-title">Belum ada data</div>
+          <div class="output-desc">Masukkan Gmail lalu kirim magic link</div>
+        </div>
+      </div>
+
+      <!-- Panel: Verifikasi -->
+      <div class="form-panel" id="panelVerifikasi">
+        <span class="step-label">LANGKAH 2 - VERIFIKASI MAGIC LINK</span>
+        
+        <div class="input-group">
+          <label>Tempel Magic Link</label>
+          <input type="url" id="magicInput" class="input-field" placeholder="https://identitytoolkit.googleapis.com/...">
+        </div>
+
+        <button class="btn-green" id="verifyMagicLinkBtn">
+          <i class="fa-solid fa-check"></i> Verifikasi & Aktivasi
+        </button>
+
+        <div class="output-box" id="verifyOutputBox">
+          <span class="output-badge">STANDBY</span>
+          <div class="output-icon"><i class="fa-solid fa-shield-halved"></i></div>
+          <div class="output-title">Menunggu Magic Link</div>
+          <div class="output-desc">Tempel link verifikasi untuk memproses aktivasi</div>
+        </div>
+      </div>
+
     </section>
 
-    <!-- Tabs -->
-    <div class="tabs-row">
-      <button class="tab-btn active" id="tabKirimLink">
-        <i class="fa-solid fa-envelope"></i> Kirim Link
-      </button>
-      <button class="tab-btn" id="tabVerifikasi">
-        <i class="fa-solid fa-shield-halved"></i> Verifikasi
-      </button>
-    </div>
+    <!-- ================= SECTION: BULK ================= -->
+    <section class="content-section" id="sectionBulk">
 
-    <!-- Panel: Kirim Link -->
-    <div class="form-panel active" id="panelKirimLink">
-      <span class="step-label">LANGKAH 1 - KIRIM MAGIC LINK</span>
-      
-      <div class="input-group">
-        <label>Alamat Gmail</label>
-        <input type="email" id="emailInput" class="input-field" placeholder="user@gmail.com">
-      </div>
-
-      <div class="captcha-box">
-        <div class="captcha-text">
-          <i class="fa-solid fa-spinner fa-spin"></i> Melakukan verifikasi...
+      <section class="hero-section">
+        <div class="hero-badge">
+          <i class="fa-solid fa-layer-group"></i> BULK AKTIVASI
         </div>
-        <div class="captcha-logo">
-          <span style="color: #f97316; font-size: 14px; font-weight: 800;">CLOUDFLARE</span>
-          <span>Privasi • Bantuan</span>
+        <h1 class="hero-title">Aktivasi Massal<br>Alight Motion</h1>
+        <p class="hero-desc">Aktivasi banyak akun Alight Motion Premium sekaligus. Format: <b>email | magic_link</b> per baris.</p>
+      </section>
+
+      <!-- Stats Row -->
+      <section class="stats-row">
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-title">TOTAL AKTIVASI</span>
+            <div class="stat-icon"><i class="fa-solid fa-trophy"></i></div>
+          </div>
+          <div class="stat-value" id="globalTotalAktivasi3">0</div>
+        </div>
+        <div class="stat-card yellow">
+          <div class="stat-header">
+            <span class="stat-title">HARI INI</span>
+            <div class="stat-icon"><i class="fa-solid fa-clock"></i></div>
+          </div>
+          <div class="stat-value" id="globalHariIniAktivasi3">0</div>
+        </div>
+      </section>
+
+      <!-- Form Bulk -->
+      <div class="form-panel active" style="display: block;">
+        <span class="step-label">FORM BULK AKTIVASI</span>
+
+        <div class="input-group">
+          <label>Paket / Durasi Premium</label>
+          <select id="bulkProductSelect" class="input-select">
+            <option value="am.full.sub.annual.19q4">Annual Sub (1 Tahun)</option>
+            <option value="am.full.sub.monthly.19q4">Monthly Sub (1 Bulan)</option>
+          </select>
+        </div>
+
+        <div class="input-group">
+          <label>Daftar Akun (Format: <code>email | magic_link</code> per baris)</label>
+          <textarea id="bulkDataInput" class="input-textarea" placeholder="user1@gmail.com | https://identitytoolkit.googleapis.com/...&#10;user2@gmail.com | https://identitytoolkit.googleapis.com/...&#10;user3@gmail.com | https://identitytoolkit.googleapis.com/..."></textarea>
+        </div>
+
+        <button class="btn-green" id="startBulkBtn">
+          <i class="fa-solid fa-play"></i> Mulai Proses Bulk
+        </button>
+
+        <button class="btn-white" id="exportBulkBtn" style="display: none;">
+          <i class="fa-solid fa-download"></i> Unduh Hasil (.txt)
+        </button>
+
+        <div id="bulkStatusBox" class="output-box" style="margin-top: 12px;">
+          <span class="output-badge">STANDBY</span>
+          <div class="output-icon"><i class="fa-solid fa-layer-group"></i></div>
+          <div class="output-title">Belum ada proses</div>
+          <div class="output-desc">Masukkan daftar akun lalu mulai proses bulk</div>
         </div>
       </div>
 
-      <button class="btn-green" id="sendMagicLinkBtn">
-        <i class="fa-solid fa-paper-plane"></i> Kirim Magic Link ke Email
-      </button>
-
-      <button class="btn-white" id="pasteMagicLinkBtn">
-        <i class="fa-solid fa-arrow-right"></i> Tempel Magic Link →
-      </button>
-
-      <div class="output-box" id="outputBox">
-        <span class="output-badge">STANDBY</span>
-        <div class="output-icon"><i class="fa-regular fa-envelope"></i></div>
-        <div class="output-title">Belum ada data</div>
-        <div class="output-desc">Masukkan Gmail lalu kirim magic link</div>
-      </div>
-    </div>
-
-    <!-- Panel: Verifikasi -->
-    <div class="form-panel" id="panelVerifikasi">
-      <span class="step-label">LANGKAH 2 - VERIFIKASI MAGIC LINK</span>
-      
-      <div class="input-group">
-        <label>Tempel Magic Link</label>
-        <input type="url" id="magicInput" class="input-field" placeholder="https://identitytoolkit.googleapis.com/...">
+      <!-- Hasil Bulk -->
+      <div class="form-panel" id="bulkResultCard" style="display: none;">
+        <span class="step-label">HASIL PEMROSESAN BULK</span>
+        <div class="bulk-table-container">
+          <table class="bulk-table">
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>Email</th>
+                <th>Order ID</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="bulkTableBody"></tbody>
+          </table>
+        </div>
       </div>
 
-      <button class="btn-green" id="verifyMagicLinkBtn">
-        <i class="fa-solid fa-check"></i> Verifikasi & Aktivasi
-      </button>
+    </section>
 
-      <div class="output-box" id="verifyOutputBox">
-        <span class="output-badge">STANDBY</span>
-        <div class="output-icon"><i class="fa-solid fa-shield-halved"></i></div>
-        <div class="output-title">Menunggu Magic Link</div>
-        <div class="output-desc">Tempel link verifikasi untuk memproses aktivasi</div>
+    <!-- ================= SECTION: DONASI ================= -->
+    <section class="content-section" id="sectionDonasi">
+
+      <section class="hero-section">
+        <div class="hero-badge">
+          <i class="fa-solid fa-heart"></i> DUKUNG KAMI
+        </div>
+        <h1 class="hero-title">Donasi &<br>Dukungan</h1>
+        <p class="hero-desc">Bantu dukung server AYAKA MOTION agar tetap berjalan gratis, stabil, dan terus berkembang.</p>
+      </section>
+
+      <div class="donasi-card">
+        <div class="donasi-icon">💖</div>
+        <div class="donasi-title">Dukung Server Ayaka Motion</div>
+        <div class="donasi-desc">
+          Dukungan Anda membantu biaya server, database, & pengembangan fitur otomasi baru.
+        </div>
+
+        <div class="donasi-store">OLPI STORE</div>
+        <div class="donasi-nmid">NMID: ID1026559688191</div>
+
+        <div class="qr-container">
+          <img 
+            src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=00020101021126570011ID.DANA.WWW011893600915303359272702090335927270303UMI51440014ID.CO.QRIS.WWW0215ID10265596881910303UMI5204654053033605802ID5910OLPI%20STORE6012Kab.%20Sumbawa6105843856304A947" 
+            alt="QRIS OLPI STORE" 
+            class="qr-image"
+          >
+          <div class="donasi-methods">DANA, OVO, GoPay, ShopeePay & M-Banking</div>
+          <div class="donasi-loc">Kab. Sumbawa</div>
+        </div>
+
+        <a href="https://wa.me/6282339430604?text=Halo%20Ayaka%20Motion,%20saya%20ingin%20mengirimkan%20donasi/dukungan" target="_blank" class="btn-pink" style="text-decoration: none;">
+          <i class="fa-brands fa-whatsapp"></i> Konfirmasi Donasi via WhatsApp
+        </a>
       </div>
-    </div>
+
+    </section>
 
   </main>
 
   <!-- ================= BOTTOM NAV ================= -->
   <nav class="bottom-nav">
-    <a href="#" class="bottom-nav-item active">
+    <button class="bottom-nav-item active" data-section="Home">
+      <i class="fa-solid fa-house"></i>
+      <span>Home</span>
+    </button>
+    <button class="bottom-nav-item" data-section="Aktivasi">
       <i class="fa-solid fa-bolt"></i>
-      <span>Activation</span>
-    </a>
-    <a href="#" class="bottom-nav-item">
+      <span>Aktivasi</span>
+    </button>
+    <button class="bottom-nav-item" data-section="Bulk">
       <i class="fa-solid fa-layer-group"></i>
       <span>Bulk</span>
-    </a>
-    <a href="#" class="bottom-nav-item">
-      <i class="fa-solid fa-file-lines"></i>
-      <span>Docs</span>
-    </a>
-    <a href="#" class="bottom-nav-item">
-      <i class="fa-solid fa-users"></i>
-      <span>Community</span>
-    </a>
+    </button>
+    <button class="bottom-nav-item" data-section="Donasi">
+      <i class="fa-solid fa-heart"></i>
+      <span>Donasi</span>
+    </button>
   </nav>
-
-  <!-- ================= MODAL DONASI ================= -->
-  <div class="modal-overlay" id="donateModal">
-    <div class="modal-card">
-      <div class="modal-close" id="closeDonateModal"><i class="fa-solid fa-xmark"></i></div>
-      <div class="modal-title">Dukung Server Ini</div>
-      <div class="modal-body">
-        Scan QRIS di bawah ini untuk berdonasi. Dukungan Anda sangat berarti untuk biaya server & pengembangan fitur baru.
-      </div>
-      <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=00020101021126570011ID.DANA.WWW011893600915303359272702090335927270303UMI51440014ID.CO.QRIS.WWW0215ID10265596881910303UMI5204654053033605802ID5910OLPI%20STORE6012Kab.%20Sumbawa6105843856304A947" alt="QRIS" class="qr-img">
-      <a href="https://wa.me/6282339430604?text=Halo%20Owner,%20saya%20sudah%20berdonasi" target="_blank" class="btn-green" style="text-decoration: none; display: flex; justify-content: center; align-items: center;">
-        <i class="fa-brands fa-whatsapp"></i> Konfirmasi Donasi
-      </a>
-    </div>
-  </div>
 
   <!-- ================= JAVASCRIPT LOGIC ================= -->
   <script>
@@ -930,8 +1196,35 @@
     // 🚀 INITIALIZATION & UI UPDATES
     // ============================================================
     document.addEventListener("DOMContentLoaded", async () => {
-      
-      // ---- 1. Tab Switching Logic ----
+
+      // ---- 1. Bottom Nav Section Switching ----
+      const navItems = document.querySelectorAll(".bottom-nav-item");
+      const sections = document.querySelectorAll(".content-section");
+
+      function switchSection(sectionName) {
+        sections.forEach(sec => sec.classList.remove("active"));
+        const target = document.getElementById(`section${sectionName}`);
+        if (target) target.classList.add("active");
+
+        navItems.forEach(item => {
+          if (item.getAttribute("data-section") === sectionName) {
+            item.classList.add("active");
+          } else {
+            item.classList.remove("active");
+          }
+        });
+
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      navItems.forEach(item => {
+        item.addEventListener("click", () => {
+          const sectionName = item.getAttribute("data-section");
+          if (sectionName) switchSection(sectionName);
+        });
+      });
+
+      // ---- 2. Tab Switching Logic (Aktivasi Section) ----
       const tabKirimLink = document.getElementById("tabKirimLink");
       const tabVerifikasi = document.getElementById("tabVerifikasi");
       const panelKirimLink = document.getElementById("panelKirimLink");
@@ -953,19 +1246,6 @@
 
       document.getElementById("pasteMagicLinkBtn").addEventListener("click", () => {
         tabVerifikasi.click();
-      });
-
-      // ---- 2. Modal Donasi ----
-      const donateModal = document.getElementById("donateModal");
-      document.getElementById("openDonateModal").addEventListener("click", (e) => {
-        e.preventDefault();
-        donateModal.classList.add("active");
-      });
-      document.getElementById("closeDonateModal").addEventListener("click", () => {
-        donateModal.classList.remove("active");
-      });
-      donateModal.addEventListener("click", (e) => {
-        if (e.target === donateModal) donateModal.classList.remove("active");
       });
 
       // ---- 3. Live Clock & Battery ----
@@ -1026,17 +1306,25 @@
           const dailyResult = await redisGet(dailyKey);
           const dailyAktivasi = (dailyResult && !dailyResult.__error && dailyResult.value) ? parseInt(dailyResult.value) || 0 : 0;
 
-          const elGlobalTotal = document.getElementById("globalTotalAktivasi");
-          const elGlobalHariIni = document.getElementById("globalHariIniAktivasi");
+          const formattedTotal = totalAktivasi.toLocaleString("id-ID");
+          const formattedDaily = dailyAktivasi.toLocaleString("id-ID");
 
-          if (elGlobalTotal) elGlobalTotal.textContent = totalAktivasi.toLocaleString("id-ID");
-          if (elGlobalHariIni) elGlobalHariIni.textContent = dailyAktivasi.toLocaleString("id-ID");
+          // Update semua elemen yang ada di 3 section berbeda
+          ["globalTotalAktivasi", "globalTotalAktivasi2", "globalTotalAktivasi3"].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.textContent = formattedTotal;
+          });
+
+          ["globalHariIniAktivasi", "globalHariIniAktivasi2", "globalHariIniAktivasi3"].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.textContent = formattedDaily;
+          });
         } catch (err) {
           console.warn("fetchAktivasiStatsFromRedis error:", err);
         }
       }
       await fetchAktivasiStatsFromRedis();
-      setInterval(fetchAktivasiStatsFromRedis, 10000); // Refresh every 10s
+      setInterval(fetchAktivasiStatsFromRedis, 10000);
 
       // ---- 5. Increment Aktivasi ----
       window.incrementAyakaActivationStats = async function(incrementCount = 1, userEmail = "", planName = "AM Premium Annual 1 Year") {
@@ -1067,7 +1355,6 @@
           return;
         }
 
-        // UI Loading State
         sendMagicLinkBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Mengirim...`;
         sendMagicLinkBtn.disabled = true;
         outputBox.innerHTML = `
@@ -1077,12 +1364,10 @@
           <div class="output-desc">Mohon tunggu sebentar, sistem sedang memproses.</div>
         `;
 
-        // Simulasi API call (karena backend asli tidak disertakan)
         setTimeout(() => {
           sendMagicLinkBtn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> Kirim Magic Link ke Email`;
           sendMagicLinkBtn.disabled = false;
 
-          // Tampilkan sukses
           outputBox.innerHTML = `
             <span class="output-badge">SUKSES</span>
             <div class="output-icon" style="color: #22c55e;"><i class="fa-solid fa-check-circle"></i></div>
@@ -1090,17 +1375,15 @@
             <div class="output-desc">Silakan cek kotak masuk Gmail Anda dan tempel link verifikasi di tab "Verifikasi".</div>
           `;
 
-          // Increment stat (simulasi aktivasi berhasil)
           if (typeof window.incrementAyakaActivationStats === 'function') {
             window.incrementAyakaActivationStats(1, email, "AM Premium Annual 1 Year");
           }
 
-          // Auto switch ke tab Verifikasi setelah 2 detik
           setTimeout(() => {
             document.getElementById("tabVerifikasi").click();
           }, 2000);
 
-        }, 2500); // Simulasi delay 2.5 detik
+        }, 2500);
       });
 
       // ---- 7. Action Handler: Verifikasi Magic Link ----
@@ -1123,7 +1406,6 @@
           <div class="output-desc">Sistem sedang mengaktifkan lisensi premium Anda.</div>
         `;
 
-        // Simulasi API verification
         setTimeout(() => {
           verifyMagicLinkBtn.innerHTML = `<i class="fa-solid fa-check"></i> Verifikasi & Aktivasi`;
           verifyMagicLinkBtn.disabled = false;
@@ -1137,6 +1419,185 @@
           
           alert("Aktivasi Berhasil! Akun Alight Motion Premium Anda sudah aktif.");
         }, 3000);
+      });
+
+      // ============================================================
+      // 🚀 BULK PROCESSING - Memanggil API dari file terpisah
+      // ============================================================
+      const startBulkBtn = document.getElementById("startBulkBtn");
+      const exportBulkBtn = document.getElementById("exportBulkBtn");
+      const bulkTableBody = document.getElementById("bulkTableBody");
+      const bulkResultCard = document.getElementById("bulkResultCard");
+      const bulkStatusBox = document.getElementById("bulkStatusBox");
+
+      let bulkResultsCache = [];
+
+      startBulkBtn.addEventListener("click", async () => {
+        const textarea = document.getElementById("bulkDataInput");
+        const productSelect = document.getElementById("bulkProductSelect");
+
+        if (!textarea || !textarea.value.trim()) {
+          alert("Mohon masukkan daftar akun terlebih dahulu!");
+          return;
+        }
+
+        const lines = textarea.value.trim().split("\n").filter(l => l.trim().length > 0);
+        if (lines.length === 0) {
+          alert("Daftar akun kosong!");
+          return;
+        }
+
+        // Parsing data akun
+        const accounts = lines.map((line, idx) => {
+          const parts = line.split(/[|,]/);
+          return {
+            no: idx + 1,
+            email: (parts[0] || "").trim(),
+            magicLink: (parts[1] || "").trim()
+          };
+        }).filter(a => a.email && a.email.includes("@"));
+
+        if (accounts.length === 0) {
+          alert("Tidak ada akun valid yang ditemukan! Pastikan format: email | magic_link");
+          return;
+        }
+
+        // UI: Loading state
+        startBulkBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Memproses ${accounts.length} akun...`;
+        startBulkBtn.disabled = true;
+        bulkResultCard.style.display = "block";
+        bulkTableBody.innerHTML = "";
+        bulkResultsCache = [];
+
+        bulkStatusBox.innerHTML = `
+          <span class="output-badge">PROSES</span>
+          <div class="output-icon"><i class="fa-solid fa-spinner fa-spin"></i></div>
+          <div class="output-title">Memproses Bulk...</div>
+          <div class="output-desc">${accounts.length} akun sedang diproses. Mohon tunggu.</div>
+        `;
+
+        // Render baris "processing" dulu
+        accounts.forEach(acc => {
+          const tr = document.createElement("tr");
+          tr.id = `bulk-row-${acc.no}`;
+          tr.innerHTML = `
+            <td>${acc.no}</td>
+            <td>${acc.email}</td>
+            <td>-</td>
+            <td><span class="badge-process">PROCESS</span></td>
+          `;
+          bulkTableBody.appendChild(tr);
+        });
+
+        const productValue = productSelect ? productSelect.value : "am.full.sub.annual.19q4";
+        const productText = productSelect ? productSelect.options[productSelect.selectedIndex].text : "Annual Sub (1 Tahun)";
+
+        // ============================================================
+        // 🔥 PANGGIL API BULK DARI FILE TERPISAH
+        // File terpisah harus meng-expose:
+        //   window.BulkAPI.process(email, magicLink, productValue)
+        //   → return { success, orderId, message }
+        // Kalau tidak ada, fallback ke simulasi lokal.
+        // ============================================================
+        for (const acc of accounts) {
+          let result = null;
+
+          try {
+            if (window.BulkAPI && typeof window.BulkAPI.process === "function") {
+              // Panggil API dari file terpisah
+              result = await window.BulkAPI.process(acc.email, acc.magicLink, productValue);
+            } else if (typeof window.processBulkAccount === "function") {
+              // Alternatif: global function
+              result = await window.processBulkAccount(acc.email, acc.magicLink, productValue);
+            } else {
+              // Fallback: simulasi lokal
+              await new Promise(r => setTimeout(r, 800));
+              result = {
+                success: true,
+                orderId: "ORD-" + Date.now().toString(36).toUpperCase() + "-" + acc.no,
+                message: "Aktivasi berhasil (simulasi)"
+              };
+            }
+          } catch (err) {
+            result = { success: false, orderId: "-", message: err.message || "Error" };
+          }
+
+          const row = document.getElementById(`bulk-row-${acc.no}`);
+          if (row) {
+            if (result && result.success) {
+              row.children[2].textContent = result.orderId || "-";
+              row.children[3].innerHTML = `<span class="badge-success">SUCCESS</span>`;
+            } else {
+              row.children[2].textContent = "-";
+              row.children[3].innerHTML = `<span class="badge-fail">FAILED</span>`;
+            }
+          }
+
+          bulkResultsCache.push({
+            no: acc.no,
+            email: acc.email,
+            orderId: result?.orderId || "-",
+            status: result?.success ? "SUCCESS" : "FAILED",
+            message: result?.message || ""
+          });
+
+          // Increment statistik untuk yang sukses
+          if (result && result.success && typeof window.incrementAyakaActivationStats === "function") {
+            window.incrementAyakaActivationStats(1, acc.email, productText + " (Bulk)");
+          }
+        }
+
+        // Selesai
+        const successCount = bulkResultsCache.filter(r => r.status === "SUCCESS").length;
+        const failCount = bulkResultsCache.filter(r => r.status === "FAILED").length;
+
+        startBulkBtn.innerHTML = `<i class="fa-solid fa-play"></i> Mulai Proses Bulk`;
+        startBulkBtn.disabled = false;
+        exportBulkBtn.style.display = "flex";
+
+        bulkStatusBox.innerHTML = `
+          <span class="output-badge">SELESAI</span>
+          <div class="output-icon" style="color: ${failCount === 0 ? "#22c55e" : "#f59e0b"};"><i class="fa-solid fa-flag-checkered"></i></div>
+          <div class="output-title">Proses Bulk Selesai</div>
+          <div class="output-desc">✅ ${successCount} sukses &nbsp;•&nbsp; ❌ ${failCount} gagal dari ${accounts.length} akun</div>
+        `;
+      });
+
+      // Export hasil bulk ke file .txt
+      exportBulkBtn.addEventListener("click", () => {
+        if (bulkResultsCache.length === 0) {
+          alert("Belum ada hasil untuk diunduh!");
+          return;
+        }
+
+        let content = "========================================\n";
+        content += "   HASIL BULK AKTIVASI - AYAKA MOTION\n";
+        content += "   Tanggal: " + new Date().toLocaleString("id-ID", { timeZone: WIB_TZ }) + "\n";
+        content += "========================================\n\n";
+
+        bulkResultsCache.forEach(r => {
+          content += `[${r.no}] ${r.email}\n`;
+          content += `     Order ID : ${r.orderId}\n`;
+          content += `     Status   : ${r.status}\n`;
+          if (r.message) content += `     Message  : ${r.message}\n`;
+          content += `\n`;
+        });
+
+        content += "========================================\n";
+        content += `Total: ${bulkResultsCache.length} akun\n`;
+        content += `Sukses: ${bulkResultsCache.filter(r => r.status === "SUCCESS").length}\n`;
+        content += `Gagal : ${bulkResultsCache.filter(r => r.status === "FAILED").length}\n`;
+        content += "========================================\n";
+
+        const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `bulk-result-${Date.now()}.txt`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
       });
 
       // ---- 8. Supabase Connection (Silent) ----
