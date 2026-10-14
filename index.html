@@ -1903,6 +1903,7 @@
     // ============================================================
     // 🚀 SISTEM UPTIME & VISITOR GLOBAL VIA UPSTASH REDIS
     // Tidak pakai localStorage lagi. Semua dari Redis.
+    // 🔥 UPTIME SUDAH SMOOTH — pakai self-correcting timer
     // ============================================================
     document.addEventListener("DOMContentLoaded", async () => {
 
@@ -2001,6 +2002,7 @@
 
       // --------------------------------------------------------
       // FUNGSI 4: Update ticker uptime di UI
+      // 🔥 Menggunakan Math.round + drift-free calculation
       // --------------------------------------------------------
       function updateGlobalUptimeUI() {
         if (!globalServerStartTime) return;
@@ -2013,6 +2015,8 @@
         const widgetUptimeVal = document.getElementById("widgetUptimeVal");
 
         const currentMillis = Date.now();
+        // Gunakan pembulatan ke bawah dari selisih milidetik
+        // supaya transisi 45 → 46 → 47 terjadi tepat di batas detik
         let diffSec = Math.floor((currentMillis - globalServerStartTime) / 1000);
         if (diffSec < 0) diffSec = 0;
 
@@ -2021,11 +2025,12 @@
         const remSec = diffSec % (3600 * 24);
         const hours = Math.floor(remSec / 3600);
         const minutes = Math.floor((remSec % 3600) / 60);
+        const seconds = diffSec % 60;
 
         const formattedDays = days + "d";
         const formattedHours = String(hours).padStart(2, "0") + "h";
         const formattedMinutes = String(minutes).padStart(2, "0") + "m";
-        const formattedSeconds = String(diffSec % 60).padStart(2, "0") + "s";
+        const formattedSeconds = String(seconds).padStart(2, "0") + "s";
 
         if (uptimeCounterEl) {
           uptimeCounterEl.textContent = `${days}d ${String(hours).padStart(2, "0")}h ${String(minutes).padStart(2, "0")}m ${formattedSeconds}`;
@@ -2038,6 +2043,37 @@
         if (widgetUptimeVal) {
           widgetUptimeVal.textContent = `${hoursTotal}j...`;
         }
+      }
+
+      // --------------------------------------------------------
+      // 🔥 FUNGSI 5: DRIFT-FREE TIMER (self-correcting scheduler)
+      // Menjadwalkan update TEPAT di batas milidetik setiap detiknya
+      // sehingga angka detik bergerak mulus: 45 → 46 → 47 → 48
+      // --------------------------------------------------------
+      function startSmoothUptimeTicker() {
+        function tick() {
+          updateGlobalUptimeUI();
+
+          // Hitung sisa milidetik menuju detik berikutnya
+          const now = Date.now();
+          const msIntoSecond = now % 1000;
+          let delay = 1000 - msIntoSecond;
+
+          // Tambah sedikit offset (5ms) supaya tidak "balapan" dengan boundary
+          delay = delay < 5 ? delay + 1000 : delay + 5;
+
+          // Simpan timer id global agar bisa di-clear jika perlu
+          window.__ayakaUptimeTimer = setTimeout(tick, delay);
+        }
+
+        // Clear timer lama jika ada
+        if (window.__ayakaUptimeTimer) {
+          clearTimeout(window.__ayakaUptimeTimer);
+          window.__ayakaUptimeTimer = null;
+        }
+
+        // Jalankan tick pertama
+        tick();
       }
 
       function updateLiveDateTimeWidget() {
@@ -2103,9 +2139,7 @@
       // --------------------------------------------------------
       await initServerStartTime();
       updateGlobalUptimeUI();
-      if (!window.globalUptimeTicker) {
-        window.globalUptimeTicker = setInterval(updateGlobalUptimeUI, 1000);
-      }
+      startSmoothUptimeTicker(); // 🔥 pakai timer mulus (bukan setInterval)
 
       // Visitor tracking (sekali per load, dengan proteksi Redis)
       const visitorCount = await trackVisitor();
