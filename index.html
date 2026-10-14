@@ -717,7 +717,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.75);
+      background: rgba(0, 0, 0, 0.8);
       backdrop-filter: blur(6px);
       display: flex;
       align-items: center;
@@ -726,7 +726,7 @@
       opacity: 0;
       visibility: hidden;
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      padding: 16px;
+      padding: 12px;
       box-sizing: border-box;
     }
 
@@ -741,14 +741,14 @@
       border-radius: 20px;
       box-shadow: 8px 8px 0px var(--black);
       width: 100%;
-      max-width: 380px;
-      padding: 20px;
+      max-width: 420px;
+      padding: 14px;
       text-align: center;
       position: relative;
       transform: scale(0.85);
       transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
       box-sizing: border-box;
-      max-height: 92vh;
+      max-height: 94vh;
       overflow-y: auto;
     }
 
@@ -788,6 +788,7 @@
       letter-spacing: 1.5px;
       text-transform: uppercase;
       margin-bottom: 4px;
+      margin-top: 6px;
     }
 
     .qr-modal-title {
@@ -801,16 +802,16 @@
     .qr-modal-nmid {
       font-size: 11px;
       color: var(--text-muted);
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
 
     .qr-modal-img {
       width: 100%;
-      max-width: 320px;
+      max-width: 380px;
       height: auto;
       border: 2px solid var(--black);
       border-radius: 14px;
-      padding: 4px;
+      padding: 0;
       background: #ffffff;
       margin: 0 auto 14px auto;
       box-shadow: var(--shadow-sm);
@@ -891,7 +892,8 @@
       .stat-value { font-size: 28px; }
       .brand-name { font-size: 14px; }
       .contact-btn { font-size: 10px; padding: 6px 10px; }
-      .qr-modal-card { padding: 16px; }
+      .qr-modal-card { padding: 12px; }
+      .qr-modal-img { max-width: 100%; }
     }
   </style>
 </head>
@@ -1208,7 +1210,7 @@
       <div class="qr-modal-title">OLPI STORE</div>
       <div class="qr-modal-nmid">NMID: ID1026559688191</div>
 
-      <img src="IMG_20260906_173304.jpg" alt="QRIS OLPI STORE" class="qr-modal-img">
+      <img src="8d9ab08d-053f-475f-ac6d-d0fe8981b85d.png" alt="QRIS OLPI STORE" class="qr-modal-img">
 
       <div class="qr-modal-methods">DANA, OVO, GoPay, ShopeePay & M-Banking</div>
       <div class="qr-modal-loc">Kab. Sumbawa</div>
@@ -1635,10 +1637,6 @@
 
         // ============================================================
         // 🔥 PANGGIL API BULK DARI FILE TERPISAH
-        // File terpisah harus meng-expose:
-        //   window.BulkAPI.process(email, magicLink, productValue)
-        //   → return { success, orderId, message }
-        // Kalau tidak ada, fallback ke simulasi lokal.
         // ============================================================
         for (const acc of accounts) {
           let result = null;
