@@ -2066,60 +2066,76 @@
     // ============================================================
     document.addEventListener("DOMContentLoaded", async () => {
 
-      // 🔑 Key uptime (WIB-agnostic, karena Date.now() = epoch ms universal)
-      const UPTIME_KEY = "ayaka:start_time";
+      // ============================================================
+      // 🔒 LOGIC FINAL SERVER UPTIME — ANTI TURUN & ANTI RESET
+      // ============================================================
+      const UPTIME_KEY = "ayaka:server_start";
+
+      // ⚓ PATOKAN MATI: 1 Agustus 2025 00:00:00 UTC
+      // Ini adalah "batas bawah" uptime — uptime TIDAK AKAN PERNAH
+      // lebih muda dari tanggal ini, apapun yang terjadi.
+      const HARDCODED_START = new Date('2025-08-01T00:00:00Z').getTime();
+
       const KEY_TOTAL_AKTIVASI = "ayaka:total_aktivasi";
 
-      let globalServerStartTime = null;
+      let globalServerStartTime = HARDCODED_START;
 
       // --------------------------------------------------------
-      // Init server_start_time — pakai SETNX supaya anti-reset
+      // 🔑 getServerStartTime:
+      //   - Ambil dari Redis (key: ayaka:server_start)
+      //   - Kalau kosong → set dengan HARDCODED_START (SETNX)
+      //   - SELALU return Math.min(redisTime, HARDCODED_START)
+      //     → jadi uptime TIDAK AKAN PERNAH turun / reset ke 0
+      //   - Kalau Redis error → fallback HARDCODED_START (bukan Date.now!)
+      // --------------------------------------------------------
+      async function getServerStartTime() {
+        try {
+          const storedResult = await redisGet(UPTIME_KEY);
+
+          // Redis error → pakai hardcoded (jangan reset!)
+          if (!storedResult || storedResult.__error) {
+            console.warn("⚠️ Redis tidak dapat diakses — pakai HARDCODED_START sebagai fallback");
+            return HARDCODED_START;
+          }
+
+          // Redis kosong (pertama kali) → simpan HARDCODED_START via SETNX
+          if (!storedResult.value) {
+            const setnxResult = await redisSetNX(UPTIME_KEY, HARDCODED_START);
+            if (setnxResult === 1 || setnxResult === "1") {
+              console.log("🌱 Inisialisasi pertama: Uptime di-set ke HARDCODED_START");
+              return HARDCODED_START;
+            }
+            // Race condition: orang lain baru saja set, baca ulang
+            const reread = await redisGet(UPTIME_KEY);
+            if (reread && !reread.__error && reread.value) {
+              const num = parseInt(reread.value);
+              if (num > 0 && !isNaN(num)) {
+                return Math.min(num, HARDCODED_START);
+              }
+            }
+            return HARDCODED_START;
+          }
+
+          // Ada value di Redis → AMBIL YANG PALING AWAL (Math.min)
+          const redisTime = parseInt(storedResult.value);
+          if (redisTime > 0 && !isNaN(redisTime)) {
+            return Math.min(redisTime, HARDCODED_START);
+          }
+
+          return HARDCODED_START;
+
+        } catch (e) {
+          console.warn("getServerStartTime exception — fallback ke HARDCODED_START:", e);
+          return HARDCODED_START;
+        }
+      }
+
+      // --------------------------------------------------------
+      // Init globalServerStartTime
       // --------------------------------------------------------
       async function initServerStartTime() {
-        try {
-          const getResult = await redisGet(UPTIME_KEY);
-
-          if (getResult && !getResult.__error && getResult.value) {
-            const num = parseInt(getResult.value);
-            if (num > 0 && !isNaN(num)) {
-              globalServerStartTime = num;
-              console.log("📡 Uptime dimuat dari Redis:", new Date(num).toISOString());
-              return;
-            }
-          }
-
-          if (getResult && getResult.__error) {
-            console.warn("⚠️ Redis GET error — pakai fallback lokal");
-            globalServerStartTime = Date.now();
-            return;
-          }
-
-          const now = Date.now();
-          const setnxResult = await redisSetNX(UPTIME_KEY, now);
-
-          if (setnxResult === 1 || setnxResult === "1") {
-            globalServerStartTime = now;
-            console.log("🌱 Uptime diinisialisasi pertama kali:", new Date(now).toISOString());
-            return;
-          }
-
-          const getResult2 = await redisGet(UPTIME_KEY);
-          if (getResult2 && !getResult2.__error && getResult2.value) {
-            const num2 = parseInt(getResult2.value);
-            if (num2 > 0 && !isNaN(num2)) {
-              globalServerStartTime = num2;
-              console.log("📡 Uptime dimuat setelah race:", new Date(num2).toISOString());
-              return;
-            }
-          }
-
-          globalServerStartTime = now;
-          console.warn("⚠️ Fallback: pakai timestamp lokal");
-
-        } catch (err) {
-          console.warn("initServerStartTime exception:", err);
-          globalServerStartTime = Date.now();
-        }
+        globalServerStartTime = await getServerStartTime();
+        console.log("📡 Server Start Time:", new Date(globalServerStartTime).toISOString());
       }
 
       // --------------------------------------------------------
@@ -2353,19 +2369,24 @@
       initDashboardBatteryStatus();
 
       // --------------------------------------------------------
-      // Refresh periodik (5 detik)
+      // 🔄 Refresh periodik (5 detik) — UPTIME ANTI TURUN
+      // Ambil timestamp dari Redis, selalu pakai Math.min
+      // dengan HARDCODED_START agar uptime tidak pernah turun.
       // --------------------------------------------------------
       setInterval(async () => {
-        // Uptime sync (hanya menerima timestamp lebih awal)
-        const getResult = await redisGet(UPTIME_KEY);
-        if (getResult && !getResult.__error && getResult.value) {
-          const num = parseInt(getResult.value);
-          if (num > 0 && !isNaN(num)) {
-            if (!globalServerStartTime || num < globalServerStartTime) {
-              globalServerStartTime = num;
-              console.log("🔄 Uptime sync: pakai timestamp lebih awal dari Redis");
-            }
-          }
+        // Sinkronisasi uptime — pakai getServerStartTime (anti reset)
+        const syncedStart = await getServerStartTime();
+
+        // Selalu pakai yang PALING AWAL (jangan yang paling baru!)
+        const earliest = Math.min(
+          syncedStart,
+          HARDCODED_START,
+          globalServerStartTime || HARDCODED_START
+        );
+
+        if (earliest < globalServerStartTime) {
+          globalServerStartTime = earliest;
+          console.log("🔄 Uptime sync (anti-turun): pakai timestamp paling awal");
         }
 
         // Visitor
