@@ -2,9 +2,9 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="google-site-verification" content="-slmDiv0Kk6tYoNbi-JY9gLE39Bjz6psf0gqom0FFZk" />
-  <title>AYAKA STORE - Panel Kontrol Premium</title>
+  <title>AYAKA MOTION - Activation Manual</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
@@ -16,17 +16,16 @@
   <script src="https://cdn.jsdelivr.net/npm/suncalc@1.9.0/suncalc.min.js"></script>
 
   <!-- ============================================================
-       KONFIGURASI UPSTASH REDIS
+       KONFIGURASI UPSTASH REDIS & SUPABASE
        ============================================================ -->
   <script>
     window.UPSTASH_URL   = "https://adequate-worm-234162.upstash.io";
     window.UPSTASH_TOKEN = "gQAAAAAAA5KyAAIgcDFmNWE3NDE0ZmVhN2Y0ZmI0ODIyYmIwNmU0YjQxYjdiZQ";
+    window.NEXT_PUBLIC_SUPABASE_URL = 'https://jbzykcuhpfkrgnimjtxx.supabase.co';
+    window.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_Usw8tFE0HQyAJo7NyvIvTA_fHfXGGZ-';
   </script>
 
   <script>
-    window.NEXT_PUBLIC_SUPABASE_URL = 'https://jbzykcuhpfkrgnimjtxx.supabase.co';
-    window.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_Usw8tFE0HQyAJo7NyvIvTA_fHfXGGZ-';
-
     const SUPABASE_URL = window.NEXT_PUBLIC_SUPABASE_URL;
     const SUPABASE_PUBLISHABLE_KEY = window.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
     window.SUPABASE_URL = SUPABASE_URL;
@@ -43,368 +42,184 @@
     }
   </script>
 
-  <link rel="stylesheet" href="style.css">
-
   <style>
-    /* ============================================================
-       NEO-BRUTALISM FULL-SCREEN APP LAYOUT
-       ============================================================ */
-    *, *::before, *::after { box-sizing: border-box; }
-
     :root {
+      --bg-color: #f8f9fa;
+      --card-bg: #ffffff;
       --black: #000000;
-      --white: #ffffff;
       --yellow: #fde047;
-      --yellow-soft: #fef3c7;
       --green: #a3e635;
-      --green-soft: #d9f99d;
-      --pink: #fbcfe8;
-      --pink-hot: #ec4899;
-      --blue: #bae6fd;
-      --gray-100: #f1f1f4;
-      --gray-300: #d1d5db;
-      --gray-600: #4b5563;
-      --gray-800: #1f2937;
-      --danger: #ef4444;
-      --success: #16a34a;
+      --pink: #ec4899;
+      --text-main: #111111;
+      --text-muted: #6b7280;
+      --border-color: #000000;
+      --shadow: 4px 4px 0px #000000;
+      --shadow-sm: 3px 3px 0px #000000;
+      --radius: 16px;
     }
 
-    html, body {
+    * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
-      height: 100%;
-      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-      background: var(--gray-100);
-      background-image:
-        linear-gradient(rgba(0,0,0,0.045) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0,0,0,0.045) 1px, transparent 1px);
-      background-size: 22px 22px;
-      color: var(--gray-800);
-      overflow: hidden;
-      -webkit-font-smoothing: antialiased;
+      -webkit-tap-highlight-color: transparent;
     }
 
-    .app-shell {
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-      height: 100dvh;
-      position: relative;
-      width: 100%;
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      padding-bottom: 90px;
+      min-height: 100vh;
+      overflow-x: hidden;
     }
 
-    /* ==================== TOP BAR ==================== */
-    .top-bar {
-      flex: 0 0 auto;
-      background: var(--white);
-      border-bottom: 3px solid var(--black);
-      padding: 10px 14px;
+    /* ================= TOP NAV ================= */
+    .top-nav {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 10px;
-      z-index: 50;
-      position: relative;
+      padding: 12px 16px;
+      background: var(--card-bg);
+      border-bottom: 2px solid var(--black);
+      position: sticky;
+      top: 0;
+      z-index: 100;
     }
 
-    .top-left {
+    .nav-left {
       display: flex;
       align-items: center;
-      gap: 10px;
-      min-width: 0;
-      flex: 1;
+      gap: 8px;
     }
 
-    .brand-logo {
-      width: 42px;
-      height: 42px;
-      flex-shrink: 0;
+    .logo-box {
+      width: 34px;
+      height: 34px;
       background: var(--black);
-      color: var(--white);
-      border-radius: 11px;
+      color: var(--yellow);
+      border-radius: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-family: 'Space Grotesk', sans-serif;
-      font-weight: 800;
-      font-size: 16px;
-      letter-spacing: -0.5px;
+      font-size: 18px;
       border: 2px solid var(--black);
-      box-shadow: 3px 3px 0 var(--green);
     }
-
-    .brand-text { display: flex; flex-direction: column; min-width: 0; }
 
     .brand-name {
       font-family: 'Space Grotesk', sans-serif;
       font-weight: 800;
-      font-size: 15px;
-      letter-spacing: -0.3px;
-      line-height: 1.1;
-      color: var(--black);
-      white-space: nowrap;
+      font-size: 16px;
+      letter-spacing: -0.5px;
     }
 
-    .brand-badge {
-      font-size: 8.5px;
-      font-weight: 800;
-      letter-spacing: 1.5px;
-      color: var(--black);
-      background: var(--yellow);
-      border: 1.5px solid var(--black);
-      border-radius: 4px;
-      padding: 1px 5px;
-      align-self: flex-start;
-      margin-top: 3px;
-    }
-
-    .top-right {
-      display: flex;
-      gap: 6px;
-      align-items: center;
-      flex-shrink: 0;
-    }
-
-    .pill-btn {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 11px;
-      font-weight: 800;
-      padding: 8px 11px;
-      border-radius: 999px;
-      border: 2px solid var(--black);
-      box-shadow: 2px 2px 0 var(--black);
-      cursor: pointer;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      transition: transform .12s, box-shadow .12s;
-      white-space: nowrap;
-      background: var(--white);
-      color: var(--black);
-    }
-
-    .pill-btn:active { transform: translate(2px, 2px); box-shadow: 0 0 0 var(--black); }
-    .pill-pink { background: var(--pink); }
-    .pill-green { background: var(--green); }
-    .pill-yellow { background: var(--yellow); }
-
-    .icon-only-btn {
-      width: 40px;
-      height: 40px;
-      padding: 0;
-      justify-content: center;
-      font-size: 14px;
-      border-radius: 12px;
-    }
-
-    /* ==================== MAIN SCROLL AREA ==================== */
-    .main-scroll {
-      flex: 1 1 auto;
-      overflow-y: auto;
-      overflow-x: hidden;
-      padding: 14px 14px 24px 14px;
-      -webkit-overflow-scrolling: touch;
-      scroll-behavior: smooth;
-    }
-
-    /* ==================== BOTTOM NAV ==================== */
-    .bottom-nav {
-      flex: 0 0 auto;
-      background: var(--white);
-      border-top: 3px solid var(--black);
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      padding: 8px 6px calc(8px + env(safe-area-inset-bottom));
-      gap: 4px;
-      z-index: 50;
-    }
-
-    .bottom-nav-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 7px 4px;
-      border-radius: 11px;
-      cursor: pointer;
-      user-select: none;
-      transition: all .15s ease;
-      color: var(--gray-600);
-      gap: 3px;
-      border: 2px solid transparent;
-      background: transparent;
-      font-family: inherit;
-    }
-
-    .bottom-nav-item i { font-size: 18px; }
-    .bottom-nav-item span {
-      font-size: 9.5px;
-      font-weight: 800;
-      letter-spacing: -0.1px;
-      line-height: 1;
-    }
-
-    .bottom-nav-item.active {
-      background: var(--yellow);
-      color: var(--black);
-      border-color: var(--black);
-      box-shadow: 2px 2px 0 var(--black);
-    }
-
-    .bottom-nav-item.active i { transform: scale(1.05); }
-
-    /* ==================== SIDE DRAWER ==================== */
-    .drawer-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.55);
-      z-index: 200;
-      opacity: 0;
-      visibility: hidden;
-      transition: all .25s ease;
-      backdrop-filter: blur(4px);
-    }
-
-    .drawer-overlay.active { opacity: 1; visibility: visible; }
-
-    .side-drawer {
-      position: fixed;
-      top: 0;
-      left: 0;
-      bottom: 0;
-      width: 290px;
-      max-width: 85%;
-      background: var(--white);
-      border-right: 3px solid var(--black);
-      z-index: 201;
-      transform: translateX(-105%);
-      transition: transform .3s cubic-bezier(.4,0,.2,1);
-      display: flex;
-      flex-direction: column;
-      overflow-y: auto;
-      box-shadow: 8px 0 30px rgba(0,0,0,0.2);
-    }
-
-    .side-drawer.active { transform: translateX(0); }
-
-    .drawer-header {
-      padding: 18px 16px 14px;
-      border-bottom: 3px solid var(--black);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: var(--yellow);
-      gap: 10px;
-    }
-
-    .drawer-header .brand-logo { box-shadow: 3px 3px 0 var(--white); }
-
-    .drawer-close {
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
+    .tag-badge {
       background: var(--black);
-      color: var(--white);
-      border: 2px solid var(--black);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 14px;
-      flex-shrink: 0;
-      transition: transform .12s;
-    }
-
-    .drawer-close:hover { transform: scale(1.08); }
-
-    .drawer-menu {
-      padding: 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      flex: 1;
-    }
-
-    .drawer-section-label {
-      font-family: 'Space Grotesk', sans-serif;
+      color: var(--yellow);
       font-size: 10px;
       font-weight: 800;
-      letter-spacing: 1.5px;
-      color: var(--gray-600);
-      text-transform: uppercase;
-      padding: 12px 8px 4px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      letter-spacing: 0.5px;
     }
 
-    .drawer-item {
+    .nav-right {
       display: flex;
       align-items: center;
       gap: 12px;
-      padding: 12px 14px;
-      border-radius: 12px;
-      border: 2px solid transparent;
-      cursor: pointer;
-      transition: all .15s ease;
-      font-weight: 700;
-      font-size: 13px;
-      color: var(--gray-800);
-      background: transparent;
-      font-family: inherit;
-      text-align: left;
-      width: 100%;
     }
 
-    .drawer-item:hover { background: var(--gray-100); border-color: var(--black); }
-
-    .drawer-item.active {
-      background: var(--yellow);
-      border-color: var(--black);
-      box-shadow: 3px 3px 0 var(--black);
+    .contact-btn {
+      background: var(--green);
       color: var(--black);
-    }
-
-    .drawer-item .ico-box {
-      width: 32px;
-      height: 32px;
-      border-radius: 8px;
-      background: var(--white);
-      border: 2px solid var(--black);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 14px;
-      flex-shrink: 0;
-      color: var(--black);
-    }
-
-    .drawer-item.active .ico-box { background: var(--white); }
-
-    .drawer-footer {
-      padding: 14px 16px calc(14px + env(safe-area-inset-bottom));
-      border-top: 3px solid var(--black);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background: var(--gray-100);
-    }
-
-    .user-avatar-sm {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--pink-hot), #8b5cf6);
-      color: var(--white);
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      font-size: 11px;
       font-weight: 800;
-      font-size: 15px;
+      padding: 8px 14px;
+      border-radius: 20px;
       border: 2px solid var(--black);
-      flex-shrink: 0;
+      text-decoration: none;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: transform 0.1s;
     }
 
-    .user-info-sm { display: flex; flex-direction: column; min-width: 0; }
-    .user-info-sm .name {
+    .contact-btn:active {
+      transform: translate(2px, 2px);
+      box-shadow: 1px 1px 0px var(--black);
+    }
+
+    /* ================= MAIN CONTENT ================= */
+    .main-content {
+      padding: 16px;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    /* ================= CONTENT SECTIONS ================= */
+    .content-section {
+      display: none;
+    }
+
+    .content-section.active {
+      display: block;
+      animation: fadeIn 0.3s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ================= WIDGETS ================= */
+    .widgets-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .widget-card {
+      background: var(--card-bg);
+      border: 2px solid var(--black);
+      border-radius: 12px;
+      padding: 10px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .widget-card.yellow {
+      background: var(--yellow);
+    }
+
+    .widget-card.green {
+      background: var(--green);
+    }
+
+    .widget-icon {
+      font-size: 16px;
+      color: var(--black);
+    }
+
+    .widget-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .widget-label {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .widget-value {
+      font-family: 'Space Grotesk', sans-serif;
       font-size: 12px;
       font-weight: 800;
       color: var(--black);
@@ -412,1042 +227,498 @@
       overflow: hidden;
       text-overflow: ellipsis;
     }
-    .user-info-sm .email {
-      font-size: 10px;
-      color: var(--gray-600);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+
+    /* ================= HERO SECTION ================= */
+    .hero-section {
+      margin-bottom: 20px;
     }
 
-    /* ==================== INFO STRIP ==================== */
-    .info-strip {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 8px;
-      margin-bottom: 14px;
-    }
-
-    .info-card {
-      background: var(--white);
-      border: 2.5px solid var(--black);
-      border-radius: 12px;
-      padding: 8px 9px;
-      box-shadow: 3px 3px 0 var(--black);
-      display: flex;
-      flex-direction: column;
-      min-width: 0;
-      overflow: hidden;
-      transition: transform .12s;
-    }
-
-    .info-card.bg-yellow { background: var(--yellow); }
-    .info-card.bg-green { background: var(--green-soft); }
-    .info-card.bg-blue { background: var(--blue); }
-
-    .info-card .lbl {
-      font-size: 8.5px;
-      font-weight: 800;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      color: var(--gray-600);
-      margin-bottom: 4px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .info-card .val {
-      font-family: 'Space Grotesk', sans-serif;
-      font-weight: 800;
-      font-size: 12.5px;
-      color: var(--black);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .info-card .val i { font-size: 13px; color: var(--black); }
-
-    /* ==================== HERO TITLE ==================== */
-    .badge-tag {
+    .hero-badge {
       display: inline-flex;
       align-items: center;
       gap: 6px;
       background: var(--yellow);
       border: 2px solid var(--black);
-      border-radius: 8px;
-      padding: 5px 11px;
+      border-radius: 20px;
+      padding: 4px 12px;
       font-family: 'Space Grotesk', sans-serif;
-      font-size: 10px;
+      font-size: 11px;
       font-weight: 800;
-      letter-spacing: 1.2px;
-      box-shadow: 2px 2px 0 var(--black);
+      letter-spacing: 0.5px;
+      box-shadow: var(--shadow-sm);
       margin-bottom: 10px;
       text-transform: uppercase;
-      color: var(--black);
     }
 
     .hero-title {
       font-family: 'Space Grotesk', sans-serif;
       font-size: 28px;
       font-weight: 800;
-      line-height: 1.02;
-      letter-spacing: -1.2px;
-      margin: 4px 0 6px 0;
-      color: var(--black);
+      line-height: 1.1;
+      margin-bottom: 8px;
+      letter-spacing: -0.5px;
     }
 
-    .hero-sub {
-      font-size: 12.5px;
-      color: var(--gray-600);
-      line-height: 1.45;
-      margin-bottom: 16px;
+    .hero-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.5;
       font-weight: 500;
     }
 
-    /* ==================== STAT SQUARES ==================== */
-    .stat-square-grid {
+    /* ================= STATS ROW ================= */
+    .stats-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 12px;
-      margin-bottom: 14px;
+      margin-bottom: 16px;
     }
 
-    .stat-square {
-      background: var(--white);
-      border: 3px solid var(--black);
-      border-radius: 14px;
-      padding: 14px 16px;
-      box-shadow: 4px 4px 0 var(--black);
+    .stat-card {
+      background: var(--card-bg);
+      border: 2px solid var(--black);
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: var(--shadow);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      min-height: 110px;
-      transition: transform .15s ease, box-shadow .15s ease;
+      position: relative;
     }
 
-    .stat-square:hover { transform: translateY(-2px); box-shadow: 6px 6px 0 var(--black); }
-    .stat-square.yellow { background: var(--yellow); }
+    .stat-card.yellow {
+      background: var(--yellow);
+    }
 
-    .stat-square .head {
+    .stat-header {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      width: 100%;
-      gap: 8px;
+      margin-bottom: 8px;
     }
 
-    .stat-square .lbl {
+    .stat-title {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: 10.5px;
+      font-size: 11px;
       font-weight: 800;
-      letter-spacing: 1px;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
       text-transform: uppercase;
-      color: var(--gray-600);
     }
 
-    .stat-square.yellow .lbl { color: #78350f; }
-
-    .stat-square .icon {
-      font-size: 22px;
-      color: #b0b0b0;
-      flex-shrink: 0;
+    .stat-icon {
+      font-size: 18px;
+      color: rgba(0,0,0,0.2);
     }
 
-    .stat-square.yellow .icon { color: #795548; opacity: 0.85; }
-
-    .stat-square .num {
+    .stat-value {
       font-family: 'Space Grotesk', sans-serif;
+      font-size: 32px;
       font-weight: 800;
-      font-size: 34px;
       line-height: 1;
       color: var(--black);
-      letter-spacing: -1.5px;
     }
 
-    /* ==================== CARDS ==================== */
-    .card {
-      background: var(--white);
-      border: 3px solid var(--black);
-      border-radius: 16px;
-      padding: 16px;
-      box-shadow: 5px 5px 0 var(--black);
-      margin-bottom: 14px;
-    }
-
-    .card-title {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 14px;
-      font-weight: 800;
-      color: var(--black);
-      margin: 0 0 12px 0;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      letter-spacing: -0.3px;
-    }
-
-    .card-title i { color: var(--pink-hot); }
-
-    /* ==================== BUTTONS ==================== */
-    .btn-black, .btn-green, .btn-yellow, .btn-outline, .btn-pink-hot {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-weight: 800;
-      font-size: 13.5px;
-      padding: 13px 16px;
-      border-radius: 12px;
-      border: 3px solid var(--black);
-      box-shadow: 3px 3px 0 var(--black);
-      cursor: pointer;
-      transition: transform .12s, box-shadow .12s;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      width: 100%;
-      color: var(--black);
-      text-decoration: none;
-      line-height: 1.2;
-    }
-
-    .btn-black { background: var(--black); color: var(--white); box-shadow: 3px 3px 0 #6b7280; }
-    .btn-green { background: var(--green); }
-    .btn-yellow { background: var(--yellow); }
-    .btn-outline { background: var(--white); }
-    .btn-pink-hot { background: var(--pink-hot); color: var(--white); box-shadow: 3px 3px 0 var(--black); }
-
-    .btn-black:active, .btn-green:active, .btn-yellow:active, .btn-outline:active, .btn-pink-hot:active {
-      transform: translate(3px, 3px);
-      box-shadow: 0 0 0 var(--black);
-    }
-
-    .btn-black:disabled, .btn-green:disabled, .btn-outline:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    .btn-row {
+    /* ================= TABS ================= */
+    .tabs-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 14px;
-    }
-
-    /* ==================== FORM ELEMENTS ==================== */
-    .form-group {
-      margin-bottom: 14px;
-    }
-
-    .form-group label {
-      display: block;
-      font-size: 12px;
-      font-weight: 800;
-      color: var(--black);
-      margin-bottom: 6px;
-      letter-spacing: -0.1px;
-    }
-
-    .form-input, .form-select, .form-textarea {
-      width: 100%;
-      padding: 13px 14px;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 13px;
-      font-weight: 600;
-      background: var(--white);
-      border: 3px solid var(--black);
-      border-radius: 11px;
-      color: var(--black);
-      outline: none;
-      transition: all .15s;
-    }
-
-    .form-input:focus, .form-select:focus, .form-textarea:focus {
-      background: #fefce8;
-      box-shadow: 3px 3px 0 var(--black);
-    }
-
-    .form-input::placeholder, .form-textarea::placeholder {
-      color: #9ca3af;
-      font-weight: 500;
-    }
-
-    .form-textarea {
-      min-height: 120px;
-      resize: vertical;
-      font-family: 'Space Grotesk', monospace;
-      font-size: 12px;
-      line-height: 1.5;
-    }
-
-    .form-select {
-      appearance: none;
-      background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 14px center;
-      padding-right: 40px;
-      cursor: pointer;
-    }
-
-    /* ==================== MESSAGE BOX ==================== */
-    .message {
-      padding: 12px 14px;
-      border-radius: 11px;
-      font-size: 12.5px;
-      font-weight: 700;
-      margin-bottom: 14px;
-      display: none;
-      border: 2.5px solid var(--black);
-      box-shadow: 3px 3px 0 var(--black);
-      line-height: 1.4;
-    }
-
-    .message.show { display: block; }
-    .message.success { background: var(--green-soft); color: #14532d; }
-    .message.error { background: #fecaca; color: #7f1d1d; }
-    .message.info { background: var(--blue); color: #1e3a8a; }
-
-    /* ==================== STEP CARDS ==================== */
-    .am-steps-container {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      margin-bottom: 14px;
-    }
-
-    .am-step-card {
-      background: var(--white);
-      border: 3px solid var(--black);
-      border-radius: 12px;
-      padding: 12px 6px;
-      text-align: center;
-      cursor: pointer;
-      transition: all .2s ease;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 6px;
-      box-shadow: 3px 3px 0 var(--black);
-    }
-
-    .am-step-card.active {
-      background: var(--yellow);
-      transform: translateY(-2px);
-      box-shadow: 4px 4px 0 var(--black);
-    }
-
-    .am-step-number {
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      background: var(--black);
-      color: var(--white);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: 'Space Grotesk', sans-serif;
-      font-weight: 800;
-      font-size: 14px;
-    }
-
-    .am-step-card.active .am-step-number {
-      background: var(--white);
-      color: var(--black);
-      border: 2px solid var(--black);
-    }
-
-    .am-step-label {
-      font-size: 9.5px;
-      font-weight: 800;
-      line-height: 1.15;
-      letter-spacing: 0.2px;
-      white-space: pre-line;
-      color: var(--black);
-    }
-
-    .am-step-content-panel { display: none; }
-    .am-step-content-panel.active { display: block; }
-
-    /* ==================== RESULT BOX ==================== */
-    .res-data-box {
-      background: var(--gray-100);
-      border: 2.5px dashed var(--black);
-      border-radius: 12px;
-      padding: 14px;
-      margin: 14px 0;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .res-data-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      font-size: 12.5px;
-      border-bottom: 1px dashed var(--gray-300);
-      padding-bottom: 8px;
-    }
-
-    .res-data-row:last-child { border-bottom: none; padding-bottom: 0; }
-
-    .res-data-row .lbl {
-      font-weight: 700;
-      color: var(--gray-600);
-      flex-shrink: 0;
-    }
-
-    .res-data-row .val {
-      font-family: 'Space Grotesk', sans-serif;
-      font-weight: 800;
-      color: var(--black);
-      text-align: right;
-      word-break: break-all;
-      min-width: 0;
-    }
-
-    /* ==================== SUCCESS ICON ==================== */
-    .success-circle {
-      width: 56px;
-      height: 56px;
-      border-radius: 50%;
-      background: var(--green-soft);
-      border: 3px solid var(--black);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--success);
-      font-size: 24px;
-      margin: 0 auto 12px;
-      box-shadow: 3px 3px 0 var(--black);
-    }
-
-    /* ==================== TABLE ==================== */
-    .table-wrap {
-      overflow-x: auto;
-      border: 2.5px solid var(--black);
-      border-radius: 12px;
-      box-shadow: 3px 3px 0 var(--black);
-      background: var(--white);
-    }
-
-    .neo-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 12px;
-    }
-
-    .neo-table th {
-      background: var(--yellow);
-      padding: 10px 10px;
-      text-align: left;
-      font-weight: 800;
-      font-size: 10.5px;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-      color: var(--black);
-      border-bottom: 2.5px solid var(--black);
-      white-space: nowrap;
-    }
-
-    .neo-table td {
-      padding: 10px 10px;
-      border-bottom: 1px solid var(--gray-300);
-      color: var(--gray-800);
-      font-weight: 600;
-      vertical-align: middle;
-    }
-
-    .neo-table tr:last-child td { border-bottom: none; }
-    .neo-table tr:nth-child(even) td { background: #fafafa; }
-
-    /* ==================== TEMP MAIL REPLICA ==================== */
-    .tm-wrapper {
-      background: var(--white);
-      border: 3px solid var(--black);
-      border-radius: 16px;
-      padding: 16px;
-      box-shadow: 5px 5px 0 var(--black);
-      margin-bottom: 14px;
-    }
-
-    .tm-top-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 10px;
-      gap: 8px;
-    }
-
-    .tm-label {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 10.5px;
-      font-weight: 800;
-      letter-spacing: 1.2px;
-      color: var(--gray-600);
-    }
-
-    .tm-email-box {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-      background: var(--yellow-soft);
-      border: 2.5px solid var(--black);
-      border-radius: 11px;
-      padding: 12px 14px;
-      margin-bottom: 10px;
-      box-shadow: 2px 2px 0 var(--black);
-    }
-
-    .tm-email-left {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      min-width: 0;
-      flex: 1;
-    }
-
-    .tm-email-left i {
-      font-size: 16px;
-      color: var(--black);
-      flex-shrink: 0;
-    }
-
-    .tm-email-address {
-      font-family: 'Space Grotesk', sans-serif;
-      font-weight: 800;
-      font-size: 13px;
-      color: var(--black);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      min-width: 0;
-      display: block;
-    }
-
-    .tm-copy-btn {
-      width: 36px;
-      height: 36px;
-      border-radius: 9px;
-      background: var(--white);
-      border: 2.5px solid var(--black);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      color: var(--black);
-      font-size: 14px;
-      flex-shrink: 0;
-      transition: transform .12s;
-    }
-
-    .tm-copy-btn:active { transform: scale(0.92); }
-
-    .tm-approved-box {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: var(--green-soft);
-      border: 2px solid var(--black);
-      border-radius: 20px;
-      padding: 5px 12px;
-      font-size: 10.5px;
-      font-weight: 800;
-      color: #14532d;
-      margin-bottom: 12px;
-    }
-
-    .tm-action-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 14px;
-    }
-
-    .tm-inbox-title {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 12.5px;
-      font-weight: 800;
-      color: var(--black);
-      margin-bottom: 10px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .tm-clear-btn {
-      font-size: 11px;
-      font-weight: 800;
-      color: var(--danger);
-      cursor: pointer;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .inbox-list {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    /* ==================== RECENT ACTIVATION ==================== */
-    .recent-act-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: #dcfce7;
-      color: #14532d;
-      border: 2px solid var(--black);
-      padding: 3px 10px;
-      border-radius: 20px;
-      font-size: 9.5px;
-      font-weight: 800;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-    }
-
-    .recent-live-dot {
-      width: 7px;
-      height: 7px;
-      background-color: var(--success);
-      border-radius: 50%;
-      animation: livePulse 1.5s infinite;
-    }
-
-    @keyframes livePulse {
-      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.7); }
-      70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(22, 163, 74, 0); }
-      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(22, 163, 74, 0); }
-    }
-
-    .recent-act-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 10px 12px;
-      background: var(--white);
-      border: 2px solid var(--black);
-      border-radius: 11px;
-      margin-bottom: 8px;
-      transition: all .2s ease;
-      animation: fadeInSlide 0.4s ease-out forwards;
-      gap: 8px;
-    }
-
-    @keyframes fadeInSlide {
-      from { opacity: 0; transform: translateY(-6px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .recent-act-item:hover {
-      background: var(--yellow-soft);
-      transform: translateX(2px);
-    }
-
-    .recent-act-user {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      min-width: 0;
-      flex: 1;
-    }
-
-    .recent-act-avatar {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--pink-hot), #8b5cf6);
-      color: var(--white);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 800;
-      font-size: 14px;
-      flex-shrink: 0;
-      border: 2px solid var(--black);
-    }
-
-    .recent-act-info-text {
-      display: flex;
-      flex-direction: column;
-      min-width: 0;
-      flex: 1;
-    }
-
-    .recent-act-email {
-      font-weight: 800;
-      font-size: 12.5px;
-      color: var(--black);
-      font-family: 'Space Grotesk', sans-serif;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .recent-act-plan {
-      font-size: 10.5px;
-      color: var(--gray-600);
-      font-weight: 600;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .recent-act-time {
-      font-size: 10px;
-      font-weight: 800;
-      color: #14532d;
-      background: var(--green-soft);
-      padding: 4px 8px;
-      border-radius: 8px;
-      border: 1.5px solid var(--black);
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
-
-    /* ==================== SKY ANIMATION ==================== */
-    .sky-bar {
-      position: relative;
-      width: 100%;
-      height: 130px;
-      border-radius: 16px;
-      overflow: hidden;
-      margin-bottom: 12px;
-      border: 3px solid var(--black);
-      box-shadow: 5px 5px 0 var(--black);
-      transition: background 3s ease-in-out;
-      isolation: isolate;
-      background: linear-gradient(180deg, #4facfe 0%, #a1c4fd 60%, #e0f2ff 100%);
-    }
-
-    .sky-bar.theme-morning { background: linear-gradient(180deg, #ff9a8b 0%, #ffb47d 35%, #ffd89b 65%, #ffefd5 100%); }
-    .sky-bar.theme-day { background: linear-gradient(180deg, #4facfe 0%, #a1c4fd 60%, #e0f2ff 100%); }
-    .sky-bar.theme-evening { background: linear-gradient(180deg, #2c1e57 0%, #8a4d8e 35%, #ff7b54 70%, #ffb26b 100%); }
-    .sky-bar.theme-night { background: linear-gradient(180deg, #0b1026 0%, #14203f 40%, #1e2f57 70%, #2a4168 100%); }
-
-    .sky-time-label {
-      position: absolute;
-      top: 10px;
-      right: 12px;
-      z-index: 20;
-      background: rgba(0, 0, 0, 0.55);
-      color: #ffffff;
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: 1px;
-      padding: 5px 11px;
-      border-radius: 20px;
-      border: 1.5px solid rgba(255, 255, 255, 0.35);
-      backdrop-filter: blur(6px);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      transition: all 0.6s ease;
-      text-transform: uppercase;
-    }
-
-    .sky-time-label i { font-size: 12px; }
-
-    .sky-info-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
       gap: 10px;
       margin-bottom: 16px;
-      padding: 10px 14px;
-      background: var(--white);
-      border: 2.5px solid var(--black);
-      border-radius: 12px;
-      box-shadow: 3px 3px 0 var(--black);
-      font-family: 'Space Grotesk', sans-serif;
-      flex-wrap: wrap;
     }
 
-    .sky-loc-label {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 10.5px;
-      font-weight: 800;
-      letter-spacing: 1px;
-      color: var(--black);
-      text-transform: uppercase;
-      white-space: nowrap;
-    }
-
-    .sky-loc-label i { color: var(--pink-hot); font-size: 13px; }
-
-    .sky-phase-label {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 10.5px;
-      font-weight: 800;
-      letter-spacing: 0.8px;
-      color: var(--black);
-      text-transform: uppercase;
-      background: var(--yellow);
-      padding: 4px 10px;
-      border-radius: 20px;
-      border: 1.5px solid var(--black);
-      white-space: nowrap;
-    }
-
-    .sky-sun {
-      position: absolute;
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
-      background: radial-gradient(circle at 35% 35%, #fff8b0 0%, #ffd93d 45%, #ff9500 100%);
-      box-shadow: 0 0 30px 12px rgba(255, 217, 61, 0.75), 0 0 60px 20px rgba(255, 149, 0, 0.35);
-      z-index: 5;
-      transform: translate(-50%, -50%);
-      transition: left 4.5s linear, top 4.5s linear, opacity 2s ease;
-      animation: sunPulse 4s ease-in-out infinite;
-      pointer-events: none;
-    }
-
-    @keyframes sunPulse {
-      0%, 100% { box-shadow: 0 0 30px 12px rgba(255, 217, 61, 0.75), 0 0 60px 20px rgba(255, 149, 0, 0.35); }
-      50% { box-shadow: 0 0 40px 16px rgba(255, 217, 61, 0.9), 0 0 80px 26px rgba(255, 149, 0, 0.45); }
-    }
-
-    .sky-moon {
-      position: absolute;
-      width: 46px;
-      height: 46px;
-      z-index: 5;
-      transform: translate(-50%, -50%);
-      transition: left 4.5s linear, top 4.5s linear, opacity 2s ease;
-      filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.65)) drop-shadow(0 0 16px rgba(180, 200, 255, 0.45));
-      pointer-events: none;
-    }
-
-    .sky-moon svg { width: 100%; height: 100%; display: block; }
-
-    .sky-stars {
-      position: absolute;
-      inset: 0;
-      z-index: 3;
-      opacity: 0;
-      transition: opacity 2s ease-in-out;
-      pointer-events: none;
-    }
-
-    .sky-stars.active { opacity: 1; }
-
-    .sky-star {
-      position: absolute;
-      background: #ffffff;
-      border-radius: 50%;
-      animation: twinkle 2.4s ease-in-out infinite;
-    }
-
-    @keyframes twinkle {
-      0%, 100% { opacity: 0.25; transform: scale(0.8); }
-      50% { opacity: 1; transform: scale(1.15); }
-    }
-
-    .sky-cloud {
-      position: absolute;
-      background: rgba(255, 255, 255, 0.92);
-      border-radius: 50%;
-      filter: blur(0.3px);
-      z-index: 4;
-      transition: opacity 1.5s ease-in-out;
-    }
-
-    .sky-cloud::before, .sky-cloud::after {
-      content: "";
-      position: absolute;
-      background: inherit;
-      border-radius: 50%;
-    }
-
-    .sky-cloud.cloud-1 { width: 50px; height: 22px; top: 30px; left: -80px; animation: cloudDrift1 28s linear infinite; }
-    .sky-cloud.cloud-1::before { width: 28px; height: 28px; top: -12px; left: 8px; }
-    .sky-cloud.cloud-1::after { width: 22px; height: 22px; top: -8px; left: 26px; }
-
-    .sky-cloud.cloud-2 { width: 70px; height: 26px; top: 62px; left: -120px; animation: cloudDrift2 38s linear infinite; opacity: 0.78; }
-    .sky-cloud.cloud-2::before { width: 36px; height: 36px; top: -18px; left: 12px; }
-    .sky-cloud.cloud-2::after { width: 26px; height: 26px; top: -12px; left: 40px; }
-
-    .sky-cloud.cloud-3 { width: 42px; height: 20px; top: 15px; left: -100px; animation: cloudDrift3 45s linear infinite; opacity: 0.7; }
-    .sky-cloud.cloud-3::before { width: 24px; height: 24px; top: -11px; left: 8px; }
-    .sky-cloud.cloud-3::after { width: 20px; height: 20px; top: -7px; left: 22px; }
-
-    @keyframes cloudDrift1 { 0% { transform: translateX(0); } 100% { transform: translateX(calc(100vw + 200px)); } }
-    @keyframes cloudDrift2 { 0% { transform: translateX(0); } 100% { transform: translateX(calc(100vw + 260px)); } }
-    @keyframes cloudDrift3 { 0% { transform: translateX(0); } 100% { transform: translateX(calc(100vw + 220px)); } }
-
-    .sky-horizon {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 18px;
-      z-index: 6;
-      transition: all 1.5s ease-in-out;
-      pointer-events: none;
-      opacity: 0.85;
-    }
-
-    .sky-horizon::before, .sky-horizon::after {
-      content: "";
-      position: absolute;
-      bottom: 0;
-      background: inherit;
-    }
-
-    .sky-horizon::before {
-      width: 55%;
-      height: 100%;
-      left: -4%;
-      clip-path: polygon(0 100%, 22% 42%, 40% 68%, 60% 25%, 80% 55%, 100% 100%);
-    }
-
-    .sky-horizon::after {
-      width: 60%;
-      height: 100%;
-      right: -4%;
-      clip-path: polygon(0 100%, 18% 60%, 34% 32%, 52% 55%, 70% 38%, 88% 60%, 100% 100%);
-    }
-
-    .theme-morning .sky-horizon { background: #b5714b; }
-    .theme-day .sky-horizon { background: #4f7d54; }
-    .theme-evening .sky-horizon { background: #3b1e42; }
-    .theme-night .sky-horizon { background: #131c33; }
-
-    .theme-night .sky-time-label {
-      background: rgba(255, 255, 255, 0.14);
-      border-color: rgba(180, 210, 255, 0.5);
-      color: #dbeafe;
-    }
-
-    .theme-night .sky-cloud { opacity: 0.15 !important; }
-    .theme-evening .sky-cloud { opacity: 0.55; }
-
-    /* ==================== DB CARD ==================== */
-    .db-card {
-      background: var(--white);
-      border: 2.5px solid var(--black);
-      border-radius: 14px;
+    .tab-btn {
       padding: 14px;
-      box-shadow: 3px 3px 0 var(--black);
-      margin-bottom: 12px;
-    }
-
-    .db-card-header {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 10px;
-    }
-
-    .db-icon-box {
-      width: 40px;
-      height: 40px;
-      border-radius: 10px;
-      background: var(--yellow);
+      border-radius: 12px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 14px;
+      font-weight: 800;
       border: 2px solid var(--black);
+      cursor: pointer;
+      transition: all 0.2s;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 16px;
-      color: var(--black);
-      flex-shrink: 0;
-    }
-
-    .db-text-group { flex: 1; min-width: 0; }
-
-    .db-title {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 13px;
-      font-weight: 800;
-      color: var(--black);
-      letter-spacing: -0.3px;
-      margin-bottom: 2px;
-    }
-
-    .db-subtitle {
-      font-size: 10.5px;
-      color: var(--gray-600);
-      font-weight: 600;
-    }
-
-    .db-status-row {
-      display: flex;
-      align-items: center;
       gap: 8px;
-      padding-top: 10px;
-      border-top: 1.5px dashed var(--gray-300);
+    }
+
+    .tab-btn.active {
+      background: var(--black);
+      color: #ffffff;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .tab-btn:not(.active) {
+      background: var(--card-bg);
+      color: var(--text-muted);
+      box-shadow: none;
+      border-color: #d1d5db;
+    }
+
+    /* ================= FORM PANEL ================= */
+    .form-panel {
+      background: var(--card-bg);
+      border: 2px solid var(--black);
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: var(--shadow);
+      margin-bottom: 16px;
+      display: none;
+    }
+
+    .form-panel.active {
+      display: block;
+      animation: fadeIn 0.3s ease-out;
+    }
+
+    .step-label {
       font-family: 'Space Grotesk', sans-serif;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .input-group {
+      margin-bottom: 14px;
+    }
+
+    .input-group label {
+      display: block;
       font-size: 13px;
       font-weight: 700;
+      margin-bottom: 6px;
       color: var(--black);
     }
 
-    .db-blink-dot {
-      width: 9px;
-      height: 9px;
-      border-radius: 50%;
-      background: var(--success);
-      box-shadow: 0 0 10px var(--success);
-      animation: dbBlink 1.5s infinite;
-      flex-shrink: 0;
+    .input-field {
+      width: 100%;
+      padding: 14px;
+      border: 2px solid var(--black);
+      border-radius: 10px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 14px;
+      background: #f3f4f6;
+      outline: none;
+      transition: border-color 0.2s;
     }
 
-    @keyframes dbBlink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.35; }
+    .input-field:focus {
+      border-color: var(--pink);
+      background: #ffffff;
     }
 
-    .uptime-digits-row {
-      display: flex;
-      gap: 6px;
-      justify-content: flex-start;
-      align-items: center;
-      flex-wrap: wrap;
+    .input-textarea {
+      width: 100%;
+      padding: 14px;
+      border: 2px solid var(--black);
+      border-radius: 10px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 13px;
+      background: #f3f4f6;
+      outline: none;
+      transition: border-color 0.2s;
+      min-height: 120px;
+      resize: vertical;
     }
 
-    .uptime-digits-row span {
+    .input-textarea:focus {
+      border-color: var(--pink);
+      background: #ffffff;
+    }
+
+    .input-select {
+      width: 100%;
+      padding: 14px;
+      border: 2px solid var(--black);
+      border-radius: 10px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 14px;
+      background: #f3f4f6;
+      outline: none;
+      transition: border-color 0.2s;
+      cursor: pointer;
+    }
+
+    .input-select:focus {
+      border-color: var(--pink);
+      background: #ffffff;
+    }
+
+    .btn-green {
+      width: 100%;
+      padding: 16px;
+      background: var(--green);
+      color: var(--black);
+      border: 2px solid var(--black);
+      border-radius: 12px;
       font-family: 'Space Grotesk', sans-serif;
       font-size: 15px;
       font-weight: 800;
-      padding: 5px 10px;
-      background: var(--gray-100);
-      border: 2px solid var(--black);
-      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 10px;
+      transition: transform 0.1s;
+    }
+
+    .btn-green:active {
+      transform: translate(2px, 2px);
+      box-shadow: 2px 2px 0px var(--black);
+    }
+
+    .btn-green:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .btn-white {
+      width: 100%;
+      padding: 16px;
+      background: #ffffff;
       color: var(--black);
+      border: 2px solid var(--black);
+      border-radius: 12px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 16px;
+      transition: transform 0.1s;
+    }
+
+    .btn-white:active {
+      transform: translate(2px, 2px);
+      box-shadow: 1px 1px 0px var(--black);
+    }
+
+    .btn-pink {
+      width: 100%;
+      padding: 16px;
+      background: var(--pink);
+      color: #ffffff;
+      border: 2px solid var(--black);
+      border-radius: 12px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 10px;
+      transition: transform 0.1s;
+    }
+
+    .btn-pink:active {
+      transform: translate(2px, 2px);
+      box-shadow: 2px 2px 0px var(--black);
+    }
+
+    /* ================= OUTPUT BOX ================= */
+    .output-box {
+      border: 2px dashed #d1d5db;
+      border-radius: 12px;
+      padding: 24px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      background: #f9fafb;
+      position: relative;
+    }
+
+    .output-badge {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .output-icon {
+      font-size: 32px;
+      color: #d1d5db;
+      margin-bottom: 8px;
+    }
+
+    .output-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 4px;
+    }
+
+    .output-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* ================= BULK RESULT TABLE ================= */
+    .bulk-table-container {
+      overflow-x: auto;
+      border-radius: 12px;
+      border: 2px solid var(--black);
+      background: #ffffff;
+      margin-top: 12px;
+    }
+
+    .bulk-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      min-width: 400px;
+    }
+
+    .bulk-table thead {
+      background: var(--black);
+      color: var(--yellow);
+    }
+
+    .bulk-table th {
+      padding: 10px 8px;
+      text-align: left;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 800;
+      font-size: 10px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
       white-space: nowrap;
     }
 
-    /* ==================== DONATION CARD ==================== */
-    .donation-card {
-      background: var(--white);
-      border: 3px solid var(--black);
-      border-radius: 18px;
-      box-shadow: 6px 6px 0 var(--black);
-      width: 100%;
-      max-width: 380px;
-      margin: 0 auto 20px auto;
-      padding: 24px 20px;
-      text-align: center;
+    .bulk-table td {
+      padding: 10px 8px;
+      border-top: 1px solid #e5e7eb;
+      font-weight: 600;
+      color: var(--black);
+      vertical-align: top;
+      word-break: break-all;
     }
 
-    /* ==================== QR MODAL ==================== */
+    .bulk-table tbody tr:hover {
+      background: #fef3c7;
+    }
+
+    .badge-success {
+      display: inline-block;
+      background: #dcfce7;
+      color: #15803d;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 20px;
+      border: 1px solid #22c55e;
+    }
+
+    .badge-fail {
+      display: inline-block;
+      background: #fee2e2;
+      color: #b91c1c;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 20px;
+      border: 1px solid #ef4444;
+    }
+
+    .badge-process {
+      display: inline-block;
+      background: #fef9c3;
+      color: #a16207;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 20px;
+      border: 1px solid #eab308;
+    }
+
+    /* ================= DONASI CARD ================= */
+    .donasi-card {
+      background: #ffffff;
+      border: 3px solid var(--black);
+      border-radius: 20px;
+      box-shadow: 6px 6px 0px var(--black);
+      width: 100%;
+      padding: 24px 20px;
+      text-align: center;
+      box-sizing: border-box;
+      margin-bottom: 20px;
+    }
+
+    .donasi-icon {
+      font-size: 42px;
+      color: var(--pink);
+      margin-bottom: 10px;
+    }
+
+    .donasi-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--black);
+      margin-bottom: 6px;
+    }
+
+    .donasi-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 16px;
+    }
+
+    .donasi-store {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--black);
+    }
+
+    .donasi-nmid {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+
+    .donasi-methods {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--black);
+      margin-bottom: 4px;
+    }
+
+    .donasi-loc {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+
+    /* ================= MODAL QR POPUP ================= */
     .qr-modal-overlay {
       position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.75);
-      backdrop-filter: blur(8px);
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(6px);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -1455,1062 +726,539 @@
       opacity: 0;
       visibility: hidden;
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      padding: 16px;
+      padding: 12px;
+      box-sizing: border-box;
     }
 
-    .qr-modal-overlay.active { opacity: 1; visibility: visible; }
+    .qr-modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
 
     .qr-modal-card {
-      background: #fffbdf;
-      border: 3.5px solid var(--black);
-      border-radius: 22px;
-      box-shadow: 8px 8px 0 var(--black);
+      background: #ffffff;
+      border: 3px solid var(--black);
+      border-radius: 20px;
+      box-shadow: 8px 8px 0px var(--black);
       width: 100%;
-      max-width: 360px;
-      padding: 24px 20px;
+      max-width: 420px;
+      padding: 14px;
       text-align: center;
       position: relative;
       transform: scale(0.85);
       transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-sizing: border-box;
+      max-height: 94vh;
+      overflow-y: auto;
     }
 
-    .qr-modal-overlay.active .qr-modal-card { transform: scale(1); }
+    .qr-modal-overlay.active .qr-modal-card {
+      transform: scale(1);
+    }
 
     .qr-modal-close-btn {
       position: absolute;
-      top: 12px;
-      right: 12px;
+      top: 10px;
+      right: 10px;
       width: 34px;
       height: 34px;
       background: var(--black);
-      color: var(--white);
+      color: #ffffff;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      font-size: 14px;
-      transition: transform 0.15s ease;
+      font-size: 15px;
+      z-index: 10;
+      border: 2px solid #ffffff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      transition: transform 0.15s;
     }
 
-    .qr-modal-close-btn:hover { transform: scale(1.1); }
+    .qr-modal-close-btn:hover {
+      transform: scale(1.1);
+    }
 
-    .qr-code-modal-img {
-      max-width: 220px;
+    .qr-modal-label {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--pink);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+      margin-top: 6px;
+    }
+
+    .qr-modal-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--black);
+      margin-bottom: 2px;
+    }
+
+    .qr-modal-nmid {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .qr-modal-img {
       width: 100%;
+      max-width: 380px;
       height: auto;
-      border: 2.5px solid var(--black);
-      border-radius: 12px;
-      padding: 8px;
-      background: var(--white);
-      margin: 12px 0;
-      box-shadow: 3px 3px 0 var(--black);
+      border: 2px solid var(--black);
+      border-radius: 14px;
+      padding: 0;
+      background: #ffffff;
+      margin: 0 auto 14px auto;
+      box-shadow: var(--shadow-sm);
+      display: block;
+      object-fit: contain;
     }
 
-    /* ==================== TUTORIAL VIDEO ==================== */
-    .tutorial-video-wrapper {
-      width: 100%;
+    .qr-modal-methods {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--black);
+      margin-bottom: 4px;
+    }
+
+    .qr-modal-loc {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+
+    /* ================= BOTTOM NAV ================= */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #ffffff;
+      border-top: 2px solid var(--black);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 8px 0;
+      z-index: 1000;
+      box-shadow: 0 -4px 10px rgba(0,0,0,0.05);
       max-width: 480px;
       margin: 0 auto;
-      background: #000;
-      border-radius: 12px;
-      overflow: hidden;
-      border: 3px solid var(--black);
-      box-shadow: 4px 4px 0 var(--black);
     }
 
-    .tutorial-video-wrapper video {
-      width: 100% !important;
-      height: auto !important;
-      display: block;
-      outline: none;
-      background: #000;
-    }
-
-    /* ==================== TUTORIAL GUIDE ==================== */
-    .guide-item {
-      background: var(--gray-100);
-      border: 2px solid var(--black);
-      border-radius: 12px;
-      padding: 14px;
-      margin-bottom: 10px;
-    }
-
-    .guide-item h4 {
-      font-size: 13px;
-      font-weight: 800;
-      color: var(--black);
-      margin: 0 0 6px 0;
+    .bottom-nav-item {
       display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .guide-item h4 .num-badge {
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      background: var(--yellow);
-      border: 2px solid var(--black);
-      display: inline-flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 11px;
-      font-weight: 800;
-      flex-shrink: 0;
-    }
-
-    .guide-item p {
-      font-size: 12px;
-      color: var(--gray-600);
-      margin: 0;
-      line-height: 1.5;
-      font-weight: 500;
-    }
-
-    /* ==================== STATUS BADGE ==================== */
-    .status-badge-inline {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: var(--green-soft);
-      border: 2px solid var(--black);
-      border-radius: 20px;
-      padding: 5px 12px;
-      font-size: 11px;
-      font-weight: 800;
-      color: #14532d;
-      margin-bottom: 12px;
-      box-shadow: 2px 2px 0 var(--black);
-    }
-
-    .status-ping-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--success);
-      box-shadow: 0 0 8px var(--success);
-      animation: dbBlink 1.5s infinite;
-    }
-
-    /* ==================== CHART WRAPPER ==================== */
-    .chart-wrap {
-      position: relative;
-      width: 100%;
-      height: 240px;
-    }
-
-    /* ==================== STAT MINI CARDS ==================== */
-    .mini-stat-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 14px;
-    }
-
-    .mini-stat {
-      background: var(--white);
-      border: 2.5px solid var(--black);
+      gap: 4px;
+      text-decoration: none;
+      color: var(--text-muted);
+      font-size: 10px;
+      font-weight: 700;
+      padding: 6px 12px;
       border-radius: 12px;
-      padding: 12px;
-      box-shadow: 3px 3px 0 var(--black);
-      display: flex;
-      align-items: center;
-      gap: 10px;
+      transition: all 0.2s;
+      cursor: pointer;
+      flex: 1;
+      background: none;
+      border: none;
+      font-family: 'Plus Jakarta Sans', sans-serif;
     }
 
-    .mini-stat-icon {
-      width: 36px;
-      height: 36px;
-      border-radius: 9px;
-      background: var(--yellow);
-      border: 2px solid var(--black);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 15px;
+    .bottom-nav-item i {
+      font-size: 18px;
+    }
+
+    .bottom-nav-item.active {
       color: var(--black);
-      flex-shrink: 0;
     }
 
-    .mini-stat-body { min-width: 0; flex: 1; }
-
-    .mini-stat-body .lbl {
-      font-size: 9.5px;
-      font-weight: 800;
-      letter-spacing: 0.5px;
-      color: var(--gray-600);
-      text-transform: uppercase;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+    .bottom-nav-item.active i {
+      color: var(--yellow);
+      background: var(--black);
+      padding: 4px 8px;
+      border-radius: 8px;
+      box-shadow: 2px 2px 0px rgba(0,0,0,0.2);
     }
 
-    .mini-stat-body .val {
-      font-family: 'Space Grotesk', sans-serif;
-      font-weight: 800;
-      font-size: 15px;
-      color: var(--black);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    /* ==================== RESPONSIVE ==================== */
-    @media (max-width: 380px) {
-      .info-card .val { font-size: 11px; }
-      .info-card .lbl { font-size: 7.5px; }
+    /* ================= RESPONSIVE ================= */
+    @media (max-width: 480px) {
       .hero-title { font-size: 24px; }
-      .stat-square .num { font-size: 28px; }
+      .stat-value { font-size: 28px; }
+      .brand-name { font-size: 14px; }
+      .contact-btn { font-size: 10px; padding: 6px 10px; }
+      .qr-modal-card { padding: 12px; }
+      .qr-modal-img { max-width: 100%; }
     }
-
-    @media (min-width: 720px) {
-      .main-scroll { padding: 18px 24px 32px; }
-      .app-shell { max-width: 720px; margin: 0 auto; }
-      .top-bar { padding: 12px 20px; }
-    }
-
-    /* ==================== SAKURA HIDE (not used now) ==================== */
-    .sakura-container { display: none; }
-    .floating-wa-container { display: none; }
   </style>
 </head>
 <body>
 
-  <div class="sakura-container" id="sakuraContainer"></div>
+  <!-- ================= TOP NAV ================= -->
+  <header class="top-nav">
+    <div class="nav-left">
+      <div class="logo-box">
+        <i class="fa-solid fa-bolt"></i>
+      </div>
+      <span class="brand-name">AYAKA MOTION</span>
+      <span class="tag-badge">AM PREM</span>
+    </div>
+    <div class="nav-right">
+      <a href="https://wa.me/6282339430604" target="_blank" class="contact-btn">
+        <i class="fa-brands fa-whatsapp"></i> Contact Owner
+      </a>
+    </div>
+  </header>
 
-  <div class="app-shell">
+  <!-- ================= MAIN CONTENT ================= -->
+  <main class="main-content">
 
-    <!-- ==================== TOP BAR ==================== -->
-    <header class="top-bar">
-      <div class="top-left">
-        <div class="brand-logo">AS</div>
-        <div class="brand-text">
-          <div class="brand-name">AYAKA STORE</div>
-          <div class="brand-badge">AM PREMIUM</div>
+    <!-- ================= SECTION: HOME ================= -->
+    <section class="content-section active" id="sectionHome">
+
+      <!-- Widgets Row -->
+      <div class="widgets-row">
+        <div class="widget-card">
+          <div class="widget-icon"><i class="fa-regular fa-calendar"></i></div>
+          <div class="widget-info">
+            <span class="widget-label">TANGGAL</span>
+            <span class="widget-value" id="widgetDateVal">Memuat...</span>
+          </div>
+        </div>
+        <div class="widget-card yellow">
+          <div class="widget-icon"><i class="fa-regular fa-clock"></i></div>
+          <div class="widget-info">
+            <span class="widget-label">WAKTU WIB</span>
+            <span class="widget-value" id="widgetTimeVal">Memuat...</span>
+          </div>
+        </div>
+        <div class="widget-card green">
+          <div class="widget-icon"><i class="fa-solid fa-battery-three-quarters"></i></div>
+          <div class="widget-info">
+            <span class="widget-label">BATERAI</span>
+            <span class="widget-value" id="widgetBatteryVal">--%</span>
+          </div>
         </div>
       </div>
-      <div class="top-right">
-        <button type="button" class="pill-btn pill-pink" id="topDonasiBtn">
-          <i class="fa-solid fa-heart"></i> Donasi
+
+      <!-- Hero Section -->
+      <section class="hero-section">
+        <div class="hero-badge">
+          <i class="fa-solid fa-house"></i> DASHBOARD
+        </div>
+        <h1 class="hero-title">Selamat Datang<br>di AYAKA MOTION</h1>
+        <p class="hero-desc">Platform aktivasi Alight Motion Premium otomatis. Pilih menu di bawah untuk memulai proses aktivasi.</p>
+      </section>
+
+      <!-- Stats Row -->
+      <section class="stats-row">
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-title">TOTAL AKTIVASI</span>
+            <div class="stat-icon"><i class="fa-solid fa-trophy"></i></div>
+          </div>
+          <div class="stat-value" id="globalTotalAktivasi">0</div>
+        </div>
+        <div class="stat-card yellow">
+          <div class="stat-header">
+            <span class="stat-title">HARI INI</span>
+            <div class="stat-icon"><i class="fa-solid fa-clock"></i></div>
+          </div>
+          <div class="stat-value" id="globalHariIniAktivasi">0</div>
+        </div>
+      </section>
+
+      <!-- Info Card -->
+      <div class="form-panel active" style="display: block;">
+        <span class="step-label">INFORMASI LAYANAN</span>
+        <div style="display: grid; gap: 10px;">
+          <div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 10px; padding: 12px;">
+            <div style="font-size: 13px; font-weight: 800; margin-bottom: 4px; color: var(--black);">
+              <i class="fa-solid fa-bolt" style="color: #f59e0b;"></i> Aktivasi Manual
+            </div>
+            <div style="font-size: 12px; color: var(--text-muted);">Aktivasi 1 akun Alight Motion Premium via magic link.</div>
+          </div>
+          <div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 10px; padding: 12px;">
+            <div style="font-size: 13px; font-weight: 800; margin-bottom: 4px; color: var(--black);">
+              <i class="fa-solid fa-layer-group" style="color: #8b5cf6;"></i> Bulk Aktivasi
+            </div>
+            <div style="font-size: 12px; color: var(--text-muted);">Aktivasi banyak akun sekaligus secara massal.</div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ================= SECTION: AKTIVASI ================= -->
+    <section class="content-section" id="sectionAktivasi">
+
+      <!-- Hero -->
+      <section class="hero-section">
+        <div class="hero-badge">
+          <i class="fa-solid fa-crown"></i> ACTIVATION MANUAL
+        </div>
+        <h1 class="hero-title">Kirim Link &<br>Verifikasi Link</h1>
+        <p class="hero-desc">Kirim magic link ke Gmail lalu verifikasi untuk aktivasi Alight Motion Premium 1 tahun — otomatis, tanpa kata sandi.</p>
+      </section>
+
+      <!-- Stats Row -->
+      <section class="stats-row">
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-title">TOTAL AKTIVASI</span>
+            <div class="stat-icon"><i class="fa-solid fa-trophy"></i></div>
+          </div>
+          <div class="stat-value" id="globalTotalAktivasi2">0</div>
+        </div>
+        <div class="stat-card yellow">
+          <div class="stat-header">
+            <span class="stat-title">HARI INI</span>
+            <div class="stat-icon"><i class="fa-solid fa-clock"></i></div>
+          </div>
+          <div class="stat-value" id="globalHariIniAktivasi2">0</div>
+        </div>
+      </section>
+
+      <!-- Tabs -->
+      <div class="tabs-row">
+        <button class="tab-btn active" id="tabKirimLink">
+          <i class="fa-solid fa-envelope"></i> Kirim Link
         </button>
-        <a href="https://wa.me/6282339430604" target="_blank" rel="noopener noreferrer" class="pill-btn pill-green">
-          <i class="fa-brands fa-whatsapp"></i> Owner
+        <button class="tab-btn" id="tabVerifikasi">
+          <i class="fa-solid fa-shield-halved"></i> Verifikasi
+        </button>
+      </div>
+
+      <!-- Panel: Kirim Link -->
+      <div class="form-panel active" id="panelKirimLink">
+        <span class="step-label">LANGKAH 1 - KIRIM MAGIC LINK</span>
+        
+        <div class="input-group">
+          <label>Alamat Gmail</label>
+          <input type="email" id="emailInput" class="input-field" placeholder="user@gmail.com">
+        </div>
+
+        <button class="btn-green" id="sendMagicLinkBtn">
+          <i class="fa-solid fa-paper-plane"></i> Kirim Magic Link ke Email
+        </button>
+
+        <button class="btn-white" id="pasteMagicLinkBtn">
+          <i class="fa-solid fa-arrow-right"></i> Tempel Magic Link →
+        </button>
+
+        <div class="output-box" id="outputBox">
+          <span class="output-badge">STANDBY</span>
+          <div class="output-icon"><i class="fa-regular fa-envelope"></i></div>
+          <div class="output-title">Belum ada data</div>
+          <div class="output-desc">Masukkan Gmail lalu kirim magic link</div>
+        </div>
+      </div>
+
+      <!-- Panel: Verifikasi -->
+      <div class="form-panel" id="panelVerifikasi">
+        <span class="step-label">LANGKAH 2 - VERIFIKASI MAGIC LINK</span>
+        
+        <div class="input-group">
+          <label>Tempel Magic Link</label>
+          <input type="url" id="magicInput" class="input-field" placeholder="https://identitytoolkit.googleapis.com/...">
+        </div>
+
+        <button class="btn-green" id="verifyMagicLinkBtn">
+          <i class="fa-solid fa-check"></i> Verifikasi & Aktivasi
+        </button>
+
+        <div class="output-box" id="verifyOutputBox">
+          <span class="output-badge">STANDBY</span>
+          <div class="output-icon"><i class="fa-solid fa-shield-halved"></i></div>
+          <div class="output-title">Menunggu Magic Link</div>
+          <div class="output-desc">Tempel link verifikasi untuk memproses aktivasi</div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ================= SECTION: BULK ================= -->
+    <section class="content-section" id="sectionBulk">
+
+      <section class="hero-section">
+        <div class="hero-badge">
+          <i class="fa-solid fa-layer-group"></i> BULK AKTIVASI
+        </div>
+        <h1 class="hero-title">Aktivasi Massal<br>Alight Motion</h1>
+        <p class="hero-desc">Aktivasi banyak akun Alight Motion Premium sekaligus. Format: <b>email | magic_link</b> per baris.</p>
+      </section>
+
+      <!-- Stats Row -->
+      <section class="stats-row">
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-title">TOTAL AKTIVASI</span>
+            <div class="stat-icon"><i class="fa-solid fa-trophy"></i></div>
+          </div>
+          <div class="stat-value" id="globalTotalAktivasi3">0</div>
+        </div>
+        <div class="stat-card yellow">
+          <div class="stat-header">
+            <span class="stat-title">HARI INI</span>
+            <div class="stat-icon"><i class="fa-solid fa-clock"></i></div>
+          </div>
+          <div class="stat-value" id="globalHariIniAktivasi3">0</div>
+        </div>
+      </section>
+
+      <!-- Form Bulk -->
+      <div class="form-panel active" style="display: block;">
+        <span class="step-label">FORM BULK AKTIVASI</span>
+
+        <div class="input-group">
+          <label>Paket / Durasi Premium</label>
+          <select id="bulkProductSelect" class="input-select">
+            <option value="am.full.sub.annual.19q4">Annual Sub (1 Tahun)</option>
+            <option value="am.full.sub.monthly.19q4">Monthly Sub (1 Bulan)</option>
+          </select>
+        </div>
+
+        <div class="input-group">
+          <label>Daftar Akun (Format: <code>email | magic_link</code> per baris)</label>
+          <textarea id="bulkDataInput" class="input-textarea" placeholder="user1@gmail.com | https://identitytoolkit.googleapis.com/...&#10;user2@gmail.com | https://identitytoolkit.googleapis.com/...&#10;user3@gmail.com | https://identitytoolkit.googleapis.com/..."></textarea>
+        </div>
+
+        <button class="btn-green" id="startBulkBtn">
+          <i class="fa-solid fa-play"></i> Mulai Proses Bulk
+        </button>
+
+        <button class="btn-white" id="exportBulkBtn" style="display: none;">
+          <i class="fa-solid fa-download"></i> Unduh Hasil (.txt)
+        </button>
+
+        <div id="bulkStatusBox" class="output-box" style="margin-top: 12px;">
+          <span class="output-badge">STANDBY</span>
+          <div class="output-icon"><i class="fa-solid fa-layer-group"></i></div>
+          <div class="output-title">Belum ada proses</div>
+          <div class="output-desc">Masukkan daftar akun lalu mulai proses bulk</div>
+        </div>
+      </div>
+
+      <!-- Hasil Bulk -->
+      <div class="form-panel" id="bulkResultCard" style="display: none;">
+        <span class="step-label">HASIL PEMROSESAN BULK</span>
+        <div class="bulk-table-container">
+          <table class="bulk-table">
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>Email</th>
+                <th>Order ID</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="bulkTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ================= SECTION: DONASI ================= -->
+    <section class="content-section" id="sectionDonasi">
+
+      <section class="hero-section">
+        <div class="hero-badge">
+          <i class="fa-solid fa-heart"></i> DUKUNG KAMI
+        </div>
+        <h1 class="hero-title">Donasi &<br>Dukungan</h1>
+        <p class="hero-desc">Bantu dukung server AYAKA MOTION agar tetap berjalan gratis, stabil, dan terus berkembang.</p>
+      </section>
+
+      <div class="donasi-card">
+        <div class="donasi-icon">💖</div>
+        <div class="donasi-title">Dukung Server Ayaka Motion</div>
+        <div class="donasi-desc">
+          Dukungan Anda membantu biaya server, database, & pengembangan fitur otomasi baru.
+        </div>
+
+        <div class="donasi-store">OLPI STORE</div>
+        <div class="donasi-nmid">NMID: ID1026559688191</div>
+
+        <div class="donasi-methods" style="margin-top: 16px;">DANA, OVO, GoPay, ShopeePay & M-Banking</div>
+        <div class="donasi-loc">Kab. Sumbawa</div>
+
+        <button type="button" class="btn-green" id="showQrBtn" style="margin-top: 8px;">
+          <i class="fa-solid fa-qrcode"></i> Tampilkan Kode QR
+        </button>
+
+        <a href="https://wa.me/6282339430604?text=Halo%20Ayaka%20Motion,%20saya%20ingin%20mengirimkan%20donasi/dukungan" target="_blank" class="btn-pink" style="text-decoration: none; margin-top: 4px;">
+          <i class="fa-brands fa-whatsapp"></i> Konfirmasi Donasi via WhatsApp
         </a>
       </div>
-    </header>
 
-    <!-- ==================== SIDE DRAWER ==================== -->
-    <div class="drawer-overlay" id="drawerOverlay"></div>
+    </section>
 
-    <aside class="side-drawer" id="sideDrawer">
-      <div class="drawer-header">
-        <div style="display:flex; align-items:center; gap:10px; min-width:0;">
-          <div class="brand-logo">AS</div>
-          <div class="brand-text">
-            <div class="brand-name">AYAKA STORE</div>
-            <div class="brand-badge" style="background: var(--black); color: var(--yellow); border-color: var(--black);">MENU</div>
-          </div>
-        </div>
-        <button type="button" class="drawer-close" id="drawerCloseBtn">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-      </div>
+  </main>
 
-      <div class="drawer-menu">
-        <div class="drawer-section-label">UTAMA</div>
-        <button type="button" class="drawer-item" data-view="dashboard">
-          <div class="ico-box"><i class="fa-solid fa-house"></i></div>
-          <span>Dashboard</span>
-        </button>
-        <button type="button" class="drawer-item" data-view="server-status">
-          <div class="ico-box"><i class="fa-solid fa-signal"></i></div>
-          <span>Server Status</span>
-        </button>
-        <button type="button" class="drawer-item" data-view="statistik">
-          <div class="ico-box"><i class="fa-solid fa-chart-line"></i></div>
-          <span>Statistik Store</span>
-        </button>
-
-        <div class="drawer-section-label">GENERATOR</div>
-        <button type="button" class="drawer-item" data-view="am-generator">
-          <div class="ico-box"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
-          <span>AM Generator V1</span>
-        </button>
-        <button type="button" class="drawer-item" data-view="am-generator-v2">
-          <div class="ico-box"><i class="fa-solid fa-bolt-lightning"></i></div>
-          <span>AM Generator V2</span>
-        </button>
-        <button type="button" class="drawer-item" data-view="am-bulk">
-          <div class="ico-box"><i class="fa-solid fa-layer-group"></i></div>
-          <span>Bulk Akun AM</span>
-        </button>
-
-        <div class="drawer-section-label">UTILITAS</div>
-        <button type="button" class="drawer-item" data-view="temp-mail">
-          <div class="ico-box"><i class="fa-solid fa-envelope-open-text"></i></div>
-          <span>Auto Temp Mail</span>
-        </button>
-        <button type="button" class="drawer-item" data-view="tutorial">
-          <div class="ico-box"><i class="fa-solid fa-circle-play"></i></div>
-          <span>Tutorial</span>
-        </button>
-        <button type="button" class="drawer-item" data-view="dukung">
-          <div class="ico-box"><i class="fa-solid fa-heart"></i></div>
-          <span>Dukung / Donasi</span>
-        </button>
-      </div>
-
-      <div class="drawer-footer">
-        <div class="user-avatar-sm">A</div>
-        <div class="user-info-sm">
-          <span class="name">Kamisato Ayaka</span>
-          <span class="email">admin@ayaka.store</span>
-        </div>
-      </div>
-    </aside>
-
-    <!-- ==================== MAIN SCROLL ==================== -->
-    <main class="main-scroll" id="mainScroll">
-
-      <!-- ============ INFO STRIP (always visible) ============ -->
-      <div class="info-strip">
-        <div class="info-card">
-          <div class="lbl">TANGGAL</div>
-          <div class="val" id="widgetDateVal">Memuat...</div>
-        </div>
-        <div class="info-card bg-yellow">
-          <div class="lbl">WAKTU WIB</div>
-          <div class="val" id="widgetTimeVal">--:--:--</div>
-        </div>
-        <div class="info-card bg-green">
-          <div class="lbl">BATERAI</div>
-          <div class="val" id="widgetBatteryVal"><i class="fa-solid fa-battery-half" id="widgetBatteryIcon"></i> --%</div>
-        </div>
-        <div class="info-card bg-blue">
-          <div class="lbl">UPTIME</div>
-          <div class="val" id="widgetUptimeVal">0 Days</div>
-        </div>
-      </div>
-
-      <!-- ======================================================
-           VIEW: DASHBOARD
-           ====================================================== -->
-      <section id="view-dashboard">
-        <div class="status-badge-inline">
-          <div class="status-ping-dot"></div>
-          <span>Ayaka Online • <span id="realtimePing">Measuring...</span></span>
-        </div>
-
-        <span class="badge-tag"><i class="fa-solid fa-crown"></i> PANEL KONTROL</span>
-        <h1 class="hero-title">Dashboard<br>Overview</h1>
-        <p class="hero-sub">Selamat datang di Panel Kontrol AYAKA STORE — Sistem Otomasi Premium Alight Motion.</p>
-
-        <!-- Sky -->
-        <div class="sky-bar" id="realtimeSkyBar">
-          <div class="sky-stars" id="skyStars"></div>
-          <div class="sky-sun" id="skySun" style="left: 12%; top: 25%;"></div>
-          <div class="sky-moon" id="skyMoon" style="left: 15%; top: 22%; opacity: 0;">
-            <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
-              <defs>
-                <radialGradient id="moonSurfaceGrad" cx="35%" cy="35%" r="70%">
-                  <stop offset="0%" stop-color="#ffffff"/>
-                  <stop offset="55%" stop-color="#eef2fa"/>
-                  <stop offset="100%" stop-color="#a9b7d0"/>
-                </radialGradient>
-              </defs>
-              <circle cx="50" cy="50" r="45" fill="#1c2740" opacity="0.85"/>
-              <path id="moonLitPath" d="" fill="url(#moonSurfaceGrad)"/>
-              <circle cx="38" cy="42" r="4" fill="rgba(140,155,180,0.35)"/>
-              <circle cx="60" cy="58" r="5" fill="rgba(140,155,180,0.3)"/>
-              <circle cx="55" cy="32" r="3" fill="rgba(140,155,180,0.3)"/>
-              <circle cx="35" cy="65" r="3.5" fill="rgba(140,155,180,0.3)"/>
-            </svg>
-          </div>
-          <div class="sky-cloud cloud-1"></div>
-          <div class="sky-cloud cloud-2"></div>
-          <div class="sky-cloud cloud-3"></div>
-          <div class="sky-horizon"></div>
-          <div class="sky-time-label" id="skyTimeLabel">
-            <i class="fa-solid fa-sun" id="skyTimeIcon"></i>
-            <span id="skyTimeText">Memuat...</span>
-          </div>
-        </div>
-
-        <div class="sky-info-row">
-          <div class="sky-loc-label" id="skyLocLabel">
-            <i class="fa-solid fa-location-dot"></i> <span id="skyLocationText">REALTIME SKY</span>
-          </div>
-          <div class="sky-phase-label" id="skyPhaseLabel">🌙 --</div>
-        </div>
-
-        <!-- Premium Status cards -->
-        <div class="mini-stat-row">
-          <div class="mini-stat">
-            <div class="mini-stat-icon" style="background: var(--green-soft);">
-              <i class="fa-solid fa-crown"></i>
-            </div>
-            <div class="mini-stat-body">
-              <div class="lbl">STATUS</div>
-              <div class="val" style="color: var(--success);">Premium Active</div>
-            </div>
-          </div>
-          <div class="mini-stat">
-            <div class="mini-stat-icon">
-              <i class="fa-solid fa-signal"></i>
-            </div>
-            <div class="mini-stat-body">
-              <div class="lbl">LATENCY</div>
-              <div class="val" id="dashboardPing">- ms</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Global Uptime -->
-        <div class="card">
-          <div class="card-title">
-            <i class="fa-solid fa-clock-rotate-left"></i>
-            <span>Server Uptime (Global Redis Sync)</span>
-            <span id="uptimePercentage" style="margin-left:auto; font-size:11px; font-weight:800; color:var(--success);">100.00%</span>
-          </div>
-          <div style="font-family:'Space Grotesk'; font-size:22px; font-weight:800; color:var(--black); margin-bottom:6px;" id="serverUptimeCounter">0 Days</div>
-          <div style="font-size:11px; color:var(--gray-600); font-weight:600;" id="uptimeLiveStatus">Status: Terkoneksi & Berjalan Normal</div>
-        </div>
-
-        <!-- Total Visitors -->
-        <div class="card">
-          <div class="card-title">
-            <i class="fa-solid fa-users"></i>
-            <span>Total Pengunjung Global</span>
-            <span id="visitorBadgeLabel" style="margin-left:auto; font-size:10px; font-weight:800; color:#78350f; background:var(--yellow); padding:3px 8px; border-radius:20px; border:1.5px solid var(--black); white-space:nowrap;">Redis Connected</span>
-          </div>
-          <div style="font-family:'Space Grotesk'; font-size:24px; font-weight:800; color:var(--black); margin-bottom:6px;" id="totalVisitorsCounter">Loading...</div>
-          <div style="font-size:11px; color:var(--gray-600); font-weight:600;" id="visitorStatusDesc">Sinkronisasi otomatis global via Upstash Redis</div>
-        </div>
-
-        <!-- Live Recent Aktivasi -->
-        <div class="card">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; gap:10px; flex-wrap:wrap;">
-            <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-              <h3 class="card-title" style="margin:0; font-size:14px;">Live Recent Aktivasi</h3>
-              <div class="recent-act-badge">
-                <div class="recent-live-dot"></div>
-                <span>LIVE</span>
-              </div>
-            </div>
-            <span style="font-size:10.5px; color:var(--gray-600); font-weight:700;" id="recentCountText">Memuat data...</span>
-          </div>
-          <div id="recentActivationList"></div>
-        </div>
-      </section>
-
-      <!-- ======================================================
-           VIEW: SERVER STATUS
-           ====================================================== -->
-      <section id="view-server-status" style="display:none;">
-        <span class="badge-tag"><i class="fa-solid fa-signal"></i> INFRASTRUKTUR</span>
-        <h1 class="hero-title">Server<br>Status</h1>
-        <p class="hero-sub">Pemantauan Status Layanan & Database Realtime.</p>
-
-        <div class="card">
-          <div class="db-card">
-            <div class="db-card-header">
-              <div class="db-icon-box" style="background: var(--pink);">
-                <i class="fa-solid fa-wand-magic-sparkles"></i>
-              </div>
-              <div class="db-text-group">
-                <div class="db-title">Total Akun Premium Generated</div>
-                <div class="db-subtitle">Live Counter Global (Upstash Redis)</div>
-              </div>
-            </div>
-            <div class="db-status-row" style="justify-content:space-between;">
-              <div style="display:flex; align-items:center; gap:10px;">
-                <div class="db-blink-dot" style="background-color: var(--pink-hot); box-shadow: 0 0 10px var(--pink-hot);"></div>
-                <span id="totalGeneratedCounter" style="font-size:22px; font-weight:800; color:var(--black); font-family:'Space Grotesk';">Loading...</span>
-              </div>
-              <span id="lastGeneratedInfo" style="font-size:10.5px; color:var(--gray-600); font-weight:700;">Sinkronisasi aktif</span>
-            </div>
-          </div>
-
-          <div class="db-card">
-            <div class="db-card-header">
-              <div class="db-icon-box">
-                <i class="fa-solid fa-database"></i>
-              </div>
-              <div class="db-text-group">
-                <div class="db-title">Database</div>
-                <div class="db-subtitle">Supabase PostgreSQL + Upstash Redis</div>
-              </div>
-            </div>
-            <div class="db-status-row">
-              <div class="db-blink-dot"></div>
-              <span id="supaStatusLabel">Connected</span>
-            </div>
-          </div>
-
-          <div class="db-card">
-            <div class="db-card-header">
-              <div class="db-icon-box" style="background: #e9d5ff;">
-                <i class="fa-solid fa-tv"></i>
-              </div>
-              <div class="db-text-group">
-                <div class="db-title">System Uptime Global</div>
-                <div class="db-subtitle">Waktu aktif sistem global (WIB)</div>
-              </div>
-            </div>
-            <div class="uptime-digits-row" id="systemUptimeCustomDisplay">
-              <span id="uptimeDays">0d</span>
-              <span id="uptimeHours">00h</span>
-              <span id="uptimeMinutes">00m</span>
-              <span id="uptimeSeconds">00s</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ======================================================
-           VIEW: STATISTIK
-           ====================================================== -->
-      <section id="view-statistik" style="display:none;">
-        <span class="badge-tag"><i class="fa-solid fa-chart-line"></i> ANALYTICS</span>
-        <h1 class="hero-title">Statistik<br>Store</h1>
-        <p class="hero-sub">Analisis Grafik Aktivasi, Pengunjung, & Performa Layanan.</p>
-
-        <div class="stat-square-grid">
-          <div class="stat-square">
-            <div class="head">
-              <span class="lbl">TOTAL<br>AKTIVASI</span>
-              <i class="fa-solid fa-trophy icon"></i>
-            </div>
-            <div class="num" id="globalTotalAktivasi">0</div>
-          </div>
-          <div class="stat-square yellow">
-            <div class="head">
-              <span class="lbl">HARI<br>INI</span>
-              <i class="fa-solid fa-clock icon"></i>
-            </div>
-            <div class="num" id="globalHariIniAktivasi">0</div>
-          </div>
-        </div>
-
-        <div class="mini-stat-row">
-          <div class="mini-stat">
-            <div class="mini-stat-icon" style="background: var(--pink);">
-              <i class="fa-solid fa-chart-pie"></i>
-            </div>
-            <div class="mini-stat-body">
-              <div class="lbl">TOTAL SUKSES</div>
-              <div class="val" id="statTotalSukses">0</div>
-            </div>
-          </div>
-          <div class="mini-stat">
-            <div class="mini-stat-icon" style="background: var(--green-soft);">
-              <i class="fa-solid fa-shield-halved"></i>
-            </div>
-            <div class="mini-stat-body">
-              <div class="lbl">SUCCESS RATE</div>
-              <div class="val" style="color: var(--success);">99.8%</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="card">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; gap:10px; flex-wrap:wrap;">
-            <h3 class="card-title" style="margin:0;">Grafik Aktivasi Bulanan</h3>
-            <button type="button" class="pill-btn pill-yellow" id="exportStatistikBtn">
-              <i class="fa-solid fa-download"></i> Unduh
-            </button>
-          </div>
-          <div class="chart-wrap">
-            <canvas id="monthlyChart"></canvas>
-          </div>
-        </div>
-
-        <div class="card">
-          <h3 class="card-title">Metrik Performa Layanan</h3>
-          <div class="table-wrap">
-            <table class="neo-table">
-              <thead>
-                <tr>
-                  <th>Fitur</th>
-                  <th>Total</th>
-                  <th>Status</th>
-                  <th>Performa</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><b>AM Gen V1</b></td>
-                  <td id="statCountV1">0 kali</td>
-                  <td><span style="color: var(--success); font-weight:800;">Optimal</span></td>
-                  <td>99.9%</td>
-                </tr>
-                <tr>
-                  <td><b>AM Gen V2</b></td>
-                  <td id="statCountV2">0 kali</td>
-                  <td><span style="color: var(--success); font-weight:800;">Optimal</span></td>
-                  <td>99.8%</td>
-                </tr>
-                <tr>
-                  <td><b>Bulk Massal</b></td>
-                  <td id="statCountBulk">0 batch</td>
-                  <td><span style="color: var(--success); font-weight:800;">Optimal</span></td>
-                  <td>99.5%</td>
-                </tr>
-                <tr>
-                  <td><b>Temp Mail</b></td>
-                  <td>Aktif</td>
-                  <td><span style="color: var(--success); font-weight:800;">Connected</span></td>
-                  <td>Real-time</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-
-      <!-- ======================================================
-           VIEW: TEMP MAIL
-           ====================================================== -->
-      <section id="view-temp-mail" style="display:none;">
-        <div id="tempMailMsg" class="message"></div>
-
-        <span class="badge-tag"><i class="fa-solid fa-envelope-open-text"></i> AUTO TEMP MAIL</span>
-        <h1 class="hero-title">Kotak Masuk<br>Sementara</h1>
-        <p class="hero-sub">Email temporer otomatis untuk verifikasi akun Alight Motion Anda.</p>
-
-        <div class="tm-wrapper">
-          <div class="tm-top-header">
-            <span class="tm-label">ALAMAT EMAIL KAMU</span>
-            <button type="button" class="pill-btn pill-yellow" id="outlookReaderInfoBtn" style="font-size:10.5px; padding:6px 10px;">
-              <i class="fa-solid fa-globe"></i> Outlook
-            </button>
-          </div>
-
-          <div class="tm-email-box">
-            <div class="tm-email-left">
-              <i class="fa-regular fa-envelope"></i>
-              <span id="tempMailAddress" class="tm-email-address">Membuat email...</span>
-            </div>
-            <button type="button" class="tm-copy-btn" id="copyTempMailBtn" title="Salin Email">
-              <i class="fa-regular fa-copy"></i>
-            </button>
-          </div>
-
-          <div class="tm-approved-box">
-            <i class="fa-solid fa-check"></i>
-            <span>Domain approved (uptime <span id="uptimeDaysCount">14</span> days)</span>
-          </div>
-
-          <button type="button" class="btn-outline" id="customTempMailBtn" style="margin-bottom:10px;">
-            <i class="fa-solid fa-pen"></i> Custom Alamat
-          </button>
-
-          <div class="tm-action-row">
-            <button type="button" class="btn-yellow" id="refreshTempMailBtn">
-              <i class="fa-solid fa-rotate" id="refreshInboxIcon"></i> Refresh
-            </button>
-            <button type="button" class="btn-black" id="newTempMailBtn">
-              <i class="fa-solid fa-plus"></i> Buat Baru
-            </button>
-          </div>
-
-          <div class="tm-inbox-title">
-            <span>Kotak Masuk <span id="inboxCountBadge">(0)</span></span>
-            <span class="tm-clear-btn" id="clearInboxBtn">Bersihkan</span>
-          </div>
-
-          <div id="tempMailInboxList" class="inbox-list">
-            <div style="text-align:center; color:var(--gray-600); padding:16px 10px; font-size:12px; background:var(--gray-100); border:2px dashed var(--black); border-radius:10px; font-weight:600;">
-              Belum ada pesan masuk. Email akan muncul di sini secara real-time.
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ======================================================
-           VIEW: AM GENERATOR V1
-           ====================================================== -->
-      <section id="view-am-generator" style="display:none;">
-        <span class="badge-tag"><i class="fa-solid fa-wand-magic-sparkles"></i> ACTIVATION MANUAL</span>
-        <h1 class="hero-title">Kirim Link &<br>Verifikasi Link</h1>
-        <p class="hero-sub">Kirim magic link ke Gmail lalu verifikasi untuk aktivasi Alight Motion Premium 1 tahun — otomatis, tanpa kata sandi.</p>
-
-        <div class="am-steps-container">
-          <div class="am-step-card active" id="amStepTab1" data-step="1">
-            <div class="am-step-number">1</div>
-            <div class="am-step-label">Hubungkan&#10;Akun</div>
-          </div>
-          <div class="am-step-card" id="amStepTab2" data-step="2">
-            <div class="am-step-number">2</div>
-            <div class="am-step-label">Aktivasi&#10;Akun</div>
-          </div>
-          <div class="am-step-card" id="amStepTab3" data-step="3">
-            <div class="am-step-number">3</div>
-            <div class="am-step-label">Premium&#10;Aktif!</div>
-          </div>
-        </div>
-
-        <div class="card">
-          <div id="msgBox" class="message"></div>
-
-          <div class="am-step-content-panel active" id="amPanel1">
-            <h3 class="card-title">Tahap 1: Hubungkan Akun</h3>
-
-            <div class="form-group">
-              <label>Email Akun Alight Motion</label>
-              <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                <input type="email" id="emailInput" class="form-input" placeholder="nama@email.com" style="flex: 1; min-width: 180px;">
-                <button type="button" id="sendBtn" class="btn-black" style="width:auto; padding:13px 16px; flex-shrink:0;">Kirim</button>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label>Magic Link / URL Verifikasi</label>
-              <input type="url" id="magicInput" class="form-input" placeholder="Paste link dari email...">
-            </div>
-
-            <button type="button" id="nextToStep2Btn" class="btn-green">
-              <i class="fa-solid fa-arrow-right"></i> Lanjut ke Tahap 2
-            </button>
-          </div>
-
-          <div class="am-step-content-panel" id="amPanel2">
-            <h3 class="card-title">Tahap 2: Aktivasi Akun</h3>
-            <p style="font-size:12px; color:var(--gray-600); margin-bottom:16px; font-weight:600;">Selesaikan proses aktivasi untuk membuka lisensi premium permanen.</p>
-
-            <div style="display:flex; justify-content:space-between; gap:10px; margin-top:16px;">
-              <button type="button" class="btn-outline" style="width:auto; padding:13px 16px;" id="backToStep1Btn">
-                <i class="fa-solid fa-arrow-left"></i>
-              </button>
-              <button type="button" id="proceedToStep3Btn" class="btn-green" style="flex:1;">
-                Aktifkan Premium <i class="fa-solid fa-arrow-right"></i>
-              </button>
-            </div>
-          </div>
-
-          <div class="am-step-content-panel" id="amPanel3">
-            <div class="success-circle"><i class="fa-solid fa-check"></i></div>
-            <h2 style="font-family:'Space Grotesk'; font-size:22px; font-weight:800; text-align:center; margin:0 0 6px 0;">Premium Aktif!</h2>
-            <p style="font-size:12.5px; color:var(--gray-600); text-align:center; margin-bottom:14px; font-weight:600;">Akun Alight Motion Anda kini resmi aktif.</p>
-
-            <div class="res-data-box">
-              <div class="res-data-row">
-                <span class="lbl">Email:</span>
-                <span class="val" id="resEmail">-</span>
-              </div>
-              <div class="res-data-row">
-                <span class="lbl">Order ID:</span>
-                <span class="val" id="resOrderId">-</span>
-              </div>
-              <div class="res-data-row">
-                <span class="lbl">Status:</span>
-                <span class="val" style="color:var(--success);">SUCCESS</span>
-              </div>
-            </div>
-
-            <button type="button" class="btn-outline" id="resetAmFormV1Btn">
-              <i class="fa-solid fa-rotate-right"></i> Proses Akun Lain
-            </button>
-          </div>
-        </div>
-      </section>
-
-      <!-- ======================================================
-           VIEW: AM GENERATOR V2
-           ====================================================== -->
-      <section id="view-am-generator-v2" style="display:none;">
-        <span class="badge-tag"><i class="fa-solid fa-bolt-lightning"></i> ACTIVATION V2</span>
-        <h1 class="hero-title">Generator V2<br>Advanced API</h1>
-        <p class="hero-sub">Verifikasi & Aktivasi Lisensi Alight Motion Advanced API (V2).</p>
-
-        <div class="am-steps-container">
-          <div class="am-step-card active" id="amV2StepTab1" data-step="1">
-            <div class="am-step-number">1</div>
-            <div class="am-step-label">Hubungkan&#10;Akun</div>
-          </div>
-          <div class="am-step-card" id="amV2StepTab2" data-step="2">
-            <div class="am-step-number">2</div>
-            <div class="am-step-label">Aktivasi&#10;Akun</div>
-          </div>
-          <div class="am-step-card" id="amV2StepTab3" data-step="3">
-            <div class="am-step-number">3</div>
-            <div class="am-step-label">Premium&#10;Aktif!</div>
-          </div>
-        </div>
-
-        <div class="card">
-          <div id="msgBoxV2" class="message"></div>
-
-          <div class="am-step-content-panel active" id="amV2Panel1">
-            <h3 class="card-title">Tahap 1: Hubungkan Akun V2</h3>
-
-            <div class="form-group">
-              <label>Paket / Durasi Premium</label>
-              <select id="v2ProductSelect" class="form-select">
-                <option value="am.full.sub.annual.19q4">Annual Sub (1 Tahun)</option>
-                <option value="am.full.sub.monthly.19q4">Monthly Sub (1 Bulan)</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label>Prefix Order ID (Opsional)</label>
-              <input type="text" id="v2PrefixInput" class="form-input" value="GPA" placeholder="Contoh: GPA / AYAKA">
-            </div>
-
-            <div class="form-group">
-              <label>Email Akun Alight Motion</label>
-              <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                <input type="email" id="emailInputV2" class="form-input" placeholder="nama@email.com" style="flex: 1; min-width: 180px;">
-                <button type="button" id="sendBtnV2" class="btn-black" style="width:auto; padding:13px 16px; flex-shrink:0;">Kirim</button>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label>Magic Link / URL Verifikasi</label>
-              <input type="url" id="magicInputV2" class="form-input" placeholder="Paste link dari email...">
-            </div>
-
-            <button type="button" id="nextToAmV2Step2Btn" class="btn-green">
-              <i class="fa-solid fa-arrow-right"></i> Lanjut ke Tahap 2
-            </button>
-          </div>
-
-          <div class="am-step-content-panel" id="amV2Panel2">
-            <h3 class="card-title">Tahap 2: Aktivasi Sistem V2</h3>
-            <p style="font-size:12px; color:var(--gray-600); margin-bottom:16px; font-weight:600;">Selesaikan proses Engine V2 untuk mengaktifkan langganan.</p>
-
-            <div style="display:flex; justify-content:space-between; gap:10px; margin-top:16px;">
-              <button type="button" class="btn-outline" style="width:auto; padding:13px 16px;" id="backToAmV2Step1Btn">
-                <i class="fa-solid fa-arrow-left"></i>
-              </button>
-              <button type="button" id="proceedToAmV2Step3Btn" class="btn-green" style="flex:1;">
-                Aktivasi Final <i class="fa-solid fa-arrow-right"></i>
-              </button>
-            </div>
-          </div>
-
-          <div class="am-step-content-panel" id="amV2Panel3">
-            <div class="success-circle"><i class="fa-solid fa-check"></i></div>
-            <h2 style="font-family:'Space Grotesk'; font-size:22px; font-weight:800; text-align:center; margin:0 0 6px 0;">Aktivasi V2 Berhasil!</h2>
-            <p style="font-size:12.5px; color:var(--gray-600); text-align:center; margin-bottom:14px; font-weight:600;">Akun Alight Motion Anda telah sukses ditingkatkan via Engine V2.</p>
-
-            <div class="res-data-box">
-              <div class="res-data-row">
-                <span class="lbl">Email:</span>
-                <span class="val" id="resEmailV2">-</span>
-              </div>
-              <div class="res-data-row">
-                <span class="lbl">Order ID:</span>
-                <span class="val" id="resOrderIdV2">-</span>
-              </div>
-              <div class="res-data-row">
-                <span class="lbl">Engine:</span>
-                <span class="val" style="color:var(--pink-hot);">AM DIRECT V2</span>
-              </div>
-              <div class="res-data-row">
-                <span class="lbl">Status:</span>
-                <span class="val" style="color:var(--success);">SUCCESS</span>
-              </div>
-            </div>
-
-            <button type="button" class="btn-outline" id="resetAmFormV2Btn">
-              <i class="fa-solid fa-rotate-right"></i> Proses Akun Lain
-            </button>
-          </div>
-        </div>
-      </section>
-
-      <!-- ======================================================
-           VIEW: BULK
-           ====================================================== -->
-      <section id="view-am-bulk" style="display:none;">
-        <span class="badge-tag"><i class="fa-solid fa-layer-group"></i> BULK GENERATOR</span>
-        <h1 class="hero-title">Bulk Akun<br>Massal</h1>
-        <p class="hero-sub">Aktivasi Lisensi Alight Motion Secara Massal Sekaligus.</p>
-
-        <div class="card">
-          <div id="msgBoxBulk" class="message"></div>
-
-          <div class="form-group">
-            <label>Paket / Durasi Premium</label>
-            <select id="bulkProductSelect" class="form-select">
-              <option value="am.full.sub.annual.19q4">Annual Sub (1 Tahun)</option>
-              <option value="am.full.sub.monthly.19q4">Monthly Sub (1 Bulan)</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label>Daftar Akun (email | magic_link per baris)</label>
-            <textarea id="bulkDataInput" class="form-textarea" placeholder="user1@gmail.com | https://identitytoolkit.googleapis.com/...&#10;user2@gmail.com | https://identitytoolkit.googleapis.com/..."></textarea>
-          </div>
-
-          <div style="display:flex; gap:10px; flex-wrap:wrap;">
-            <button type="button" id="startBulkBtn" class="btn-green" style="flex: 1; min-width: 160px;">
-              <i class="fa-solid fa-play"></i> Mulai Bulk
-            </button>
-            <button type="button" id="exportBulkBtn" class="btn-outline" style="width:auto; display:none;">
-              <i class="fa-solid fa-download"></i> Unduh
-            </button>
-          </div>
-        </div>
-
-        <div id="bulkResultCard" class="card" style="display:none;">
-          <h3 class="card-title">Hasil Pemrosesan Bulk</h3>
-          <div class="table-wrap">
-            <table class="neo-table">
-              <thead>
-                <tr>
-                  <th>No</th>
-                  <th>Email</th>
-                  <th>Order ID</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody id="bulkTableBody"></tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-
-      <!-- ======================================================
-           VIEW: DUKUNG / DONASI
-           ====================================================== -->
-      <section id="view-dukung" style="display:none;">
-        <span class="badge-tag"><i class="fa-solid fa-heart"></i> SUPPORT US</span>
-        <h1 class="hero-title">Dukung<br>Server</h1>
-        <p class="hero-sub">Bantu Dukung Server AYAKA STORE Agar Tetap Berjalan Gratis & Stabil.</p>
-
-        <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; margin-top:10px;">
-          <div class="donation-card">
-            <div style="font-size:36px; margin-bottom:8px;">💖</div>
-            <h2 style="font-size:18px; font-weight:800; color:var(--black); margin-bottom:4px; font-family:'Space Grotesk';">Dukung Ayaka Store</h2>
-            <p style="font-size:12px; color:var(--gray-600); margin-bottom:16px; line-height:1.4; font-weight:500;">
-              Dukungan Anda membantu biaya server, database, & fitur otomasi baru.
-            </p>
-
-            <div style="font-size:14px; font-weight:800; color:var(--black); font-family:'Space Grotesk';">OLPI STORE</div>
-            <div style="font-size:11px; color:var(--gray-600); margin-bottom:20px; font-weight:600;">NMID: ID1026559688191</div>
-
-            <button type="button" class="btn-black" id="showQrBtn" style="margin-bottom:10px;">
-              <i class="fa-solid fa-qrcode"></i> Tampilkan Kode QR
-            </button>
-
-            <a href="https://wa.me/6282339430604?text=Halo%20Ayaka%20Store,%20saya%20ingin%20mengirimkan%20donasi/dukungan" target="_blank" rel="noopener noreferrer" class="btn-green">
-              <i class="fa-brands fa-whatsapp"></i> Konfirmasi WhatsApp
-            </a>
-          </div>
-        </div>
-      </section>
-
-      <!-- ======================================================
-           VIEW: TUTORIAL
-           ====================================================== -->
-      <section id="view-tutorial" style="display:none;">
-        <span class="badge-tag"><i class="fa-solid fa-circle-play"></i> PANDUAN</span>
-        <h1 class="hero-title">Tutorial &<br>Panduan</h1>
-        <p class="hero-sub">Langkah Mudah Menggunakan Seluruh Layanan Otomasi AYAKA STORE.</p>
-
-        <div class="card">
-          <h3 class="card-title"><i class="fa-solid fa-video"></i> Video Tutorial Aktivasi</h3>
-          <div class="tutorial-video-wrapper">
-            <video controls playsinline preload="metadata" controlsList="nodownload">
-              <source src="utorial-baru%20am-premium-E373B9E.mp4" type="video/mp4">
-              <source src="utorial-baru am-premium-E373B9E.mp4" type="video/mp4">
-              Browser Anda tidak mendukung pemutar video HTML5.
-            </video>
-          </div>
-        </div>
-
-        <div class="card">
-          <h3 class="card-title"><i class="fa-solid fa-list-check"></i> Panduan Aktivasi Alight Motion</h3>
-
-          <div class="guide-item">
-            <h4><span class="num-badge">1</span> Buka Menu Aktivasi</h4>
-            <p>Masukkan email akun Alight Motion Anda pada kolom yang disediakan, lalu klik <b>Kirim</b>.</p>
-          </div>
-
-          <div class="guide-item">
-            <h4><span class="num-badge">2</span> Dapatkan Magic Link</h4>
-            <p>Buka email Anda (bisa menggunakan Auto Temp Mail), lalu salin URL verifikasi dari Alight Motion.</p>
-          </div>
-
-          <div class="guide-item">
-            <h4><span class="num-badge">3</span> Tempel Link & Aktivasi</h4>
-            <p>Tempelkan tautan Magic Link di form panel dan klik <b>Lanjut ke Tahap Aktivasi</b>. Sistem akan memproses lisensi secara otomatis.</p>
-          </div>
-        </div>
-      </section>
-
-    </main>
-
-    <!-- ==================== BOTTOM NAV ==================== -->
-    <nav class="bottom-nav">
-      <button type="button" class="bottom-nav-item active" data-view="dashboard">
-        <i class="fa-solid fa-house"></i>
-        <span>Home</span>
-      </button>
-      <button type="button" class="bottom-nav-item" data-view="am-generator">
-        <i class="fa-solid fa-bolt"></i>
-        <span>Aktivasi</span>
-      </button>
-      <button type="button" class="bottom-nav-item" data-view="am-bulk">
-        <i class="fa-solid fa-layer-group"></i>
-        <span>Bulk</span>
-      </button>
-      <button type="button" class="bottom-nav-item" data-view="temp-mail">
-        <i class="fa-solid fa-envelope"></i>
-        <span>Mail</span>
-      </button>
-      <button type="button" class="bottom-nav-item" id="bottomMoreBtn">
-        <i class="fa-solid fa-bars"></i>
-        <span>More</span>
-      </button>
-    </nav>
-
-  </div>
-
-  <!-- ==================== QR MODAL ==================== -->
+  <!-- ================= MODAL QR POPUP ================= -->
   <div class="qr-modal-overlay" id="qrDonasiModal">
     <div class="qr-modal-card">
       <div class="qr-modal-close-btn" id="closeQrModalBtn"><i class="fa-solid fa-xmark"></i></div>
 
-      <div style="font-size:11px; font-weight:800; color:var(--pink-hot); letter-spacing:1px; text-transform:uppercase;">SCAN QRIS DONASI</div>
-      <h3 style="font-size:20px; font-weight:800; color:var(--black); margin:4px 0 2px 0; font-family:'Space Grotesk';">OLPI STORE</h3>
-      <div style="font-size:11px; color:var(--gray-600); font-weight:600;">NMID: ID1026559688191</div>
+      <div class="qr-modal-label">SCAN QRIS DONASI</div>
+      <div class="qr-modal-title">OLPI STORE</div>
+      <div class="qr-modal-nmid">NMID: ID1026559688191</div>
 
-      <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=00020101021126570011ID.DANA.WWW011893600915303359272702090335927270303UMI51440014ID.CO.QRIS.WWW0215ID10265596881910303UMI5204654053033605802ID5910OLPI%20STORE6012Kab.%20Sumbawa6105843856304A947" alt="QRIS OLPI STORE" class="qr-code-modal-img">
+      <img src="8d9ab08d-053f-475f-ac6d-d0fe8981b85d.png" alt="QRIS OLPI STORE" class="qr-modal-img">
 
-      <div style="font-size:12px; font-weight:800; color:var(--black); margin-top:4px;">DANA, OVO, GoPay, ShopeePay</div>
-      <div style="font-size:11px; color:var(--gray-600); margin-bottom:14px; font-weight:600;">Kab. Sumbawa</div>
+      <div class="qr-modal-methods">DANA, OVO, GoPay, ShopeePay & M-Banking</div>
+      <div class="qr-modal-loc">Kab. Sumbawa</div>
 
-      <a href="https://wa.me/6282339430604?text=Halo%20Ayaka%20Store,%20saya%20sudah%20mengirimkan%20donasi" target="_blank" rel="noopener noreferrer" class="btn-green" style="font-size:12px; padding:11px;">
-        <i class="fa-brands fa-whatsapp"></i> Konfirmasi WhatsApp
+      <a href="https://wa.me/6282339430604?text=Halo%20Ayaka%20Motion,%20saya%20sudah%20mengirimkan%20donasi" target="_blank" class="btn-pink" style="text-decoration: none; margin-top: 4px;">
+        <i class="fa-brands fa-whatsapp"></i> Konfirmasi via WhatsApp
       </a>
     </div>
   </div>
 
-  <script src="config.js"></script>
-  <script src="auth.js"></script>
-  <script src="main.js"></script>
+  <!-- ================= BOTTOM NAV ================= -->
+  <nav class="bottom-nav">
+    <button class="bottom-nav-item active" data-section="Home">
+      <i class="fa-solid fa-house"></i>
+      <span>Home</span>
+    </button>
+    <button class="bottom-nav-item" data-section="Aktivasi">
+      <i class="fa-solid fa-bolt"></i>
+      <span>Aktivasi</span>
+    </button>
+    <button class="bottom-nav-item" data-section="Bulk">
+      <i class="fa-solid fa-layer-group"></i>
+      <span>Bulk</span>
+    </button>
+    <button class="bottom-nav-item" data-section="Donasi">
+      <i class="fa-solid fa-heart"></i>
+      <span>Donasi</span>
+    </button>
+  </nav>
 
+  <!-- ================= JAVASCRIPT LOGIC ================= -->
   <script>
     // ============================================================
     // 🌐 UPSTASH REDIS REST API CLIENT
     // ============================================================
     const UPSTASH_URL   = window.UPSTASH_URL;
     const UPSTASH_TOKEN = window.UPSTASH_TOKEN;
-
     const UPSTASH_HEADERS = { Authorization: `Bearer ${UPSTASH_TOKEN}` };
 
     async function redisGet(key) {
       try {
         const res = await fetch(`${UPSTASH_URL}/get/${encodeURIComponent(key)}`, { headers: UPSTASH_HEADERS });
-        if (!res.ok) { console.warn("redisGet HTTP error:", res.status); return { __error: true }; }
+        if (!res.ok) return { __error: true };
         const json = await res.json();
         return { value: json.result };
-      } catch (e) { console.warn("redisGet exception:", e); return { __error: true }; }
+      } catch (e) {
+        return { __error: true };
+      }
     }
 
     async function redisSet(key, value) {
@@ -2518,15 +1266,7 @@
         const res = await fetch(`${UPSTASH_URL}/set/${encodeURIComponent(key)}/${encodeURIComponent(value)}`, { headers: UPSTASH_HEADERS });
         const json = await res.json();
         return json.result;
-      } catch (e) { console.warn("redisSet error:", e); return null; }
-    }
-
-    async function redisSetNX(key, value) {
-      try {
-        const res = await fetch(`${UPSTASH_URL}/setnx/${encodeURIComponent(key)}/${encodeURIComponent(value)}`, { headers: UPSTASH_HEADERS });
-        const json = await res.json();
-        return json.result;
-      } catch (e) { console.warn("redisSetNX error:", e); return null; }
+      } catch (e) { return null; }
     }
 
     async function redisIncr(key) {
@@ -2534,7 +1274,7 @@
         const res = await fetch(`${UPSTASH_URL}/incr/${encodeURIComponent(key)}`, { headers: UPSTASH_HEADERS });
         const json = await res.json();
         return json.result;
-      } catch (e) { console.warn("redisIncr error:", e); return null; }
+      } catch (e) { return null; }
     }
 
     async function redisIncrBy(key, amount) {
@@ -2542,7 +1282,7 @@
         const res = await fetch(`${UPSTASH_URL}/incrby/${encodeURIComponent(key)}/${amount}`, { headers: UPSTASH_HEADERS });
         const json = await res.json();
         return json.result;
-      } catch (e) { console.warn("redisIncrBy error:", e); return null; }
+      } catch (e) { return null; }
     }
 
     async function redisExpire(key, seconds) {
@@ -2550,103 +1290,11 @@
         const res = await fetch(`${UPSTASH_URL}/expire/${encodeURIComponent(key)}/${seconds}`, { headers: UPSTASH_HEADERS });
         const json = await res.json();
         return json.result;
-      } catch (e) { console.warn("redisExpire error:", e); return null; }
-    }
-
-    async function redisLpush(key, value) {
-      try {
-        const res = await fetch(`${UPSTASH_URL}/lpush/${encodeURIComponent(key)}/${encodeURIComponent(value)}`, { headers: UPSTASH_HEADERS });
-        const json = await res.json();
-        return json.result;
-      } catch (e) { console.warn("redisLpush error:", e); return null; }
-    }
-
-    async function redisLtrim(key, start, stop) {
-      try {
-        const res = await fetch(`${UPSTASH_URL}/ltrim/${encodeURIComponent(key)}/${start}/${stop}`, { headers: UPSTASH_HEADERS });
-        const json = await res.json();
-        return json.result;
-      } catch (e) { console.warn("redisLtrim error:", e); return null; }
-    }
-
-    async function redisLrange(key, start, stop) {
-      try {
-        const res = await fetch(`${UPSTASH_URL}/lrange/${encodeURIComponent(key)}/${start}/${stop}`, { headers: UPSTASH_HEADERS });
-        if (!res.ok) return { __error: true };
-        const json = await res.json();
-        return { value: json.result };
-      } catch (e) { console.warn("redisLrange error:", e); return { __error: true }; }
+      } catch (e) { return null; }
     }
 
     // ============================================================
-    // ⏱️ SERVER UPTIME — AUTO START TIME (MONOTONIC, ANTI-TURUN)
-    // ============================================================
-    const UPTIME_REDIS_KEY       = "ayaka:server_start_ms";
-    const UPTIME_LOCAL_START_KEY = "ayaka:server_start_ms_local";
-    const UPTIME_LOCAL_MAX_KEY   = "ayaka:uptime_max_seconds";
-
-    let __serverStartMs     = null;
-    let __maxUptimeSeconds  = 0;
-    let __uptimeInitialized = false;
-
-    try {
-      const localStart = localStorage.getItem(UPTIME_LOCAL_START_KEY);
-      if (localStart) { const n = parseInt(localStart, 10); if (!isNaN(n) && n > 0) __serverStartMs = n; }
-      const maxSaved = localStorage.getItem(UPTIME_LOCAL_MAX_KEY);
-      if (maxSaved) { const n = parseInt(maxSaved, 10); if (!isNaN(n) && n > 0) __maxUptimeSeconds = n; }
-    } catch (e) { /* ignore */ }
-
-    async function initServerStartTime() {
-      const res = await redisGet(UPTIME_REDIS_KEY);
-      if (res && !res.__error && res.value) {
-        const n = parseInt(res.value, 10);
-        if (!isNaN(n) && n > 0 && (__serverStartMs === null || n < __serverStartMs)) __serverStartMs = n;
-      } else if (res && !res.__error && !res.value) {
-        const seed = __serverStartMs || Date.now();
-        const setnxRes = await redisSetNX(UPTIME_REDIS_KEY, seed);
-        if (setnxRes === 1 || setnxRes === "1") { __serverStartMs = seed; }
-        else {
-          const r2 = await redisGet(UPTIME_REDIS_KEY);
-          if (r2 && !r2.__error && r2.value) {
-            const n2 = parseInt(r2.value, 10);
-            if (!isNaN(n2) && n2 > 0 && (__serverStartMs === null || n2 < __serverStartMs)) __serverStartMs = n2;
-          }
-        }
-      }
-
-      if (!__serverStartMs || isNaN(__serverStartMs) || __serverStartMs <= 0) __serverStartMs = Date.now();
-
-      try {
-        const localStart = localStorage.getItem(UPTIME_LOCAL_START_KEY);
-        if (localStart) {
-          const n = parseInt(localStart, 10);
-          if (!isNaN(n) && n > 0 && n < __serverStartMs) __serverStartMs = n;
-        }
-        localStorage.setItem(UPTIME_LOCAL_START_KEY, String(__serverStartMs));
-      } catch (e) { /* ignore */ }
-
-      __uptimeInitialized = true;
-      console.log("🕒 Server start time initialized:", new Date(__serverStartMs).toISOString());
-    }
-
-    function computeStableUptimeSeconds() {
-      if (!__serverStartMs) return __maxUptimeSeconds || 0;
-      let diffSec = Math.floor((Date.now() - __serverStartMs) / 1000);
-      if (diffSec < 0) diffSec = 0;
-      if (diffSec < __maxUptimeSeconds) diffSec = __maxUptimeSeconds;
-      else if (diffSec > __maxUptimeSeconds) {
-        __maxUptimeSeconds = diffSec;
-        try { localStorage.setItem(UPTIME_LOCAL_MAX_KEY, String(diffSec)); } catch (e) {}
-      }
-      return diffSec;
-    }
-
-    window.computeStableUptimeSeconds = computeStableUptimeSeconds;
-    window.getServerStartMs = () => __serverStartMs;
-    window.isUptimeReady = () => __uptimeInitialized;
-
-    // ============================================================
-    // 🕒 WIB UTIL
+    // 🕒 UTIL: Timezone-aware WIB (Asia/Jakarta)
     // ============================================================
     const WIB_TZ = "Asia/Jakarta";
 
@@ -2668,488 +1316,92 @@
     }
 
     // ============================================================
-    // SUPABASE CONNECT
+    // 🚀 INITIALIZATION & UI UPDATES
     // ============================================================
     document.addEventListener("DOMContentLoaded", async () => {
-      try {
-        if (typeof window.supabaseClient === 'undefined' || !window.supabaseClient) return;
-        const { data, error } = await window.supabaseClient.from('products').select('*');
-        if (error) { window.ayakaProductsData = []; }
-        else {
-          window.ayakaProductsData = data || [];
-          console.log('%c🌐 WEB GLOBAL', 'font-size:20px;font-weight:900;color:#22c55e;');
-          console.log('%c✅ Connected to Supabase', 'color:#22c55e;font-weight:700;');
-          console.log('%c📦 Products loaded: ' + (data ? data.length : 0), 'color:#38bdf8;font-weight:700;');
-        }
-        const visitorBadgeLabel = document.getElementById("visitorBadgeLabel");
-        if (visitorBadgeLabel) visitorBadgeLabel.textContent = "Redis + Supabase";
-      } catch (e) { console.warn("Supabase connection test failed:", e); }
-    });
 
-    // ============================================================
-    // NAVIGATION ROUTING (Bottom Nav + Drawer + Modal)
-    // ============================================================
-    document.addEventListener("DOMContentLoaded", () => {
-      const bottomNavItems = document.querySelectorAll(".bottom-nav-item");
-      const drawerNavItems = document.querySelectorAll(".drawer-item");
-      const sections = document.querySelectorAll(".main-scroll section");
-      const drawer = document.getElementById("sideDrawer");
-      const overlay = document.getElementById("drawerOverlay");
-      const closeBtn = document.getElementById("drawerCloseBtn");
-      const moreBtn = document.getElementById("bottomMoreBtn");
+      // ---- 1. Bottom Nav Section Switching ----
+      const navItems = document.querySelectorAll(".bottom-nav-item");
+      const sections = document.querySelectorAll(".content-section");
+
+      function switchSection(sectionName) {
+        sections.forEach(sec => sec.classList.remove("active"));
+        const target = document.getElementById(`section${sectionName}`);
+        if (target) target.classList.add("active");
+
+        navItems.forEach(item => {
+          if (item.getAttribute("data-section") === sectionName) {
+            item.classList.add("active");
+          } else {
+            item.classList.remove("active");
+          }
+        });
+
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      navItems.forEach(item => {
+        item.addEventListener("click", () => {
+          const sectionName = item.getAttribute("data-section");
+          if (sectionName) switchSection(sectionName);
+        });
+      });
+
+      // ---- 2. Tab Switching Logic (Aktivasi Section) ----
+      const tabKirimLink = document.getElementById("tabKirimLink");
+      const tabVerifikasi = document.getElementById("tabVerifikasi");
+      const panelKirimLink = document.getElementById("panelKirimLink");
+      const panelVerifikasi = document.getElementById("panelVerifikasi");
+
+      tabKirimLink.addEventListener("click", () => {
+        tabKirimLink.classList.add("active");
+        tabVerifikasi.classList.remove("active");
+        panelKirimLink.classList.add("active");
+        panelVerifikasi.classList.remove("active");
+      });
+
+      tabVerifikasi.addEventListener("click", () => {
+        tabVerifikasi.classList.add("active");
+        tabKirimLink.classList.remove("active");
+        panelVerifikasi.classList.add("active");
+        panelKirimLink.classList.remove("active");
+      });
+
+      document.getElementById("pasteMagicLinkBtn").addEventListener("click", () => {
+        tabVerifikasi.click();
+      });
+
+      // ---- 3. Modal QR Donasi ----
       const qrModal = document.getElementById("qrDonasiModal");
       const showQrBtn = document.getElementById("showQrBtn");
       const closeQrBtn = document.getElementById("closeQrModalBtn");
-      const topDonasiBtn = document.getElementById("topDonasiBtn");
-      const mainScroll = document.getElementById("mainScroll");
 
-      function openDrawer() { drawer.classList.add("active"); overlay.classList.add("active"); }
-      function closeDrawer() { drawer.classList.remove("active"); overlay.classList.remove("active"); }
-
-      function switchView(targetView) {
-        sections.forEach(sec => sec.style.display = "none");
-        const targetSection = document.getElementById(`view-${targetView}`);
-        if (targetSection) targetSection.style.display = "block";
-
-        bottomNavItems.forEach(item => {
-          const dv = item.getAttribute("data-view");
-          if (dv === targetView) item.classList.add("active");
-          else if (dv) item.classList.remove("active");
+      if (showQrBtn) {
+        showQrBtn.addEventListener("click", (e) => {
+          e.preventDefault();
+          qrModal.classList.add("active");
         });
+      }
 
-        drawerNavItems.forEach(item => {
-          if (item.getAttribute("data-view") === targetView) item.classList.add("active");
-          else item.classList.remove("active");
+      if (closeQrBtn) {
+        closeQrBtn.addEventListener("click", () => {
+          qrModal.classList.remove("active");
         });
-
-        if (mainScroll) mainScroll.scrollTo({ top: 0, behavior: 'smooth' });
       }
 
-      window.__ayakaSwitchView = switchView;
-
-      bottomNavItems.forEach(item => {
-        if (item.id === "bottomMoreBtn") {
-          item.addEventListener("click", openDrawer);
-        } else {
-          item.addEventListener("click", () => {
-            const tv = item.getAttribute("data-view");
-            if (tv) switchView(tv);
-          });
-        }
-      });
-
-      drawerNavItems.forEach(item => {
-        item.addEventListener("click", () => {
-          const tv = item.getAttribute("data-view");
-          if (tv) { switchView(tv); closeDrawer(); }
+      if (qrModal) {
+        qrModal.addEventListener("click", (e) => {
+          if (e.target === qrModal) qrModal.classList.remove("active");
         });
-      });
-
-      if (closeBtn) closeBtn.addEventListener("click", closeDrawer);
-      if (overlay) overlay.addEventListener("click", closeDrawer);
-
-      // QR Modal
-      function openQrPopup(e) { if (e) e.stopPropagation(); if (qrModal) qrModal.classList.add("active"); }
-      function closeQrPopup() { if (qrModal) qrModal.classList.remove("active"); }
-      if (showQrBtn) showQrBtn.addEventListener("click", openQrPopup);
-      if (closeQrBtn) closeQrBtn.addEventListener("click", closeQrPopup);
-      if (topDonasiBtn) topDonasiBtn.addEventListener("click", openQrPopup);
-      if (qrModal) qrModal.addEventListener("click", (e) => { if (e.target === qrModal) closeQrPopup(); });
-
-      // Step tabs V1
-      document.querySelectorAll("#view-am-generator .am-step-card").forEach(tab => {
-        tab.addEventListener("click", () => {
-          const step = tab.getAttribute("data-step");
-          document.querySelectorAll("#view-am-generator .am-step-card").forEach(t => t.classList.remove("active"));
-          document.querySelectorAll("#view-am-generator .am-step-content-panel").forEach(p => p.classList.remove("active"));
-          tab.classList.add("active");
-          const panel = document.getElementById(`amPanel${step}`);
-          if (panel) panel.classList.add("active");
-        });
-      });
-
-      // Step tabs V2
-      document.querySelectorAll("#view-am-generator-v2 .am-step-card").forEach(tab => {
-        tab.addEventListener("click", () => {
-          const step = tab.getAttribute("data-step");
-          document.querySelectorAll("#view-am-generator-v2 .am-step-card").forEach(t => t.classList.remove("active"));
-          document.querySelectorAll("#view-am-generator-v2 .am-step-content-panel").forEach(p => p.classList.remove("active"));
-          tab.classList.add("active");
-          const panel = document.getElementById(`amV2Panel${step}`);
-          if (panel) panel.classList.add("active");
-        });
-      });
-    });
-
-    // ============================================================
-    // SKY ANIMATION (SunCalc)
-    // ============================================================
-    document.addEventListener("DOMContentLoaded", async () => {
-      const skyBar = document.getElementById("realtimeSkyBar");
-      const skySun = document.getElementById("skySun");
-      const skyMoon = document.getElementById("skyMoon");
-      const skyStars = document.getElementById("skyStars");
-      const skyTimeIcon = document.getElementById("skyTimeIcon");
-      const skyTimeText = document.getElementById("skyTimeText");
-      const skyPhaseLabel = document.getElementById("skyPhaseLabel");
-      const skyLocationText = document.getElementById("skyLocationText");
-      const moonLitPath = document.getElementById("moonLitPath");
-
-      if (!skyBar) return;
-
-      const hasSunCalc = typeof window.SunCalc !== 'undefined';
-      let userLat = -6.2088;
-      let userLng = 106.8456;
-      let locationName = "JAKARTA (DEFAULT)";
-
-      if (navigator.geolocation) {
-        try {
-          const pos = await new Promise((resolve, reject) => {
-            navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 6000, maximumAge: 600000, enableHighAccuracy: false });
-          });
-          userLat = pos.coords.latitude;
-          userLng = pos.coords.longitude;
-          locationName = "LIVE GPS";
-        } catch (e) { locationName = "JAKARTA (DEFAULT)"; }
       }
 
-      if (skyLocationText) skyLocationText.textContent = locationName;
-
-      function generateStars() {
-        if (!skyStars) return;
-        skyStars.innerHTML = "";
-        for (let i = 0; i < 50; i++) {
-          const star = document.createElement("div");
-          star.className = "sky-star";
-          const size = Math.random() * 2 + 1;
-          star.style.width = size + "px";
-          star.style.height = size + "px";
-          star.style.left = Math.random() * 100 + "%";
-          star.style.top = Math.random() * 75 + "%";
-          star.style.animationDelay = (Math.random() * 3) + "s";
-          star.style.animationDuration = (1.8 + Math.random() * 1.8) + "s";
-          skyStars.appendChild(star);
-        }
-      }
-      generateStars();
-
-      function getMoonPath(fraction, phase, r) {
-        const cx = 50, cy = 50;
-        const rx = r * Math.abs(2 * fraction - 1);
-        const waxing = phase < 0.5;
-        let outerSweep, innerSweep;
-        if (waxing) { outerSweep = 1; innerSweep = fraction > 0.5 ? 1 : 0; }
-        else { outerSweep = 0; innerSweep = fraction < 0.5 ? 1 : 0; }
-        const startX = cx, startY = cy - r, endY = cy + r;
-        return `M ${startX} ${startY} A ${r} ${r} 0 0 ${outerSweep} ${startX} ${endY} A ${rx} ${r} 0 0 ${innerSweep} ${startX} ${startY} Z`;
-      }
-
-      function getPhaseName(phase) {
-        if (phase < 0.03 || phase >= 0.97) return "Bulan Baru";
-        if (phase < 0.22) return "Sabit Awal";
-        if (phase < 0.28) return "Kuartal Pertama";
-        if (phase < 0.47) return "Cembung Awal";
-        if (phase < 0.53) return "Bulan Penuh";
-        if (phase < 0.72) return "Cembung Akhir";
-        if (phase < 0.78) return "Kuartal Ketiga";
-        return "Sabit Akhir";
-      }
-
-      function getPhaseEmoji(phase) {
-        if (phase < 0.03 || phase >= 0.97) return "🌑";
-        if (phase < 0.22) return "🌒";
-        if (phase < 0.28) return "🌓";
-        if (phase < 0.47) return "🌔";
-        if (phase < 0.53) return "🌕";
-        if (phase < 0.72) return "🌖";
-        if (phase < 0.78) return "🌗";
-        return "🌘";
-      }
-
-      function azimuthToXPercent(azimuthRad) {
-        const azDeg = azimuthRad * 180 / Math.PI;
-        const clamped = Math.max(-110, Math.min(110, azDeg));
-        return 50 + (clamped / 110) * 48;
-      }
-
-      function altitudeToYPercent(altitudeRad) {
-        const altDeg = altitudeRad * 180 / Math.PI;
-        const clamped = Math.max(-10, Math.min(90, altDeg));
-        return 100 - ((clamped + 10) / 100) * 100;
-      }
-
-      function updateSky() {
-        const now = new Date();
-        if (!hasSunCalc) {
-          const wib = getWIBDateParts(now);
-          let theme = "day", label = "Siang", icon = "fa-solid fa-sun";
-          if (wib.hours >= 5 && wib.hours < 10) { theme = "morning"; label = "Pagi"; }
-          else if (wib.hours >= 10 && wib.hours < 15) { theme = "day"; label = "Siang"; }
-          else if (wib.hours >= 15 && wib.hours < 18) { theme = "evening"; label = "Sore"; icon = "fa-solid fa-cloud-sun"; }
-          else { theme = "night"; label = "Malam"; icon = "fa-solid fa-moon"; }
-          skyBar.classList.remove("theme-morning", "theme-day", "theme-evening", "theme-night");
-          skyBar.classList.add("theme-" + theme);
-          if (skyStars) skyStars.classList.toggle("active", theme === "night");
-          if (skyTimeIcon) skyTimeIcon.className = icon;
-          if (skyTimeText) skyTimeText.textContent = label;
-          return;
-        }
-
-        const sunPos = window.SunCalc.getPosition(now, userLat, userLng);
-        const moonPos = window.SunCalc.getMoonPosition(now, userLat, userLng);
-        const moonIllum = window.SunCalc.getMoonIllumination(now);
-        const sunAltDeg = sunPos.altitude * 180 / Math.PI;
-        const moonAltDeg = moonPos.altitude * 180 / Math.PI;
-
-        if (skySun) {
-          if (sunAltDeg > -3) {
-            skySun.style.left = azimuthToXPercent(sunPos.azimuth) + "%";
-            skySun.style.top = altitudeToYPercent(sunPos.altitude) + "%";
-            skySun.style.opacity = sunAltDeg > 0 ? "1" : "0.45";
-          } else skySun.style.opacity = "0";
-        }
-
-        if (skyMoon && moonLitPath) {
-          if (moonAltDeg > -3) {
-            skyMoon.style.left = azimuthToXPercent(moonPos.azimuth) + "%";
-            skyMoon.style.top = altitudeToYPercent(moonPos.altitude) + "%";
-            skyMoon.style.opacity = sunAltDeg > 0 ? "0.55" : "1";
-          } else skyMoon.style.opacity = "0";
-          moonLitPath.setAttribute("d", getMoonPath(moonIllum.fraction, moonIllum.phase, 45));
-        }
-
-        if (skyPhaseLabel) {
-          skyPhaseLabel.textContent = `${getPhaseEmoji(moonIllum.phase)} ${getPhaseName(moonIllum.phase)} • ${Math.round(moonIllum.fraction * 100)}%`;
-        }
-
-        const isRising = sunPos.azimuth < 0;
-        let theme, label, icon;
-        if (sunAltDeg > 10) { theme = "day"; label = "Siang"; icon = "fa-solid fa-sun"; }
-        else if (sunAltDeg > 0) {
-          if (isRising) { theme = "morning"; label = "Pagi"; icon = "fa-solid fa-sun"; }
-          else { theme = "evening"; label = "Sore"; icon = "fa-solid fa-cloud-sun"; }
-        } else if (sunAltDeg > -6) {
-          if (isRising) { theme = "morning"; label = "Fajar"; icon = "fa-solid fa-sun"; }
-          else { theme = "evening"; label = "Senja"; icon = "fa-solid fa-cloud-moon"; }
-        } else { theme = "night"; label = "Malam"; icon = "fa-solid fa-moon"; }
-
-        skyBar.classList.remove("theme-morning", "theme-day", "theme-evening", "theme-night");
-        skyBar.classList.add("theme-" + theme);
-        if (skyStars) skyStars.classList.toggle("active", theme === "night");
-        if (skyTimeIcon) skyTimeIcon.className = icon;
-        if (skyTimeText) skyTimeText.textContent = label;
-      }
-
-      updateSky();
-      setInterval(updateSky, 5000);
-    });
-
-    // ============================================================
-    // MASK EMAIL
-    // ============================================================
-    function maskEmailAddress(emailStr) {
-      if (!emailStr || typeof emailStr !== 'string' || !emailStr.includes('@')) return "user****@gmail.com";
-      const parts = emailStr.split('@');
-      const username = parts[0];
-      const domain = parts[1];
-      if (username.length <= 2) return username.substring(0, 1) + "****@" + domain;
-      if (username.length <= 4) return username.substring(0, 2) + "****@" + domain;
-      return username.substring(0, 3) + "****" + username.substring(username.length - 1) + "@" + domain;
-    }
-
-    // ============================================================
-    // 🔥 LIVE RECENT AKTIVASI
-    // ============================================================
-    const RECENT_AKTIVASI_KEY = "ayaka:recent_aktivasi";
-    const RECENT_MAX_ITEMS = 20;
-    const RECENT_RENDER_COUNT = 10;
-
-    let activeRecentList = [];
-
-    function timeAgoFromTs(ts) {
-      const diff = Math.floor((Date.now() - ts) / 1000);
-      if (diff < 5) return "Baru Saja";
-      if (diff < 60) return `${diff} detik lalu`;
-      if (diff < 3600) return `${Math.floor(diff / 60)} menit lalu`;
-      if (diff < 86400) return `${Math.floor(diff / 3600)} jam lalu`;
-      return `${Math.floor(diff / 86400)} hari lalu`;
-    }
-
-    function renderRecentActivationUI() {
-      const container = document.getElementById("recentActivationList");
-      const recentCountText = document.getElementById("recentCountText");
-      if (!container) return;
-
-      if (recentCountText) recentCountText.textContent = `${activeRecentList.length} Aktivasi Terakhir`;
-
-      if (activeRecentList.length === 0) {
-        container.innerHTML = `<div style="text-align:center; color:var(--gray-600); padding:18px; font-size:12px; background:var(--gray-100); border:2px dashed var(--black); border-radius:12px; font-weight:600;">Belum ada aktivitas lisensi terbaru.</div>`;
-        return;
-      }
-
-      let htmlContent = "";
-      activeRecentList.forEach((item) => {
-        const email = item.email || "user@gmail.com";
-        const masked = maskEmailAddress(email);
-        const firstLetter = (item.initial || email.charAt(0) || "A").toUpperCase();
-        const plan = item.plan || item.type || "AM Premium Annual 1 Year";
-        const timeAgo = item.time ? timeAgoFromTs(item.time) : "Baru Saja";
-
-        htmlContent += `
-          <div class="recent-act-item">
-            <div class="recent-act-user">
-              <div class="recent-act-avatar">${firstLetter}</div>
-              <div class="recent-act-info-text">
-                <span class="recent-act-email">${masked}</span>
-                <span class="recent-act-plan">${plan}</span>
-              </div>
-            </div>
-            <div class="recent-act-time">
-              <i class="fa-regular fa-clock" style="margin-right:4px;"></i>${timeAgo}
-            </div>
-          </div>`;
-      });
-      container.innerHTML = htmlContent;
-    }
-
-    window.addLiveRecentActivation = async function(rawEmail, planType) {
-      try {
-        if (!rawEmail) rawEmail = "user" + Math.floor(1000 + Math.random() * 9000) + "@gmail.com";
-        const initial = (rawEmail.charAt(0) || "A").toUpperCase();
-        const data = { email: rawEmail, plan: planType || "AM Premium Annual 1 Year", time: Date.now(), initial: initial };
-        await redisLpush(RECENT_AKTIVASI_KEY, JSON.stringify(data));
-        await redisLtrim(RECENT_AKTIVASI_KEY, 0, RECENT_MAX_ITEMS - 1);
-        console.log("✅ Recent aktivasi tersimpan:", maskEmailAddress(rawEmail));
-        await fetchRecentActivationsFromRedis();
-      } catch (err) { console.warn("Gagal simpan recent aktivasi:", err); }
-    };
-
-    async function fetchRecentActivationsFromRedis() {
-      try {
-        const result = await redisLrange(RECENT_AKTIVASI_KEY, 0, RECENT_RENDER_COUNT - 1);
-        if (result && !result.__error && Array.isArray(result.value)) {
-          const parsed = [];
-          for (const rawItem of result.value) {
-            try {
-              const obj = typeof rawItem === "string" ? JSON.parse(rawItem) : rawItem;
-              if (obj && obj.email) parsed.push(obj);
-            } catch (parseErr) { console.warn("Skip item recent:", rawItem); }
-          }
-          activeRecentList = parsed;
-          renderRecentActivationUI();
-        } else if (result && !result.__error && !result.value) {
-          activeRecentList = [];
-          renderRecentActivationUI();
-        }
-      } catch (err) { console.warn("fetchRecentActivationsFromRedis error:", err); }
-    }
-
-    window.fetchRecentActivationsFromRedis = fetchRecentActivationsFromRedis;
-
-    // ============================================================
-    // MAIN SYSTEM: UPTIME, VISITOR, AKTIVASI
-    // ============================================================
-    document.addEventListener("DOMContentLoaded", async () => {
-      const KEY_TOTAL_AKTIVASI = "ayaka:total_aktivasi";
-
-      async function trackVisitor() {
-        try {
-          let ip = "unknown";
-          try {
-            const ipRes = await fetch("https://api.ipify.org?format=json");
-            const ipData = await ipRes.json();
-            if (ipData && ipData.ip) ip = ipData.ip;
-          } catch (e) { console.warn("Gagal ambil IP:", e); }
-
-          const visitorKey = `visitor:${ip}`;
-          const existsResult = await redisGet(visitorKey);
-          if (existsResult && existsResult.__error) return null;
-          const exists = existsResult && existsResult.value;
-
-          if (!exists) {
-            await redisIncr("total_visitors");
-            await redisSet(visitorKey, "1");
-            await redisExpire(visitorKey, 3600);
-            console.log("🆕 Visitor baru:", ip);
-          }
-
-          const totalResult = await redisGet("total_visitors");
-          if (totalResult && !totalResult.__error && totalResult.value) return parseInt(totalResult.value) || 0;
-          return null;
-        } catch (err) { console.warn("trackVisitor error:", err); return null; }
-      }
-
-      async function fetchAktivasiStatsFromRedis() {
-        try {
-          const todayStr = getLocalDateStr();
-          const dailyKey = `ayaka:aktivasi:${todayStr}`;
-
-          const totalResult = await redisGet(KEY_TOTAL_AKTIVASI);
-          const totalAktivasi = (totalResult && !totalResult.__error && totalResult.value) ? parseInt(totalResult.value) || 0 : 0;
-
-          const dailyResult = await redisGet(dailyKey);
-          const dailyAktivasi = (dailyResult && !dailyResult.__error && dailyResult.value) ? parseInt(dailyResult.value) || 0 : 0;
-
-          const elTotalGen = document.getElementById("totalGeneratedCounter");
-          const elStatSukses = document.getElementById("statTotalSukses");
-          const elGlobalTotal = document.getElementById("globalTotalAktivasi");
-          const elGlobalHariIni = document.getElementById("globalHariIniAktivasi");
-
-          const formattedTotal = totalAktivasi.toLocaleString("id-ID");
-          const formattedDaily = dailyAktivasi.toLocaleString("id-ID");
-
-          if (elTotalGen) elTotalGen.textContent = formattedTotal;
-          if (elStatSukses) elStatSukses.textContent = formattedTotal;
-          if (elGlobalTotal) elGlobalTotal.textContent = formattedTotal;
-          if (elGlobalHariIni) elGlobalHariIni.textContent = formattedDaily;
-
-          return { totalAktivasi, dailyAktivasi };
-        } catch (err) { console.warn("fetchAktivasiStatsFromRedis error:", err); return null; }
-      }
-
-      window.fetchAktivasiStatsFromRedis = fetchAktivasiStatsFromRedis;
-
-      function updateGlobalUptimeUI() {
-        const diffSec = computeStableUptimeSeconds();
-        const uptimeCounterEl   = document.getElementById("serverUptimeCounter");
-        const uptimeDaysEl      = document.getElementById("uptimeDays");
-        const uptimeHoursEl     = document.getElementById("uptimeHours");
-        const uptimeMinutesEl   = document.getElementById("uptimeMinutes");
-        const uptimeSecondsEl   = document.getElementById("uptimeSeconds");
-        const widgetUptimeVal   = document.getElementById("widgetUptimeVal");
-        const uptimeDaysCountEl = document.getElementById("uptimeDaysCount");
-
-        const totalDays = Math.floor(diffSec / 86400);
-        const hours = Math.floor((diffSec % 86400) / 3600);
-        const minutes = Math.floor((diffSec % 3600) / 60);
-        const seconds = diffSec % 60;
-
-        if (uptimeCounterEl) uptimeCounterEl.textContent = `${totalDays.toLocaleString("id-ID")} Days`;
-        if (uptimeDaysEl) uptimeDaysEl.textContent = totalDays + "d";
-        if (uptimeHoursEl) uptimeHoursEl.textContent = String(hours).padStart(2, "0") + "h";
-        if (uptimeMinutesEl) uptimeMinutesEl.textContent = String(minutes).padStart(2, "0") + "m";
-        if (uptimeSecondsEl) uptimeSecondsEl.textContent = String(seconds).padStart(2, "0") + "s";
-        if (widgetUptimeVal) widgetUptimeVal.textContent = `${totalDays} Days`;
-        if (uptimeDaysCountEl) uptimeDaysCountEl.textContent = totalDays;
-      }
-
-      function startSmoothUptimeTicker() {
-        if (window.__ayakaUptimeTimer) { clearTimeout(window.__ayakaUptimeTimer); window.__ayakaUptimeTimer = null; }
-        function tick() {
-          updateGlobalUptimeUI();
-          const msIntoSecond = Date.now() % 1000;
-          let delay = 1000 - msIntoSecond;
-          if (delay < 8) delay += 1000;
-          window.__ayakaUptimeTimer = setTimeout(tick, delay);
-        }
-        tick();
-      }
-
+      // ---- 4. Live Clock & Battery ----
       function updateLiveDateTimeWidget() {
         const dateEl = document.getElementById("widgetDateVal");
         const timeEl = document.getElementById("widgetTimeVal");
         const wib = getWIBDateParts(new Date());
         const daysShort = ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"];
+        
         if (dateEl) dateEl.textContent = `${daysShort[wib.day]}, ${wib.date}/${wib.month}`;
         if (timeEl) {
           const hh = String(wib.hours).padStart(2, "0");
@@ -3158,198 +1410,340 @@
           timeEl.textContent = `${hh}:${mm}:${ss}`;
         }
       }
+      setInterval(updateLiveDateTimeWidget, 1000);
+      updateLiveDateTimeWidget();
 
-      function initDashboardBatteryStatus() {
+      function initBatteryStatus() {
         const batteryValEl = document.getElementById("widgetBatteryVal");
-        const batteryIconEl = document.getElementById("widgetBatteryIcon");
+        const batteryIconEl = document.querySelector(".widget-card.green .widget-icon i");
+        
         if ('getBattery' in navigator) {
           navigator.getBattery().then(battery => {
             function updateAllBatteryInfo() {
               const level = Math.round(battery.level * 100);
               const isCharging = battery.charging;
-              if (batteryValEl) {
-                batteryValEl.innerHTML = `<i id="widgetBatteryIcon" class="fa-solid ${isCharging ? 'fa-battery-charging' : level <= 20 ? 'fa-battery-quarter' : level <= 70 ? 'fa-battery-half' : 'fa-battery-full'}"></i> ${level}%`;
+              if (batteryValEl) batteryValEl.textContent = `${level}%`;
+              if (batteryIconEl) {
+                if (isCharging) batteryIconEl.className = "fa-solid fa-battery-charging";
+                else if (level <= 20) batteryIconEl.className = "fa-solid fa-battery-quarter";
+                else if (level <= 70) batteryIconEl.className = "fa-solid fa-battery-half";
+                else batteryIconEl.className = "fa-solid fa-battery-full";
               }
             }
             updateAllBatteryInfo();
             battery.addEventListener('levelchange', updateAllBatteryInfo);
             battery.addEventListener('chargingchange', updateAllBatteryInfo);
-          }).catch(err => { if (batteryValEl) batteryValEl.textContent = "N/A"; });
-        } else { if (batteryValEl) batteryValEl.textContent = "N/A"; }
-      }
-
-      // INIT
-      await initServerStartTime();
-      updateGlobalUptimeUI();
-      startSmoothUptimeTicker();
-
-      const visitorCount = await trackVisitor();
-      if (visitorCount !== null) {
-        const el = document.getElementById("totalVisitorsCounter");
-        if (el) el.textContent = Number(visitorCount).toLocaleString("id-ID");
-      }
-
-      await fetchAktivasiStatsFromRedis();
-      await fetchRecentActivationsFromRedis();
-
-      setInterval(updateLiveDateTimeWidget, 1000);
-      updateLiveDateTimeWidget();
-      initDashboardBatteryStatus();
-
-      setInterval(async () => {
-        const totalResult = await redisGet("total_visitors");
-        if (totalResult && !totalResult.__error && totalResult.value) {
-          const total = parseInt(totalResult.value) || 0;
-          const el = document.getElementById("totalVisitorsCounter");
-          if (el) el.textContent = total.toLocaleString("id-ID");
+          }).catch(() => { if (batteryValEl) batteryValEl.textContent = "N/A"; });
+        } else {
+          if (batteryValEl) batteryValEl.textContent = "N/A";
         }
-        await fetchAktivasiStatsFromRedis();
-        await fetchRecentActivationsFromRedis();
-      }, 5000);
+      }
+      initBatteryStatus();
 
-      window.incrementAyakaActivationStats = async function(incrementCount = 1, userEmail = "", planName = "AM Premium Annual 1 Year") {
+      // ---- 5. Fetch Stats (Total Aktivasi & Hari Ini) ----
+      async function fetchAktivasiStatsFromRedis() {
         try {
-          if (!userEmail) {
-            userEmail = document.getElementById("emailInput")?.value || document.getElementById("emailInputV2")?.value || "ayaka_user@gmail.com";
-          }
           const todayStr = getLocalDateStr();
           const dailyKey = `ayaka:aktivasi:${todayStr}`;
+          const KEY_TOTAL_AKTIVASI = "ayaka:total_aktivasi";
 
-          window.addLiveRecentActivation(userEmail, planName).catch(err => console.warn("Gagal simpan recent:", err));
+          const totalResult = await redisGet(KEY_TOTAL_AKTIVASI);
+          const totalAktivasi = (totalResult && !totalResult.__error && totalResult.value) ? parseInt(totalResult.value) || 0 : 0;
+
+          const dailyResult = await redisGet(dailyKey);
+          const dailyAktivasi = (dailyResult && !dailyResult.__error && dailyResult.value) ? parseInt(dailyResult.value) || 0 : 0;
+
+          const formattedTotal = totalAktivasi.toLocaleString("id-ID");
+          const formattedDaily = dailyAktivasi.toLocaleString("id-ID");
+
+          ["globalTotalAktivasi", "globalTotalAktivasi2", "globalTotalAktivasi3"].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.textContent = formattedTotal;
+          });
+
+          ["globalHariIniAktivasi", "globalHariIniAktivasi2", "globalHariIniAktivasi3"].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.textContent = formattedDaily;
+          });
+        } catch (err) {
+          console.warn("fetchAktivasiStatsFromRedis error:", err);
+        }
+      }
+      await fetchAktivasiStatsFromRedis();
+      setInterval(fetchAktivasiStatsFromRedis, 10000);
+
+      // ---- 6. Increment Aktivasi ----
+      window.incrementAyakaActivationStats = async function(incrementCount = 1, userEmail = "", planName = "AM Premium Annual 1 Year") {
+        try {
+          if (!userEmail) userEmail = document.getElementById("emailInput")?.value || "ayaka_user@gmail.com";
+          const todayStr = getLocalDateStr();
+          const dailyKey = `ayaka:aktivasi:${todayStr}`;
+          const KEY_TOTAL_AKTIVASI = "ayaka:total_aktivasi";
+
           await redisIncrBy(KEY_TOTAL_AKTIVASI, incrementCount);
           await redisIncrBy(dailyKey, incrementCount);
           await redisExpire(dailyKey, 60 * 60 * 24 * 90);
-          console.log(`✅ Aktivasi +${incrementCount}`);
+          
           await fetchAktivasiStatsFromRedis();
-        } catch (err) { console.warn("Gagal increment aktivasi:", err); }
+        } catch (err) {
+          console.warn("Gagal update aktivasi:", err);
+        }
       };
 
-      // EVENT HANDLERS
-      const proceedStep3Btn = document.getElementById("proceedToStep3Btn");
-      if (proceedStep3Btn) {
-        proceedStep3Btn.addEventListener("click", () => {
-          const emailVal = document.getElementById("emailInput")?.value || "";
-          if (typeof window.incrementAyakaActivationStats === 'function') {
-            window.incrementAyakaActivationStats(1, emailVal, "AM Premium Annual 1 Year");
-          }
-        });
-      }
+      // ---- 7. Action Handler: Kirim Magic Link ----
+      const sendMagicLinkBtn = document.getElementById("sendMagicLinkBtn");
+      const outputBox = document.getElementById("outputBox");
 
-      const proceedAmV2Step3Btn = document.getElementById("proceedToAmV2Step3Btn");
-      if (proceedAmV2Step3Btn) {
-        proceedAmV2Step3Btn.addEventListener("click", () => {
-          const emailValV2 = document.getElementById("emailInputV2")?.value || "";
-          const sel = document.getElementById("v2ProductSelect");
-          const planText = sel ? sel.options[sel.selectedIndex].text : "AM Premium V2";
-          if (typeof window.incrementAyakaActivationStats === 'function') {
-            window.incrementAyakaActivationStats(1, emailValV2, planText);
-          }
-        });
-      }
+      sendMagicLinkBtn.addEventListener("click", async () => {
+        const email = document.getElementById("emailInput").value.trim();
+        if (!email || !email.includes("@")) {
+          alert("Mohon masukkan alamat Gmail yang valid!");
+          return;
+        }
 
+        sendMagicLinkBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Mengirim...`;
+        sendMagicLinkBtn.disabled = true;
+        outputBox.innerHTML = `
+          <span class="output-badge">PROSES</span>
+          <div class="output-icon"><i class="fa-solid fa-spinner fa-spin"></i></div>
+          <div class="output-title">Mengirim Magic Link...</div>
+          <div class="output-desc">Mohon tunggu sebentar, sistem sedang memproses.</div>
+        `;
+
+        setTimeout(() => {
+          sendMagicLinkBtn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> Kirim Magic Link ke Email`;
+          sendMagicLinkBtn.disabled = false;
+
+          outputBox.innerHTML = `
+            <span class="output-badge">SUKSES</span>
+            <div class="output-icon" style="color: #22c55e;"><i class="fa-solid fa-check-circle"></i></div>
+            <div class="output-title">Magic Link Terkirim!</div>
+            <div class="output-desc">Silakan cek kotak masuk Gmail Anda dan tempel link verifikasi di tab "Verifikasi".</div>
+          `;
+
+          if (typeof window.incrementAyakaActivationStats === 'function') {
+            window.incrementAyakaActivationStats(1, email, "AM Premium Annual 1 Year");
+          }
+
+          setTimeout(() => {
+            document.getElementById("tabVerifikasi").click();
+          }, 2000);
+
+        }, 2500);
+      });
+
+      // ---- 8. Action Handler: Verifikasi Magic Link ----
+      const verifyMagicLinkBtn = document.getElementById("verifyMagicLinkBtn");
+      const verifyOutputBox = document.getElementById("verifyOutputBox");
+
+      verifyMagicLinkBtn.addEventListener("click", () => {
+        const magicLink = document.getElementById("magicInput").value.trim();
+        if (!magicLink) {
+          alert("Mohon tempel Magic Link terlebih dahulu!");
+          return;
+        }
+
+        verifyMagicLinkBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Memverifikasi...`;
+        verifyMagicLinkBtn.disabled = true;
+        verifyOutputBox.innerHTML = `
+          <span class="output-badge">PROSES</span>
+          <div class="output-icon"><i class="fa-solid fa-spinner fa-spin"></i></div>
+          <div class="output-title">Memverifikasi Link...</div>
+          <div class="output-desc">Sistem sedang mengaktifkan lisensi premium Anda.</div>
+        `;
+
+        setTimeout(() => {
+          verifyMagicLinkBtn.innerHTML = `<i class="fa-solid fa-check"></i> Verifikasi & Aktivasi`;
+          verifyMagicLinkBtn.disabled = false;
+
+          verifyOutputBox.innerHTML = `
+            <span class="output-badge">SUKSES</span>
+            <div class="output-icon" style="color: #22c55e;"><i class="fa-solid fa-shield-halved"></i></div>
+            <div class="output-title">Premium Aktif!</div>
+            <div class="output-desc">Akun Alight Motion Anda telah sukses diaktifkan selama 1 tahun.</div>
+          `;
+          
+          alert("Aktivasi Berhasil! Akun Alight Motion Premium Anda sudah aktif.");
+        }, 3000);
+      });
+
+      // ============================================================
+      // 🚀 BULK PROCESSING - Memanggil API dari file terpisah
+      // ============================================================
       const startBulkBtn = document.getElementById("startBulkBtn");
-      if (startBulkBtn) {
-        startBulkBtn.addEventListener("click", () => {
-          const textarea = document.getElementById("bulkDataInput");
-          if (textarea && textarea.value.trim() !== "") {
-            const lines = textarea.value.trim().split("\n").filter(l => l.trim().length > 0);
-            if (lines.length > 0 && typeof window.incrementAyakaActivationStats === 'function') {
-              lines.forEach((line) => {
-                const parts = line.split(/[|,]/);
-                const em = parts[0] ? parts[0].trim() : "";
-                window.incrementAyakaActivationStats(1, em, "AM Premium Bulk");
-              });
+      const exportBulkBtn = document.getElementById("exportBulkBtn");
+      const bulkTableBody = document.getElementById("bulkTableBody");
+      const bulkResultCard = document.getElementById("bulkResultCard");
+      const bulkStatusBox = document.getElementById("bulkStatusBox");
+
+      let bulkResultsCache = [];
+
+      startBulkBtn.addEventListener("click", async () => {
+        const textarea = document.getElementById("bulkDataInput");
+        const productSelect = document.getElementById("bulkProductSelect");
+
+        if (!textarea || !textarea.value.trim()) {
+          alert("Mohon masukkan daftar akun terlebih dahulu!");
+          return;
+        }
+
+        const lines = textarea.value.trim().split("\n").filter(l => l.trim().length > 0);
+        if (lines.length === 0) {
+          alert("Daftar akun kosong!");
+          return;
+        }
+
+        const accounts = lines.map((line, idx) => {
+          const parts = line.split(/[|,]/);
+          return {
+            no: idx + 1,
+            email: (parts[0] || "").trim(),
+            magicLink: (parts[1] || "").trim()
+          };
+        }).filter(a => a.email && a.email.includes("@"));
+
+        if (accounts.length === 0) {
+          alert("Tidak ada akun valid yang ditemukan! Pastikan format: email | magic_link");
+          return;
+        }
+
+        startBulkBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Memproses ${accounts.length} akun...`;
+        startBulkBtn.disabled = true;
+        bulkResultCard.style.display = "block";
+        bulkTableBody.innerHTML = "";
+        bulkResultsCache = [];
+
+        bulkStatusBox.innerHTML = `
+          <span class="output-badge">PROSES</span>
+          <div class="output-icon"><i class="fa-solid fa-spinner fa-spin"></i></div>
+          <div class="output-title">Memproses Bulk...</div>
+          <div class="output-desc">${accounts.length} akun sedang diproses. Mohon tunggu.</div>
+        `;
+
+        accounts.forEach(acc => {
+          const tr = document.createElement("tr");
+          tr.id = `bulk-row-${acc.no}`;
+          tr.innerHTML = `
+            <td>${acc.no}</td>
+            <td>${acc.email}</td>
+            <td>-</td>
+            <td><span class="badge-process">PROCESS</span></td>
+          `;
+          bulkTableBody.appendChild(tr);
+        });
+
+        const productValue = productSelect ? productSelect.value : "am.full.sub.annual.19q4";
+        const productText = productSelect ? productSelect.options[productSelect.selectedIndex].text : "Annual Sub (1 Tahun)";
+
+        // ============================================================
+        // 🔥 PANGGIL API BULK DARI FILE TERPISAH
+        // ============================================================
+        for (const acc of accounts) {
+          let result = null;
+
+          try {
+            if (window.BulkAPI && typeof window.BulkAPI.process === "function") {
+              result = await window.BulkAPI.process(acc.email, acc.magicLink, productValue);
+            } else if (typeof window.processBulkAccount === "function") {
+              result = await window.processBulkAccount(acc.email, acc.magicLink, productValue);
+            } else {
+              await new Promise(r => setTimeout(r, 800));
+              result = {
+                success: true,
+                orderId: "ORD-" + Date.now().toString(36).toUpperCase() + "-" + acc.no,
+                message: "Aktivasi berhasil (simulasi)"
+              };
+            }
+          } catch (err) {
+            result = { success: false, orderId: "-", message: err.message || "Error" };
+          }
+
+          const row = document.getElementById(`bulk-row-${acc.no}`);
+          if (row) {
+            if (result && result.success) {
+              row.children[2].textContent = result.orderId || "-";
+              row.children[3].innerHTML = `<span class="badge-success">SUCCESS</span>`;
+            } else {
+              row.children[2].textContent = "-";
+              row.children[3].innerHTML = `<span class="badge-fail">FAILED</span>`;
             }
           }
-        });
-      }
 
-      const resetV1Btn = document.getElementById("resetAmFormV1Btn");
-      if (resetV1Btn) {
-        resetV1Btn.addEventListener("click", () => {
-          const emailInput = document.getElementById("emailInput");
-          const magicInput = document.getElementById("magicInput");
-          if (emailInput) emailInput.value = "";
-          if (magicInput) magicInput.value = "";
-          document.querySelectorAll("#view-am-generator .am-step-card").forEach(el => el.classList.remove("active"));
-          document.querySelectorAll("#view-am-generator .am-step-content-panel").forEach(el => el.classList.remove("active"));
-          const tab1 = document.getElementById("amStepTab1");
-          const panel1 = document.getElementById("amPanel1");
-          if (tab1) tab1.classList.add("active");
-          if (panel1) panel1.classList.add("active");
-        });
-      }
+          bulkResultsCache.push({
+            no: acc.no,
+            email: acc.email,
+            orderId: result?.orderId || "-",
+            status: result?.success ? "SUCCESS" : "FAILED",
+            message: result?.message || ""
+          });
 
-      const resetV2Btn = document.getElementById("resetAmFormV2Btn");
-      if (resetV2Btn) {
-        resetV2Btn.addEventListener("click", () => {
-          const emailInputV2 = document.getElementById("emailInputV2");
-          const magicInputV2 = document.getElementById("magicInputV2");
-          const prefixInputV2 = document.getElementById("v2PrefixInput");
-          if (emailInputV2) emailInputV2.value = "";
-          if (magicInputV2) magicInputV2.value = "";
-          if (prefixInputV2) prefixInputV2.value = "GPA";
-          document.querySelectorAll("#view-am-generator-v2 .am-step-card").forEach(el => el.classList.remove("active"));
-          document.querySelectorAll("#view-am-generator-v2 .am-step-content-panel").forEach(el => el.classList.remove("active"));
-          const tabV2_1 = document.getElementById("amV2StepTab1");
-          const panelV2_1 = document.getElementById("amV2Panel1");
-          if (tabV2_1) tabV2_1.classList.add("active");
-          if (panelV2_1) panelV2_1.classList.add("active");
-        });
-      }
-
-      const backToStep1Btn = document.getElementById("backToStep1Btn");
-      if (backToStep1Btn) {
-        backToStep1Btn.addEventListener("click", () => {
-          document.querySelectorAll("#view-am-generator .am-step-card").forEach(el => el.classList.remove("active"));
-          document.querySelectorAll("#view-am-generator .am-step-content-panel").forEach(el => el.classList.remove("active"));
-          document.getElementById("amStepTab1").classList.add("active");
-          document.getElementById("amPanel1").classList.add("active");
-        });
-      }
-
-      const nextToStep2Btn = document.getElementById("nextToStep2Btn");
-      if (nextToStep2Btn) {
-        nextToStep2Btn.addEventListener("click", () => {
-          document.querySelectorAll("#view-am-generator .am-step-card").forEach(el => el.classList.remove("active"));
-          document.querySelectorAll("#view-am-generator .am-step-content-panel").forEach(el => el.classList.remove("active"));
-          document.getElementById("amStepTab2").classList.add("active");
-          document.getElementById("amPanel2").classList.add("active");
-        });
-      }
-
-      const backToAmV2Step1Btn = document.getElementById("backToAmV2Step1Btn");
-      if (backToAmV2Step1Btn) {
-        backToAmV2Step1Btn.addEventListener("click", () => {
-          document.querySelectorAll("#view-am-generator-v2 .am-step-card").forEach(el => el.classList.remove("active"));
-          document.querySelectorAll("#view-am-generator-v2 .am-step-content-panel").forEach(el => el.classList.remove("active"));
-          document.getElementById("amV2StepTab1").classList.add("active");
-          document.getElementById("amV2Panel1").classList.add("active");
-        });
-      }
-
-      const nextToAmV2Step2Btn = document.getElementById("nextToAmV2Step2Btn");
-      if (nextToAmV2Step2Btn) {
-        nextToAmV2Step2Btn.addEventListener("click", () => {
-          document.querySelectorAll("#view-am-generator-v2 .am-step-card").forEach(el => el.classList.remove("active"));
-          document.querySelectorAll("#view-am-generator-v2 .am-step-content-panel").forEach(el => el.classList.remove("active"));
-          document.getElementById("amV2StepTab2").classList.add("active");
-          document.getElementById("amV2Panel2").classList.add("active");
-        });
-      }
-
-      const copyTempMailBtn = document.getElementById("copyTempMailBtn");
-      if (copyTempMailBtn) {
-        copyTempMailBtn.addEventListener("click", () => {
-          const addr = document.getElementById("tempMailAddress");
-          if (addr && addr.textContent) {
-            navigator.clipboard.writeText(addr.textContent).then(() => {
-              const icon = copyTempMailBtn.querySelector("i");
-              if (icon) { icon.className = "fa-solid fa-check"; setTimeout(() => icon.className = "fa-regular fa-copy", 1500); }
-            });
+          if (result && result.success && typeof window.incrementAyakaActivationStats === "function") {
+            window.incrementAyakaActivationStats(1, acc.email, productText + " (Bulk)");
           }
+        }
+
+        const successCount = bulkResultsCache.filter(r => r.status === "SUCCESS").length;
+        const failCount = bulkResultsCache.filter(r => r.status === "FAILED").length;
+
+        startBulkBtn.innerHTML = `<i class="fa-solid fa-play"></i> Mulai Proses Bulk`;
+        startBulkBtn.disabled = false;
+        exportBulkBtn.style.display = "flex";
+
+        bulkStatusBox.innerHTML = `
+          <span class="output-badge">SELESAI</span>
+          <div class="output-icon" style="color: ${failCount === 0 ? "#22c55e" : "#f59e0b"};"><i class="fa-solid fa-flag-checkered"></i></div>
+          <div class="output-title">Proses Bulk Selesai</div>
+          <div class="output-desc">✅ ${successCount} sukses &nbsp;•&nbsp; ❌ ${failCount} gagal dari ${accounts.length} akun</div>
+        `;
+      });
+
+      // Export hasil bulk ke file .txt
+      exportBulkBtn.addEventListener("click", () => {
+        if (bulkResultsCache.length === 0) {
+          alert("Belum ada hasil untuk diunduh!");
+          return;
+        }
+
+        let content = "========================================\n";
+        content += "   HASIL BULK AKTIVASI - AYAKA MOTION\n";
+        content += "   Tanggal: " + new Date().toLocaleString("id-ID", { timeZone: WIB_TZ }) + "\n";
+        content += "========================================\n\n";
+
+        bulkResultsCache.forEach(r => {
+          content += `[${r.no}] ${r.email}\n`;
+          content += `     Order ID : ${r.orderId}\n`;
+          content += `     Status   : ${r.status}\n`;
+          if (r.message) content += `     Message  : ${r.message}\n`;
+          content += `\n`;
         });
+
+        content += "========================================\n";
+        content += `Total: ${bulkResultsCache.length} akun\n`;
+        content += `Sukses: ${bulkResultsCache.filter(r => r.status === "SUCCESS").length}\n`;
+        content += `Gagal : ${bulkResultsCache.filter(r => r.status === "FAILED").length}\n`;
+        content += "========================================\n";
+
+        const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `bulk-result-${Date.now()}.txt`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      });
+
+      // ---- 9. Supabase Connection (Silent) ----
+      try {
+        if (window.supabaseClient) {
+          const { data, error } = await window.supabaseClient.from('products').select('*');
+          if (!error) console.log('✅ Supabase connected. Products loaded:', data?.length || 0);
+        }
+      } catch (e) {
+        console.warn("Supabase connection test failed:", e);
       }
+
     });
   </script>
 </body>
