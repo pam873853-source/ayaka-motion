@@ -19,8 +19,12 @@
        KONFIGURASI UPSTASH REDIS
        ============================================================ -->
   <script>
-    window.UPSTASH_URL   = "https://adequate-worm-234162.upstash.io";
-    window.UPSTASH_TOKEN = "gQAAAAAAA5KyAAIgcDFmNWE3NDE0ZmVhN2Y0ZmI0ODIyYmIwNmU0YjQxYjdiZQ";
+    // ==========================================================
+    // ⚙️ GANTI 2 BARIS DI BAWAH INI DENGAN MILIK KAMU
+    // ==========================================================
+    window.UPSTASH_URL   = "https://adequate-worm-234162.upstash.io";        // ← GANTI
+    window.UPSTASH_TOKEN = "gQAAAAAAA5KyAAIgcDFmNWE3NDE0ZmVhN2Y0ZmI0ODIyYmIwNmU0YjQxYjdiZQ";    // ← GANTI
+    // ==========================================================
   </script>
 
   <script>
@@ -43,359 +47,392 @@
     }
   </script>
 
+  <link rel="stylesheet" href="style.css">
   <style>
-    /* =====================================================
-       THEME: NEON AURORA — TOTAL REWORK
-       ===================================================== */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    :root {
-      --bg-deep: #050510;
-      --bg-main: #0a0a18;
-      --bg-card: rgba(22, 22, 45, 0.65);
-      --bg-card-solid: #14142a;
-      --card-inner: rgba(35, 35, 65, 0.55);
-      --border-color: rgba(139, 92, 246, 0.18);
-      --border-strong: rgba(139, 92, 246, 0.42);
-      --text-main: #f1f5f9;
-      --text-muted: #94a3b8;
-      --text-dim: #64748b;
-      --accent-pink: #ec4899;
-      --accent-cyan: #06b6d4;
-      --accent-purple: #8b5cf6;
-      --accent-blue: #3b82f6;
-      --success: #10b981;
-      --success-bg: rgba(16, 185, 129, 0.12);
-      --brand-blue: #60a5fa;
-      --grad-primary: linear-gradient(135deg, #06b6d4 0%, #8b5cf6 50%, #ec4899 100%);
-      --grad-soft: linear-gradient(135deg, rgba(6,182,212,0.12), rgba(139,92,246,0.12), rgba(236,72,153,0.12));
-      --shadow-glow: 0 8px 32px rgba(139, 92, 246, 0.28);
-      --shadow-soft: 0 8px 24px rgba(0, 0, 0, 0.45);
-      --radius-lg: 22px;
-      --radius-md: 16px;
-      --radius-sm: 12px;
-    }
-
-    html, body { min-height: 100%; }
-
-    body {
-      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
-      background: var(--bg-deep);
-      color: var(--text-main);
-      line-height: 1.55;
-      -webkit-font-smoothing: antialiased;
-      position: relative;
-      overflow-x: hidden;
-    }
-
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      background:
-        radial-gradient(circle at 12% 8%, rgba(6, 182, 212, 0.16), transparent 42%),
-        radial-gradient(circle at 88% 15%, rgba(139, 92, 246, 0.20), transparent 48%),
-        radial-gradient(circle at 50% 100%, rgba(236, 72, 153, 0.15), transparent 55%),
-        radial-gradient(circle at 100% 90%, rgba(59, 130, 246, 0.14), transparent 50%);
-      z-index: -2;
-      pointer-events: none;
-    }
-
-    body::after {
-      content: "";
-      position: fixed;
-      inset: 0;
-      background-image:
-        linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
-      background-size: 64px 64px;
-      z-index: -1;
-      pointer-events: none;
-      mask-image: radial-gradient(ellipse at center, black 20%, transparent 85%);
-      -webkit-mask-image: radial-gradient(ellipse at center, black 20%, transparent 85%);
-    }
-
-    ::-webkit-scrollbar { width: 8px; height: 8px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb {
-      background: linear-gradient(180deg, #8b5cf6, #ec4899);
-      border-radius: 8px;
-    }
-
-    /* ============ SAKURA CONTAINER ============ */
-    .sakura-container {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 1;
+    .uptime-digits-row {
+      display: flex;
+      gap: 6px !important;
+      justify-content: flex-start;
+      align-items: center;
+      flex-wrap: nowrap;
       overflow: hidden;
     }
-
-    /* ============ FLOATING WHATSAPP ============ */
-    .floating-wa-container {
-      position: fixed;
-      bottom: 120px;
-      right: 20px;
-      z-index: 9998;
-    }
-    .floating-wa-btn {
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 56px;
-      height: 56px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #25d366, #128c7e);
-      color: #fff;
-      font-size: 26px;
-      text-decoration: none;
-      box-shadow: 0 8px 24px rgba(37, 211, 102, 0.45), 0 0 0 4px rgba(37, 211, 102, 0.15);
-      transition: transform 0.25s ease, box-shadow 0.25s ease;
-      animation: waPulse 2.4s ease-in-out infinite;
-    }
-    .floating-wa-btn:hover {
-      transform: scale(1.08) rotate(-6deg);
-      box-shadow: 0 10px 30px rgba(37, 211, 102, 0.65), 0 0 0 6px rgba(37, 211, 102, 0.2);
-    }
-    .floating-wa-badge {
-      position: absolute;
-      top: -4px;
-      right: -4px;
-      background: #ef4444;
-      color: #fff;
-      font-size: 11px;
-      font-weight: 800;
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: 2px solid var(--bg-deep);
-    }
-    @keyframes waPulse {
-      0%, 100% { box-shadow: 0 8px 24px rgba(37, 211, 102, 0.45), 0 0 0 4px rgba(37, 211, 102, 0.15); }
-      50%      { box-shadow: 0 8px 32px rgba(37, 211, 102, 0.7), 0 0 0 10px rgba(37, 211, 102, 0.05); }
-    }
-
-    /* ============ SIDEBAR ============ */
-    .sidebar {
-      position: fixed;
-      top: 16px;
-      left: 16px;
-      bottom: 16px;
-      width: 250px;
-      background: linear-gradient(160deg, rgba(22, 22, 45, 0.92) 0%, rgba(15, 15, 35, 0.95) 100%);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-lg);
-      padding: 20px 14px;
-      display: flex;
-      flex-direction: column;
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      box-shadow: var(--shadow-glow);
-      z-index: 1000;
-      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s ease;
-      overflow: hidden;
-    }
-
-    .sidebar-header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 6px 6px 20px 6px;
-      border-bottom: 1px solid var(--border-color);
-      position: relative;
-      margin-bottom: 16px;
-    }
-
-    .sidebar-logo {
-      width: 42px;
-      height: 42px;
-      border-radius: 12px;
-      background: var(--grad-primary);
-      color: #fff;
-      font-family: 'Space Grotesk', sans-serif;
-      font-weight: 800;
-      font-size: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 6px 18px rgba(139, 92, 246, 0.5);
-      flex-shrink: 0;
-      letter-spacing: -0.5px;
-    }
-
-    .sidebar-title {
-      font-family: 'Space Grotesk', sans-serif;
-      font-weight: 800;
-      font-size: 15px;
-      letter-spacing: 1px;
-      background: var(--grad-primary);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
+    .system-uptime-card-custom .uptime-digits-row span {
+      font-size: 16px !important;
+      font-weight: 700 !important;
+      padding: 4px 8px !important;
+      background: rgba(192, 132, 252, 0.08);
+      border-radius: 6px;
       white-space: nowrap;
     }
-
-    .btn-toggle-sidebar {
-      position: absolute;
-      top: 6px;
-      right: 0;
-      width: 28px;
-      height: 28px;
-      border-radius: 8px;
-      background: var(--card-inner);
-      border: 1px solid var(--border-color);
-      color: var(--text-muted);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 11px;
-      transition: all 0.2s ease;
+    .custom-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 240px));
+      gap: 16px;
+      margin-bottom: 24px;
+      justify-content: start;
     }
-    .btn-toggle-sidebar:hover {
-      color: #fff;
-      background: var(--border-strong);
+    @media (max-width: 600px) {
+      .custom-stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+      }
     }
-
-    .sidebar-menu {
+    .custom-stat-square-box {
+      background: #ffffff;
+      border: 2.5px solid #000000;
+      border-radius: 16px;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      max-width: 220px;
+      max-height: 220px;
+      padding: 18px;
+      box-shadow: 4px 4px 0px #000000;
       display: flex;
       flex-direction: column;
-      gap: 4px;
-      flex: 1;
-      overflow-y: auto;
-      padding-right: 4px;
-    }
-
-    .sidebar-menu::-webkit-scrollbar { width: 4px; }
-    .sidebar-menu::-webkit-scrollbar-thumb {
-      background: rgba(139, 92, 246, 0.3);
-      border-radius: 4px;
-    }
-
-    .nav-item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 11px 14px;
-      border-radius: 12px;
-      color: var(--text-muted);
-      font-size: 13.5px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.22s ease;
+      justify-content: space-between;
       position: relative;
       overflow: hidden;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
-
-    .nav-item i {
-      font-size: 15px;
-      width: 20px;
-      text-align: center;
-      transition: transform 0.22s ease, color 0.22s ease;
+    .custom-stat-square-box:hover {
+      transform: translateY(-2px);
+      box-shadow: 6px 6px 0px #000000;
     }
-
-    .nav-item:hover {
-      background: rgba(139, 92, 246, 0.1);
-      color: var(--text-main);
-    }
-    .nav-item:hover i { color: var(--accent-cyan); transform: scale(1.1); }
-
-    .nav-item.active {
-      background: var(--grad-primary);
-      color: #fff;
-      box-shadow: 0 6px 20px rgba(139, 92, 246, 0.45);
-    }
-    .nav-item.active i { color: #fff; }
-
-    .sidebar-user-footer {
-      padding-top: 14px;
-      border-top: 1px solid var(--border-color);
-      margin-top: 12px;
-    }
-
-    .user-profile-card {
+    .custom-stat-square-box.yellow-box { background: #ffeb3b; }
+    .custom-stat-header-row {
       display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px;
-      background: var(--card-inner);
-      border: 1px solid var(--border-color);
-      border-radius: 14px;
+      justify-content: space-between;
+      align-items: flex-start;
+      width: 100%;
     }
-
-    .user-avatar {
-      width: 36px;
-      height: 36px;
-      border-radius: 10px;
-      background: var(--grad-primary);
-      color: #fff;
-      font-weight: 800;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      font-size: 14px;
-      box-shadow: 0 4px 12px rgba(236, 72, 153, 0.4);
-    }
-
-    .user-info { display: flex; flex-direction: column; min-width: 0; }
-    .user-name {
-      font-size: 12.5px;
+    .custom-stat-title-text {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 12px;
       font-weight: 700;
-      color: #fff;
+      letter-spacing: 1px;
+      color: #333333;
+    }
+    .custom-stat-icon-elem { font-size: 24px; color: #b0b0b0; }
+    .yellow-box .custom-stat-icon-elem { color: #795548; opacity: 0.85; }
+    .custom-stat-number-val {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 34px;
+      font-weight: 800;
+      color: #000000;
+      line-height: 1;
+    }
+    .widget-info-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 24px;
+      width: 100%;
+      max-width: 720px;
+    }
+    @media (max-width: 640px) {
+      .widget-info-row {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+    }
+    .widget-mini-card {
+      border: 3px solid #000000;
+      border-radius: 16px;
+      padding: 10px 14px;
+      box-shadow: 4px 4px 0px #000000;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      height: 75px;
+      box-sizing: border-box;
+      transition: transform 0.15s ease;
+    }
+    .widget-mini-card:hover { transform: translateY(-2px); }
+    .widget-mini-card.bg-white { background-color: #ffffff; color: #111111; }
+    .widget-mini-card.bg-yellow { background-color: #fde047; color: #111111; }
+    .widget-mini-card.bg-green { background-color: #a3e635; color: #111111; }
+    .widget-mini-card.bg-blue { background-color: #bae6fd; color: #111111; }
+    .widget-header-text {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: #4b5563;
+      text-transform: uppercase;
+      margin-bottom: 2px;
+    }
+    .widget-body-content { display: flex; align-items: center; gap: 8px; }
+    .widget-icon {
+      font-size: 20px;
+      color: #374151;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+    }
+    .widget-value-text {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 15px;
+      font-weight: 800;
+      color: #000000;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
-    .user-email {
-      font-size: 10.5px;
-      color: var(--text-muted);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+    .bottom-nav-container {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100% - 32px);
+      max-width: 500px;
+      background: linear-gradient(135deg, #f5f3ff 0%, #edf2fe 50%, #f1f5f9 100%);
+      border-radius: 28px;
+      padding: 8px 12px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.4) inset;
+      z-index: 9999;
+      backdrop-filter: blur(12px);
     }
-
-    /* ============ MAIN WRAPPER ============ */
-    .main-wrapper {
-      margin-left: 282px;
-      padding: 16px 16px 16px 0;
-      min-height: 100vh;
+    .bottom-nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 16px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      color: #2d3748;
+      text-decoration: none;
+      flex: 1;
+      max-width: 110px;
+      user-select: none;
+    }
+    .bottom-nav-item i { font-size: 22px; margin-bottom: 4px; transition: transform 0.2s ease; }
+    .bottom-nav-item span {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: -0.2px;
+    }
+    .bottom-nav-item.active {
+      background: #000000;
+      color: #ffffff !important;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+    .bottom-nav-item.active i { color: #ffffff !important; transform: scale(1.05); }
+    .bottom-nav-item:hover:not(.active) { background: rgba(0, 0, 0, 0.05); color: #000000; }
+    .content-container { padding-bottom: 110px !important; }
+    .donation-square-card {
+      background: #ffffff;
+      border: 3px solid #000000;
+      border-radius: 20px;
+      box-shadow: 6px 6px 0px #000000;
+      width: 100%;
+      max-width: 380px;
+      margin: 0 auto 20px auto;
+      padding: 24px 20px;
+      text-align: center;
+      box-sizing: border-box;
       position: relative;
-      z-index: 2;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
-
-    .content-container {
-      padding: 8px 8px 110px 8px !important;
-      max-width: 1200px;
+    .donation-square-card:hover { transform: translateY(-2px); box-shadow: 8px 8px 0px #000000; }
+    .qr-modal-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 99999;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      padding: 16px;
+      box-sizing: border-box;
     }
-
-    /* ============ SKY BAR (frame only) ============ */
+    .qr-modal-overlay.active { opacity: 1; visibility: visible; }
+    .qr-modal-card {
+      background: #fffbdf;
+      border: 3.5px solid #000000;
+      border-radius: 24px;
+      box-shadow: 8px 8px 0px #000000;
+      width: 100%;
+      max-width: 360px;
+      padding: 24px 20px;
+      text-align: center;
+      position: relative;
+      transform: scale(0.85);
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-sizing: border-box;
+    }
+    .qr-modal-overlay.active .qr-modal-card { transform: scale(1); }
+    .qr-modal-close-btn {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 32px;
+      height: 32px;
+      background: #000000;
+      color: #ffffff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 14px;
+      transition: transform 0.15s ease;
+    }
+    .qr-modal-close-btn:hover { transform: scale(1.1); }
+    .qr-code-modal-img {
+      max-width: 220px;
+      width: 100%;
+      height: auto;
+      border: 2px solid #000;
+      border-radius: 12px;
+      padding: 8px;
+      background: #ffffff;
+      margin: 12px 0;
+      box-shadow: 3px 3px 0px #000000;
+    }
+    .tutorial-video-card {
+      background: var(--card-inner);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    .tutorial-video-card h4 {
+      color: #fbcfe8;
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .tutorial-video-wrapper {
+      width: 100%;
+      max-width: 480px;
+      margin: 0 auto;
+      background: #000000;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 2px solid #000000;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      position: relative;
+    }
+    .tutorial-video-wrapper video {
+      width: 100% !important;
+      height: auto !important;
+      display: block;
+      border-radius: 12px;
+      outline: none;
+      object-fit: contain;
+      transform: translateZ(0);
+      background: #000000;
+    }
+    .recent-act-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(34, 197, 94, 0.15);
+      color: #4ade80;
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .recent-live-dot {
+      width: 8px;
+      height: 8px;
+      background-color: #22c55e;
+      border-radius: 50%;
+      animation: livePulse 1.5s infinite;
+    }
+    @keyframes livePulse {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
+      70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+    }
+    .recent-act-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px;
+      background: var(--card-inner);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      margin-bottom: 8px;
+      transition: all 0.25s ease;
+      animation: fadeInSlide 0.4s ease-out forwards;
+    }
+    @keyframes fadeInSlide {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .recent-act-item:hover { border-color: #f472b6; background: rgba(244, 114, 182, 0.05); }
+    .recent-act-user { display: flex; align-items: center; gap: 12px; }
+    .recent-act-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 14px;
+      box-shadow: 0 2px 8px rgba(236, 72, 153, 0.3);
+    }
+    .recent-act-info-text { display: flex; flex-direction: column; }
+    .recent-act-email {
+      font-weight: 700;
+      font-size: 13px;
+      color: #ffffff;
+      font-family: 'Space Grotesk', sans-serif;
+    }
+    .recent-act-plan { font-size: 11px; color: var(--text-muted); }
+    .recent-act-time {
+      font-size: 11px;
+      font-weight: 600;
+      color: #a7f3d0;
+      background: rgba(16, 185, 129, 0.1);
+      padding: 4px 8px;
+      border-radius: 8px;
+      border: 1px solid rgba(16, 185, 129, 0.2);
+    }
     .realtime-sky-bar {
       position: relative;
       width: 100%;
       height: 150px;
-      border-radius: var(--radius-lg);
+      border-radius: 18px;
       overflow: hidden;
-      margin-bottom: 14px;
-      border: 1px solid var(--border-strong);
-      box-shadow: var(--shadow-glow), inset 0 0 30px rgba(0,0,0,0.3);
+      margin-bottom: 12px;
+      border: 3px solid #000000;
+      box-shadow: 6px 6px 0px #000000;
       transition: background 3s ease-in-out;
       isolation: isolate;
-      background: linear-gradient(180deg, #4facfe 0%, #a1c4fd 60%, #e0f2ff 100%);
     }
+    .realtime-sky-bar { background: linear-gradient(180deg, #4facfe 0%, #a1c4fd 60%, #e0f2ff 100%); }
     .realtime-sky-bar.theme-morning { background: linear-gradient(180deg, #ff9a8b 0%, #ffb47d 35%, #ffd89b 65%, #ffefd5 100%); }
     .realtime-sky-bar.theme-day { background: linear-gradient(180deg, #4facfe 0%, #a1c4fd 60%, #e0f2ff 100%); }
     .realtime-sky-bar.theme-evening { background: linear-gradient(180deg, #2c1e57 0%, #8a4d8e 35%, #ff7b54 70%, #ffb26b 100%); }
     .realtime-sky-bar.theme-night { background: linear-gradient(180deg, #0b1026 0%, #14203f 40%, #1e2f57 70%, #2a4168 100%); }
-
     .sky-time-label {
       position: absolute;
-      top: 12px;
-      right: 16px;
+      top: 10px;
+      right: 14px;
       z-index: 20;
       background: rgba(0, 0, 0, 0.55);
       color: #ffffff;
@@ -414,21 +451,19 @@
       text-transform: uppercase;
     }
     .sky-time-label i { font-size: 13px; }
-
     .sky-info-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
       gap: 10px;
-      margin-bottom: 20px;
-      padding: 12px 16px;
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: 14px;
-      box-shadow: var(--shadow-soft);
+      margin-bottom: 18px;
+      padding: 10px 14px;
+      background: #ffffff;
+      border: 2.5px solid #000000;
+      border-radius: 12px;
+      box-shadow: 4px 4px 0px #000000;
       font-family: 'Space Grotesk', sans-serif;
       flex-wrap: wrap;
-      backdrop-filter: blur(12px);
     }
     .sky-loc-label {
       display: flex;
@@ -437,11 +472,11 @@
       font-size: 11px;
       font-weight: 800;
       letter-spacing: 1px;
-      color: var(--text-main);
+      color: #111111;
       text-transform: uppercase;
       white-space: nowrap;
     }
-    .sky-loc-label i { color: var(--accent-cyan); font-size: 13px; }
+    .sky-loc-label i { color: #ec4899; font-size: 13px; }
     .sky-phase-label {
       display: flex;
       align-items: center;
@@ -449,15 +484,14 @@
       font-size: 11px;
       font-weight: 800;
       letter-spacing: 0.8px;
-      color: #0a0a18;
+      color: #111111;
       text-transform: uppercase;
-      background: linear-gradient(135deg, #fde047, #fbbf24);
-      padding: 5px 12px;
+      background: #fde047;
+      padding: 4px 10px;
       border-radius: 20px;
+      border: 1.5px solid #000000;
       white-space: nowrap;
-      box-shadow: 0 4px 12px rgba(251, 191, 36, 0.35);
     }
-
     .sky-sun {
       position: absolute;
       width: 42px;
@@ -568,1346 +602,13 @@
     }
     .theme-night .sky-cloud { opacity: 0.15 !important; }
     .theme-evening .sky-cloud { opacity: 0.55; }
-
-    /* ============ BANNER AYAKA ============ */
-    .ayaka-banner {
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      padding: 18px 22px;
-      margin-bottom: 22px;
-      border-radius: var(--radius-lg);
-      background: linear-gradient(120deg, rgba(6, 182, 212, 0.18) 0%, rgba(139, 92, 246, 0.18) 50%, rgba(236, 72, 153, 0.18) 100%);
-      border: 1px solid var(--border-strong);
-      box-shadow: var(--shadow-glow);
-      overflow: hidden;
-      backdrop-filter: blur(12px);
-    }
-    .ayaka-banner::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: var(--grad-soft);
-      opacity: 0.4;
-      z-index: -1;
-    }
-    .ayaka-banner::after {
-      content: "";
-      position: absolute;
-      top: -50%;
-      right: -20%;
-      width: 300px;
-      height: 300px;
-      background: radial-gradient(circle, rgba(236, 72, 153, 0.4), transparent 65%);
-      border-radius: 50%;
-      animation: auroraFloat 8s ease-in-out infinite;
-      pointer-events: none;
-    }
-    @keyframes auroraFloat {
-      0%, 100% { transform: translate(0, 0) scale(1); }
-      50%      { transform: translate(-20px, 15px) scale(1.1); }
-    }
-    .ayaka-info h3 {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 16px;
-      font-weight: 800;
-      color: #fff;
-      margin-bottom: 4px;
-      letter-spacing: -0.2px;
-      position: relative;
-      z-index: 1;
-    }
-    .ayaka-info p {
-      font-size: 12px;
-      color: var(--text-muted);
-      position: relative;
-      z-index: 1;
-    }
-
-    /* ============ STATUS BADGE INLINE ============ */
-    .status-badge-inline {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 7px 14px;
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: 20px;
-      font-size: 11.5px;
-      font-weight: 700;
-      color: var(--text-muted);
-      margin-bottom: 12px;
-      backdrop-filter: blur(10px);
-    }
-    .status-ping-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--success);
-      box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
-      animation: pingDot 1.6s infinite;
-    }
-    @keyframes pingDot {
-      0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
-      70% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
-    }
-
-    /* ============ TITLES ============ */
-    .dash-title {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 26px;
-      font-weight: 800;
-      letter-spacing: -0.6px;
-      color: #fff;
-      margin-bottom: 4px;
-      background: linear-gradient(120deg, #fff 0%, #a5b4fc 40%, #f0abfc 70%, #fff 100%);
-      background-size: 200% auto;
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-      animation: titleShine 6s linear infinite;
-    }
-    @keyframes titleShine {
-      to { background-position: 200% center; }
-    }
-    .dash-subtitle {
-      font-size: 13px;
-      color: var(--text-muted);
-      margin-bottom: 22px;
-    }
-
-    /* ============ STATS GRID & CARDS ============ */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 14px;
-      margin-bottom: 18px;
-    }
-
-    .stat-card {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      padding: 18px;
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-md);
-      box-shadow: var(--shadow-soft);
-      transition: all 0.3s ease;
-      backdrop-filter: blur(12px);
-      position: relative;
-      overflow: hidden;
-    }
-    .stat-card::before {
-      content: "";
-      position: absolute;
-      top: 0; left: 0;
-      width: 3px; height: 100%;
-      background: var(--grad-primary);
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-    .stat-card:hover {
-      transform: translateY(-3px);
-      border-color: var(--border-strong);
-      box-shadow: var(--shadow-glow);
-    }
-    .stat-card:hover::before { opacity: 1; }
-
-    .stat-icon {
-      width: 48px;
-      height: 48px;
-      border-radius: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 20px;
-      flex-shrink: 0;
-    }
-
-    .stat-info { flex: 1; min-width: 0; }
-    .stat-info h3 {
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 4px;
-    }
-    .stat-info p {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 20px;
-      font-weight: 800;
-      color: #fff;
-      line-height: 1.2;
-      margin-bottom: 2px;
-    }
-    .stat-desc {
-      font-size: 11px;
-      color: var(--text-dim);
-      margin-top: 4px;
-    }
-
-    /* ============ WIDGET INFO ROW ============ */
-    .widget-info-row {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 12px;
-      margin-bottom: 20px;
-      width: 100%;
-    }
-
-    .widget-mini-card {
-      border-radius: var(--radius-md);
-      padding: 14px 16px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      height: 84px;
-      box-sizing: border-box;
-      transition: all 0.25s ease;
-      border: 1px solid var(--border-color);
-      background: var(--bg-card);
-      backdrop-filter: blur(12px);
-      position: relative;
-      overflow: hidden;
-    }
-    .widget-mini-card::after {
-      content: "";
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 3px;
-      background: var(--grad-primary);
-    }
-    .widget-mini-card:hover {
-      transform: translateY(-3px);
-      border-color: var(--border-strong);
-      box-shadow: var(--shadow-glow);
-    }
-
-    .widget-mini-card.bg-white::after  { background: linear-gradient(90deg, #06b6d4, #3b82f6); }
-    .widget-mini-card.bg-yellow::after { background: linear-gradient(90deg, #fbbf24, #f59e0b); }
-    .widget-mini-card.bg-green::after  { background: linear-gradient(90deg, #10b981, #22c55e); }
-    .widget-mini-card.bg-blue::after   { background: linear-gradient(90deg, #8b5cf6, #ec4899); }
-
-    .widget-mini-card.bg-white  { background: linear-gradient(135deg, rgba(6,182,212,0.10), var(--bg-card)); }
-    .widget-mini-card.bg-yellow { background: linear-gradient(135deg, rgba(251,191,36,0.12), var(--bg-card)); }
-    .widget-mini-card.bg-green  { background: linear-gradient(135deg, rgba(16,185,129,0.12), var(--bg-card)); }
-    .widget-mini-card.bg-blue   { background: linear-gradient(135deg, rgba(139,92,246,0.12), var(--bg-card)); }
-
-    .widget-header-text {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 10px;
-      font-weight: 800;
-      letter-spacing: 1.2px;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      margin-bottom: 6px;
-    }
-    .widget-body-content { display: flex; align-items: center; gap: 10px; }
-    .widget-icon {
-      font-size: 20px;
-      color: var(--accent-cyan);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 24px;
-    }
-    .widget-mini-card.bg-yellow .widget-icon { color: #fbbf24; }
-    .widget-mini-card.bg-green  .widget-icon { color: #22c55e; }
-    .widget-mini-card.bg-blue   .widget-icon { color: #a78bfa; }
-
-    .widget-value-text {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 16px;
-      font-weight: 800;
-      color: #fff;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    /* ============ DASH CARD ============ */
-    .dash-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-lg);
-      padding: 22px;
-      box-shadow: var(--shadow-soft);
-      backdrop-filter: blur(14px);
-      margin-bottom: 18px;
-      position: relative;
-      overflow: hidden;
-    }
-    .dash-card::before {
-      content: "";
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 2px;
-      background: var(--grad-primary);
-      opacity: 0.6;
-    }
-
-    /* ============ CUSTOM STAT SQUARE BOXES ============ */
-    .custom-stats-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 240px));
-      gap: 16px;
-      margin-bottom: 24px;
-      justify-content: start;
-    }
-
-    .custom-stat-square-box {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-lg);
-      width: 100%;
-      aspect-ratio: 1 / 1;
-      max-width: 220px;
-      max-height: 220px;
-      padding: 20px;
-      box-shadow: var(--shadow-soft);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      position: relative;
-      overflow: hidden;
-      transition: all 0.3s ease;
-      backdrop-filter: blur(12px);
-    }
-    .custom-stat-square-box::before {
-      content: "";
-      position: absolute;
-      top: -40px; right: -40px;
-      width: 130px; height: 130px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(6, 182, 212, 0.4), transparent 70%);
-      pointer-events: none;
-    }
-    .custom-stat-square-box:hover {
-      transform: translateY(-4px);
-      border-color: var(--border-strong);
-      box-shadow: var(--shadow-glow);
-    }
-    .custom-stat-square-box.yellow-box::before {
-      background: radial-gradient(circle, rgba(251, 191, 36, 0.4), transparent 70%);
-    }
-    .custom-stat-square-box.yellow-box { border-color: rgba(251, 191, 36, 0.3); }
-
-    .custom-stat-header-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      width: 100%;
-      position: relative;
-      z-index: 1;
-    }
-    .custom-stat-title-text {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: 1.4px;
-      color: var(--text-muted);
-      text-transform: uppercase;
-    }
-    .custom-stat-icon-elem {
-      font-size: 22px;
-      color: var(--accent-cyan);
-    }
-    .yellow-box .custom-stat-icon-elem { color: #fbbf24; }
-
-    .custom-stat-number-val {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 36px;
-      font-weight: 800;
-      color: #fff;
-      line-height: 1;
-      position: relative;
-      z-index: 1;
-      background: linear-gradient(120deg, #fff, #a5b4fc);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    .yellow-box .custom-stat-number-val {
-      background: linear-gradient(120deg, #fff, #fbbf24);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    /* ============ DATABASE CARDS ============ */
-    .database-card-custom {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-md);
-      padding: 18px;
-      margin-bottom: 14px;
-      transition: all 0.25s ease;
-      backdrop-filter: blur(12px);
-    }
-    .database-card-custom:hover {
-      border-color: var(--border-strong);
-      box-shadow: var(--shadow-glow);
-    }
-
-    .db-card-header {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      margin-bottom: 14px;
-    }
-    .db-icon-box {
-      width: 44px;
-      height: 44px;
-      border-radius: 12px;
-      background: rgba(139, 92, 246, 0.15);
-      border: 1px solid var(--border-color);
-      color: var(--accent-purple);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      flex-shrink: 0;
-    }
-    .db-text-group { flex: 1; min-width: 0; }
-    .db-title {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 14px;
-      font-weight: 800;
-      color: #fff;
-    }
-    .db-subtitle {
-      font-size: 11px;
-      color: var(--text-muted);
-      margin-top: 2px;
-    }
-    .db-status-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--success);
-    }
-    .db-blink-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: var(--success);
-      box-shadow: 0 0 10px var(--success);
-      animation: dbBlink 1.4s ease-in-out infinite;
-    }
-    @keyframes dbBlink {
-      0%, 100% { opacity: 1; }
-      50%      { opacity: 0.4; }
-    }
-
-    .system-uptime-card-custom {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-md);
-      padding: 18px;
-      backdrop-filter: blur(12px);
-    }
-
-    .uptime-digits-row {
-      display: flex;
-      gap: 8px !important;
-      justify-content: flex-start;
-      align-items: center;
-      flex-wrap: nowrap;
-      overflow: hidden;
-    }
-    .system-uptime-card-custom .uptime-digits-row span {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 18px !important;
-      font-weight: 800 !important;
-      padding: 6px 12px !important;
-      background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(236, 72, 153, 0.12));
-      border: 1px solid var(--border-color);
-      border-radius: 10px;
-      white-space: nowrap;
-      color: #fff;
-    }
-
-    /* ============ RECENT ACTIVATION LIST ============ */
-    .recent-act-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(16, 185, 129, 0.12);
-      color: #4ade80;
-      border: 1px solid rgba(16, 185, 129, 0.3);
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 10.5px;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-    }
-    .recent-live-dot {
-      width: 7px;
-      height: 7px;
-      background-color: #22c55e;
-      border-radius: 50%;
-      animation: livePulse 1.5s infinite;
-    }
-    @keyframes livePulse {
-      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
-      70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
-      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
-    }
-    .recent-act-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 13px 14px;
-      background: var(--card-inner);
-      border: 1px solid var(--border-color);
-      border-radius: 14px;
-      margin-bottom: 8px;
-      transition: all 0.25s ease;
-      animation: fadeInSlide 0.4s ease-out forwards;
-    }
-    @keyframes fadeInSlide {
-      from { opacity: 0; transform: translateY(-8px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .recent-act-item:hover {
-      border-color: var(--accent-pink);
-      background: rgba(236, 72, 153, 0.06);
-      transform: translateX(3px);
-    }
-    .recent-act-user { display: flex; align-items: center; gap: 12px; min-width: 0; }
-    .recent-act-avatar {
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      background: var(--grad-primary);
-      color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 800;
-      font-size: 14px;
-      box-shadow: 0 4px 12px rgba(236, 72, 153, 0.4);
-      flex-shrink: 0;
-    }
-    .recent-act-info-text { display: flex; flex-direction: column; min-width: 0; }
-    .recent-act-email {
-      font-family: 'Space Grotesk', sans-serif;
-      font-weight: 700;
-      font-size: 13px;
-      color: #fff;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .recent-act-plan { font-size: 11px; color: var(--text-muted); }
-    .recent-act-time {
-      font-size: 10.5px;
-      font-weight: 700;
-      color: #a7f3d0;
-      background: rgba(16, 185, 129, 0.1);
-      padding: 5px 10px;
-      border-radius: 8px;
-      border: 1px solid rgba(16, 185, 129, 0.2);
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
-
-    /* ============ AM STEP CARDS ============ */
-    .am-steps-container {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      margin-bottom: 20px;
-    }
-
-    .am-step-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-md);
-      padding: 16px 12px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
-      backdrop-filter: blur(12px);
-    }
-    .am-step-card:hover {
-      transform: translateY(-2px);
-      border-color: var(--border-strong);
-    }
-    .am-step-card.active {
-      border-color: transparent;
-      background: var(--grad-primary);
-      box-shadow: var(--shadow-glow);
-    }
-    .am-step-card.active .am-step-number,
-    .am-step-card.active .am-step-label { color: #fff; }
-
-    .am-step-number {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 24px;
-      font-weight: 800;
-      color: var(--accent-cyan);
-      line-height: 1;
-      margin-bottom: 6px;
-      transition: color 0.3s ease;
-    }
-    .am-step-label {
-      font-size: 11.5px;
-      font-weight: 700;
-      color: var(--text-muted);
-      white-space: pre-line;
-      line-height: 1.35;
-      transition: color 0.3s ease;
-    }
-
-    .am-step-content-panel { display: none; }
-    .am-step-content-panel.active { display: block; animation: fadeIn 0.35s ease; }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(6px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* ============ FORM ============ */
-    .auth-form-group { margin-bottom: 16px; }
-    .auth-form-group label {
-      display: block;
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.6px;
-      margin-bottom: 8px;
-    }
-    .auth-form-group label code {
-      background: var(--card-inner);
-      padding: 1px 6px;
-      border-radius: 5px;
-      color: var(--accent-cyan);
-      font-size: 11px;
-      font-family: 'Space Grotesk', monospace;
-    }
-
-    .auth-input,
-    .auth-select,
-    .auth-textarea {
-      width: 100%;
-      background: rgba(10, 10, 25, 0.6);
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      padding: 13px 14px;
-      color: #fff;
-      font-size: 13.5px;
-      font-family: inherit;
-      outline: none;
-      transition: all 0.22s ease;
-    }
-    .auth-input:focus,
-    .auth-select:focus,
-    .auth-textarea:focus {
-      border-color: var(--accent-purple);
-      box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.18);
-      background: rgba(10, 10, 25, 0.85);
-    }
-    .auth-input::placeholder,
-    .auth-textarea::placeholder { color: var(--text-dim); }
-
-    .auth-select {
-      appearance: none;
-      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'%3e%3cpolyline points='6 9 12 15 18 9'/%3e%3c/svg%3e");
-      background-repeat: no-repeat;
-      background-position: right 12px center;
-      background-size: 16px;
-      padding-right: 40px;
-      cursor: pointer;
-    }
-    .auth-select option {
-      background: #14142a;
-      color: #fff;
-    }
-
-    .auth-textarea {
-      min-height: 130px;
-      resize: vertical;
-      font-family: 'Space Grotesk', monospace;
-      font-size: 12.5px;
-      line-height: 1.6;
-    }
-
-    /* ============ BUTTONS ============ */
-    .btn-pink {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      width: 100%;
-      padding: 13px 22px;
-      background: var(--grad-primary);
-      color: #fff;
-      border: none;
-      border-radius: 12px;
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 13.5px;
-      font-weight: 800;
-      letter-spacing: 0.4px;
-      cursor: pointer;
-      transition: all 0.25s ease;
-      box-shadow: 0 8px 22px rgba(139, 92, 246, 0.4);
-      text-decoration: none;
-      position: relative;
-      overflow: hidden;
-    }
-    .btn-pink::before {
-      content: "";
-      position: absolute;
-      top: 0; left: -100%;
-      width: 100%; height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
-      transition: left 0.5s ease;
-    }
-    .btn-pink:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 28px rgba(139, 92, 246, 0.55);
-    }
-    .btn-pink:hover::before { left: 100%; }
-    .btn-pink:active { transform: translateY(0); }
-    .btn-pink i { font-size: 13px; }
-
-    /* ============ MESSAGE ============ */
-    .message {
-      padding: 12px 16px;
-      border-radius: 12px;
-      font-size: 12.5px;
-      font-weight: 600;
-      margin-bottom: 16px;
-      display: none;
-    }
-    .message:not(:empty) { display: block; }
-    .message.success {
-      background: rgba(16, 185, 129, 0.12);
-      border: 1px solid rgba(16, 185, 129, 0.35);
-      color: #6ee7b7;
-    }
-    .message.error {
-      background: rgba(239, 68, 68, 0.12);
-      border: 1px solid rgba(239, 68, 68, 0.35);
-      color: #fca5a5;
-    }
-
-    /* ============ LANDING / RESULT ============ */
-    .am-landing-box {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-    }
-    .am-hero-title {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 22px;
-      font-weight: 800;
-      color: #fff;
-      margin-bottom: 6px;
-    }
-    .am-hero-desc {
-      font-size: 12.5px;
-      color: var(--text-muted);
-      margin-bottom: 18px;
-    }
-
-    .res-data-box {
-      width: 100%;
-      max-width: 420px;
-      background: var(--card-inner);
-      border: 1px solid var(--border-color);
-      border-radius: 14px;
-      padding: 16px;
-      margin-bottom: 16px;
-      text-align: left;
-    }
-    .res-data-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 0;
-      border-bottom: 1px dashed rgba(139, 92, 246, 0.15);
-      font-size: 13px;
-    }
-    .res-data-row:last-child { border-bottom: none; }
-    .res-data-row .lbl { color: var(--text-muted); font-weight: 600; }
-    .res-data-row .val {
-      color: #fff;
-      font-weight: 700;
-      font-family: 'Space Grotesk', sans-serif;
-      word-break: break-all;
-      text-align: right;
-    }
-
-    /* ============ BULK TABLE ============ */
-    .bulk-table-container {
-      width: 100%;
-      overflow-x: auto;
-      border-radius: 12px;
-      border: 1px solid var(--border-color);
-    }
-    .bulk-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 12.5px;
-      min-width: 500px;
-    }
-    .bulk-table thead {
-      background: rgba(139, 92, 246, 0.1);
-    }
-    .bulk-table th {
-      padding: 12px 14px;
-      text-align: left;
-      font-family: 'Space Grotesk', sans-serif;
-      font-weight: 800;
-      font-size: 11px;
-      letter-spacing: 0.6px;
-      color: var(--accent-cyan);
-      text-transform: uppercase;
-      border-bottom: 1px solid var(--border-color);
-      white-space: nowrap;
-    }
-    .bulk-table td {
-      padding: 12px 14px;
-      color: var(--text-main);
-      border-bottom: 1px solid rgba(139, 92, 246, 0.08);
-      font-weight: 500;
-    }
-    .bulk-table tbody tr { transition: background 0.2s ease; }
-    .bulk-table tbody tr:hover { background: rgba(139, 92, 246, 0.06); }
-    .bulk-table tbody tr:last-child td { border-bottom: none; }
-
-    /* ============ TEMP MAIL (SS replica) ============ */
-    .ss-replica-wrapper {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-lg);
-      padding: 22px;
-      box-shadow: var(--shadow-soft);
-      backdrop-filter: blur(14px);
-      position: relative;
-      overflow: hidden;
-    }
-    .ss-replica-wrapper::before {
-      content: "";
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 2px;
-      background: var(--grad-primary);
-      opacity: 0.6;
-    }
-
-    .ss-top-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 12px;
-      flex-wrap: wrap;
-    }
-    .ss-label-title {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: 1.2px;
-      color: var(--text-muted);
-      text-transform: uppercase;
-    }
-
-    .ss-outlook-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 7px 14px;
-      background: var(--card-inner);
-      border: 1px solid var(--border-color);
-      border-radius: 20px;
-      color: var(--text-main);
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 11px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.22s ease;
-    }
-    .ss-outlook-btn:hover {
-      border-color: var(--border-strong);
-      background: rgba(139, 92, 246, 0.15);
-    }
-
-    .ss-email-box {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      background: rgba(10, 10, 25, 0.6);
-      border: 1px solid var(--border-strong);
-      border-radius: 14px;
-      padding: 14px 16px;
-      margin-bottom: 12px;
-    }
-    .ss-email-left {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      min-width: 0;
-      flex: 1;
-    }
-    .ss-email-icon {
-      color: var(--accent-cyan);
-      font-size: 18px;
-      flex-shrink: 0;
-    }
-    .ss-email-address {
-      font-family: 'Space Grotesk', monospace;
-      font-size: 14px;
-      font-weight: 700;
-      color: #fff;
-      word-break: break-all;
-    }
-    .ss-copy-btn {
-      width: 36px;
-      height: 36px;
-      border-radius: 10px;
-      background: var(--card-inner);
-      border: 1px solid var(--border-color);
-      color: var(--text-main);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.22s ease;
-      flex-shrink: 0;
-    }
-    .ss-copy-btn:hover {
-      background: var(--grad-primary);
-      color: #fff;
-      border-color: transparent;
-    }
-
-    .ss-domain-approved-box {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 6px 14px;
-      background: rgba(16, 185, 129, 0.12);
-      border: 1px solid rgba(16, 185, 129, 0.3);
-      border-radius: 20px;
-      font-size: 11px;
-      font-weight: 700;
-      color: #6ee7b7;
-      margin-bottom: 14px;
-    }
-    .ss-domain-approved-box i {
-      background: var(--success);
-      color: #fff;
-      font-size: 9px;
-      width: 16px;
-      height: 16px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .ss-custom-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 9px 16px;
-      background: var(--card-inner);
-      border: 1px solid var(--border-color);
-      border-radius: 10px;
-      color: var(--text-main);
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 12px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.22s ease;
-      margin-bottom: 14px;
-    }
-    .ss-custom-btn:hover {
-      border-color: var(--border-strong);
-      background: rgba(139, 92, 246, 0.15);
-    }
-
-    .ss-action-row {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 18px;
-      flex-wrap: wrap;
-    }
-    .ss-refresh-btn,
-    .ss-new-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 7px;
-      padding: 11px 20px;
-      border-radius: 12px;
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 12.5px;
-      font-weight: 800;
-      cursor: pointer;
-      transition: all 0.25s ease;
-      border: none;
-      flex: 1;
-      min-width: 120px;
-    }
-    .ss-refresh-btn {
-      background: var(--card-inner);
-      border: 1px solid var(--border-color);
-      color: var(--text-main);
-    }
-    .ss-refresh-btn:hover {
-      border-color: var(--border-strong);
-      background: rgba(139, 92, 246, 0.15);
-    }
-    .ss-new-btn {
-      background: var(--grad-primary);
-      color: #fff;
-      box-shadow: 0 6px 18px rgba(139, 92, 246, 0.4);
-    }
-    .ss-new-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 24px rgba(139, 92, 246, 0.55);
-    }
-
-    .ss-inbox-section-title {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      padding-bottom: 12px;
-      margin-bottom: 12px;
-      border-bottom: 1px solid var(--border-color);
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 13px;
-      font-weight: 800;
-      color: #fff;
-      text-transform: uppercase;
-      letter-spacing: 0.6px;
-    }
-    #inboxCountBadge { color: var(--accent-cyan); }
-    #clearInboxBtn {
-      font-size: 11px;
-      color: var(--accent-pink);
-      cursor: pointer;
-      font-weight: 700;
-      text-transform: none;
-      letter-spacing: 0;
-      transition: color 0.2s ease;
-    }
-    #clearInboxBtn:hover { color: #f472b6; text-decoration: underline; }
-
-    .inbox-list {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      max-height: 420px;
-      overflow-y: auto;
-      padding-right: 4px;
-    }
-    .inbox-list::-webkit-scrollbar { width: 4px; }
-    .inbox-list::-webkit-scrollbar-thumb {
-      background: rgba(139, 92, 246, 0.3);
-      border-radius: 4px;
-    }
-
-    /* ============ DONATION CARD ============ */
-    .donation-square-card {
-      background: linear-gradient(160deg, rgba(236, 72, 153, 0.12) 0%, var(--bg-card) 60%, rgba(139, 92, 246, 0.12) 100%);
-      border: 1px solid var(--border-strong);
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow-glow);
-      width: 100%;
-      max-width: 380px;
-      margin: 0 auto 20px auto;
-      padding: 26px 22px;
-      text-align: center;
-      box-sizing: border-box;
-      position: relative;
-      transition: all 0.3s ease;
-      backdrop-filter: blur(14px);
-      overflow: hidden;
-    }
-    .donation-square-card::before {
-      content: "";
-      position: absolute;
-      top: -60px; left: -60px;
-      width: 180px; height: 180px;
-      background: radial-gradient(circle, rgba(236, 72, 153, 0.4), transparent 70%);
-      border-radius: 50%;
-      pointer-events: none;
-    }
-    .donation-square-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 16px 42px rgba(236, 72, 153, 0.35);
-    }
-
-    /* ============ TUTORIAL ============ */
-    .tutorial-video-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-lg);
-      padding: 20px;
-      margin-bottom: 20px;
-      box-shadow: var(--shadow-soft);
-      backdrop-filter: blur(12px);
-      position: relative;
-      overflow: hidden;
-    }
-    .tutorial-video-card::before {
-      content: "";
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 2px;
-      background: var(--grad-primary);
-      opacity: 0.6;
-    }
-    .tutorial-video-card h4 {
-      color: #fff;
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 15px;
-      font-weight: 800;
-      margin-bottom: 14px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .tutorial-video-wrapper {
-      width: 100%;
-      max-width: 480px;
-      margin: 0 auto;
-      background: #000000;
-      border-radius: 14px;
-      overflow: hidden;
-      border: 1px solid var(--border-strong);
-      box-shadow: var(--shadow-glow);
-      position: relative;
-    }
-    .tutorial-video-wrapper video {
-      width: 100% !important;
-      height: auto !important;
-      display: block;
-      border-radius: 12px;
-      outline: none;
-      object-fit: contain;
-      transform: translateZ(0);
-      background: #000000;
-    }
-
-    /* ============ QR MODAL ============ */
-    .qr-modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(5, 5, 20, 0.85);
-      backdrop-filter: blur(10px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 99999;
-      opacity: 0;
-      visibility: hidden;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      padding: 16px;
-      box-sizing: border-box;
-    }
-    .qr-modal-overlay.active { opacity: 1; visibility: visible; }
-
-    .qr-modal-card {
-      background: linear-gradient(160deg, #1a1a35 0%, #14142a 100%);
-      border: 1px solid var(--border-strong);
-      border-radius: var(--radius-lg);
-      box-shadow: 0 20px 60px rgba(139, 92, 246, 0.45);
-      width: 100%;
-      max-width: 360px;
-      padding: 26px 22px;
-      text-align: center;
-      position: relative;
-      transform: scale(0.85);
-      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-      box-sizing: border-box;
-      overflow: hidden;
-    }
-    .qr-modal-card::before {
-      content: "";
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 3px;
-      background: var(--grad-primary);
-    }
-    .qr-modal-overlay.active .qr-modal-card { transform: scale(1); }
-
-    .qr-modal-close-btn {
-      position: absolute;
-      top: 14px;
-      right: 14px;
-      width: 32px;
-      height: 32px;
-      background: var(--card-inner);
-      color: #fff;
-      border: 1px solid var(--border-color);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 13px;
-      transition: all 0.2s ease;
-      z-index: 2;
-    }
-    .qr-modal-close-btn:hover {
-      background: var(--accent-pink);
-      border-color: transparent;
-      transform: rotate(90deg);
-    }
-
-    .qr-code-modal-img {
-      max-width: 230px;
-      width: 100%;
-      height: auto;
-      border: 1px solid var(--border-strong);
-      border-radius: 14px;
-      padding: 10px;
-      background: #ffffff;
-      margin: 14px 0;
-      box-shadow: var(--shadow-glow);
-    }
-
-    /* ============ BOTTOM NAV ============ */
-    .bottom-nav-container {
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: calc(100% - 32px);
-      max-width: 500px;
-      background: linear-gradient(135deg, rgba(22, 22, 45, 0.92) 0%, rgba(35, 35, 65, 0.92) 100%);
-      border: 1px solid var(--border-strong);
-      border-radius: 24px;
-      padding: 8px 12px;
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6), 0 0 30px rgba(139, 92, 246, 0.25);
-      z-index: 9999;
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-    }
-
-    .bottom-nav-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 10px 12px;
-      border-radius: 16px;
-      cursor: pointer;
-      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-      color: var(--text-muted);
-      text-decoration: none;
-      flex: 1;
-      max-width: 110px;
-      user-select: none;
-    }
-    .bottom-nav-item i {
-      font-size: 20px;
-      margin-bottom: 4px;
-      transition: transform 0.22s ease, color 0.22s ease;
-    }
-    .bottom-nav-item span {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 12px;
-      font-weight: 800;
-      letter-spacing: -0.2px;
-    }
-    .bottom-nav-item.active {
-      background: var(--grad-primary);
-      color: #ffffff !important;
-      box-shadow: 0 6px 18px rgba(139, 92, 246, 0.5);
-    }
-    .bottom-nav-item.active i { color: #ffffff !important; transform: scale(1.08); }
-    .bottom-nav-item:hover:not(.active) {
-      background: rgba(139, 92, 246, 0.12);
-      color: #ffffff;
-    }
-
-    /* ============ RESPONSIVE ============ */
-    @media (max-width: 1100px) {
-      .sidebar {
-        transform: translateX(-115%);
-      }
-      .sidebar.open {
-        transform: translateX(0);
-      }
-      .main-wrapper {
-        margin-left: 0;
-        padding: 16px;
-      }
-      .btn-toggle-sidebar i {
-        transform: rotate(180deg);
-      }
-    }
-
-    @media (max-width: 640px) {
-      .widget-info-row {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
-      }
-      .widget-mini-card { height: 80px; padding: 12px; }
-      .widget-value-text { font-size: 15px; }
-      .custom-stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
-      }
-      .custom-stat-square-box {
-        max-width: none;
-        max-height: none;
-        padding: 16px;
-      }
-      .custom-stat-number-val { font-size: 28px; }
-      .dash-title { font-size: 22px; }
-      .dash-subtitle { font-size: 12px; }
-      .dash-card { padding: 18px 16px; }
-      .ayaka-banner { padding: 14px 16px; }
-      .ayaka-info h3 { font-size: 14px; }
-      .ayaka-info p { font-size: 11px; }
-      .am-steps-container { gap: 8px; }
-      .am-step-card { padding: 12px 6px; }
-      .am-step-number { font-size: 20px; }
-      .am-step-label { font-size: 10.5px; }
-      .realtime-sky-bar { height: 125px; border-radius: 16px; }
+    @media (max-width: 600px) {
+      .realtime-sky-bar { height: 125px; border-radius: 14px; }
       .sky-sun, .sky-moon { width: 34px; height: 34px; }
       .sky-time-label { font-size: 10px; padding: 4px 9px; }
       .sky-loc-label { font-size: 10px; }
-      .sky-phase-label { font-size: 10px; padding: 4px 9px; }
-      .sky-info-row { padding: 10px 12px; }
-      .bottom-nav-container { padding: 6px 8px; border-radius: 20px; }
-      .bottom-nav-item { padding: 8px 6px; }
-      .bottom-nav-item i { font-size: 17px; }
-      .bottom-nav-item span { font-size: 10.5px; }
-      .floating-wa-container { bottom: 110px; right: 14px; }
-      .floating-wa-btn { width: 50px; height: 50px; font-size: 22px; }
-      .res-data-row { font-size: 12px; }
-      .res-data-row .val { font-size: 11.5px; }
-    }
-
-    @media (max-width: 380px) {
-      .bottom-nav-item span { font-size: 9.5px; }
-      .bottom-nav-item i { font-size: 15px; }
+      .sky-phase-label { font-size: 10px; padding: 3px 8px; }
+      .sky-info-row { padding: 8px 10px; }
     }
   </style>
 </head>
@@ -2026,7 +727,7 @@
           <h3>Kamisato Ayaka • Cryo Frostflake Heron</h3>
           <p>Elegansi Inazuma & Sistem Otomasi Berkecepatan Tinggi</p>
         </div>
-        <div style="font-size: 28px; position: relative; z-index: 1;">🌸❄️</div>
+        <div style="font-size: 28px;">🌸❄️</div>
       </div>
 
       <section id="view-dashboard">
@@ -2067,29 +768,29 @@
             <div class="widget-header-text">UPTIME</div>
             <div class="widget-body-content">
               <div class="widget-icon"><i class="fa-solid fa-hourglass-half"></i></div>
-              <div class="widget-value-text" id="widgetUptimeVal">0j...</div>
+              <div class="widget-value-text" id="widgetUptimeVal">0 Days</div>
             </div>
           </div>
         </div>
 
         <div class="stats-grid">
           <div class="stat-card">
-            <div class="stat-icon" style="background: rgba(16, 185, 129, 0.15); color: var(--success);">
+            <div class="stat-icon" style="background: rgba(52, 211, 153, 0.15); color: var(--success);">
               <i class="fa-solid fa-crown"></i>
             </div>
             <div class="stat-info">
               <h3>Premium Status</h3>
-              <p style="color: var(--success); font-size: 18px;">Active</p>
+              <p style="color: var(--success); font-size: 16px;">Active</p>
               <div class="stat-desc">Expires : 31/7/2027</div>
             </div>
           </div>
           <div class="stat-card">
-            <div class="stat-icon" style="background: rgba(236, 72, 153, 0.15); color: var(--accent-pink);">
+            <div class="stat-icon" style="background: rgba(244, 114, 182, 0.15); color: var(--brand-blue);">
               <i class="fa-solid fa-signal"></i>
             </div>
             <div class="stat-info">
               <h3>Dashboard Latency</h3>
-              <p style="font-size: 18px;" id="dashboardPing">- ms</p>
+              <p style="font-size: 16px;" id="dashboardPing">- ms</p>
               <div class="stat-desc" id="dashboardStatusText">Checking connection...</div>
             </div>
           </div>
@@ -2097,7 +798,7 @@
 
         <div class="stats-grid" style="margin-top: -6px;">
           <div class="stat-card" style="grid-column: 1 / -1;">
-            <div class="stat-icon" style="background: rgba(236, 72, 153, 0.15); color: #f472b6;">
+            <div class="stat-icon" style="background: rgba(219, 39, 119, 0.15); color: #f472b6;">
               <i class="fa-solid fa-clock-rotate-left"></i>
             </div>
             <div class="stat-info" style="width: 100%; min-width: 0;">
@@ -2105,7 +806,7 @@
                 <h3>Server Uptime (Global Redis Sync)</h3>
                 <span id="uptimePercentage" style="font-size: 12px; font-weight: 700; color: var(--success);">100.00%</span>
               </div>
-              <p style="font-size: 20px; font-family: 'Space Grotesk', sans-serif; margin-top: 6px;" id="serverUptimeCounter">0d 00h 00m 00s</p>
+              <p style="font-size: 18px; font-family: 'Space Grotesk', sans-serif; margin-top: 4px;" id="serverUptimeCounter">0 Days</p>
               <div class="stat-desc" id="uptimeLiveStatus">Status: Terkoneksi & Berjalan Normal</div>
             </div>
           </div>
@@ -2119,20 +820,20 @@
             <div class="stat-info" style="width: 100%; min-width: 0;">
               <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px;">
                 <h3>Total Pengunjung Global</h3>
-                <span style="font-size: 11px; font-weight: 700; color: #f59e0b; background: rgba(245, 158, 11, 0.1); padding: 3px 10px; border-radius: 20px; white-space: nowrap; border: 1px solid rgba(245, 158, 11, 0.3);" id="visitorBadgeLabel">
+                <span style="font-size: 11px; font-weight: 700; color: #f59e0b; background: rgba(245, 158, 11, 0.1); padding: 2px 8px; border-radius: 20px; white-space: nowrap;" id="visitorBadgeLabel">
                   Redis Connected
                 </span>
               </div>
-              <p style="font-size: 22px; font-family: 'Space Grotesk', sans-serif; margin-top: 6px; color: #fff;" id="totalVisitorsCounter">Loading...</p>
+              <p style="font-size: 20px; font-family: 'Space Grotesk', sans-serif; margin-top: 4px; color: #fff;" id="totalVisitorsCounter">Loading...</p>
               <div class="stat-desc" id="visitorStatusDesc">Sinkronisasi otomatis global via Upstash Redis</div>
             </div>
           </div>
         </div>
 
         <div class="dash-card" style="margin-top: 20px;">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
             <div style="display: flex; align-items: center; gap: 10px;">
-              <h3 style="font-size: 15px; font-weight: 800; color: #fff; margin: 0;">Live Recent Aktivasi</h3>
+              <h3 style="font-size: 15px; font-weight: 800; color: #fbcfe8; margin: 0;">Live Recent Aktivasi</h3>
               <div class="recent-act-badge">
                 <div class="recent-live-dot"></div>
                 <span>LIVE REALTIME</span>
@@ -2152,7 +853,7 @@
         <div class="dash-card">
           <div class="database-card-custom" id="totalGeneratedCardCustom">
             <div class="db-card-header">
-              <div class="db-icon-box" style="color: #f472b6; background: rgba(236, 72, 153, 0.15); border-color: rgba(236, 72, 153, 0.3);">
+              <div class="db-icon-box" style="color: #f472b6;">
                 <i class="fa-solid fa-wand-magic-sparkles"></i>
               </div>
               <div class="db-text-group">
@@ -2160,7 +861,7 @@
                 <div class="db-subtitle">Live Counter Global (Upstash Redis)</div>
               </div>
             </div>
-            <div class="db-status-row" style="justify-content: space-between; color: var(--text-main);">
+            <div class="db-status-row" style="justify-content: space-between;">
               <div style="display: flex; align-items: center; gap: 10px;">
                 <div class="db-blink-dot" style="background-color: #f472b6; box-shadow: 0 0 10px #f472b6;"></div>
                 <span id="totalGeneratedCounter" style="font-size: 24px; font-weight: 800; color: #fff; font-family: 'Space Grotesk', sans-serif;">Loading...</span>
@@ -2187,7 +888,7 @@
 
           <div class="system-uptime-card-custom">
             <div class="db-card-header">
-              <div class="db-icon-box" style="color: #c084fc; background: rgba(192, 132, 252, 0.12); border-color: rgba(192, 132, 252, 0.3);">
+              <div class="db-icon-box" style="color: #c084fc; background: #25132a; border-color: #583361;">
                 <i class="fa-solid fa-tv"></i>
               </div>
               <div class="db-text-group">
@@ -2233,7 +934,7 @@
 
         <div class="stats-grid">
           <div class="stat-card">
-            <div class="stat-icon" style="background: rgba(236, 72, 153, 0.15); color: #f472b6;">
+            <div class="stat-icon" style="background: rgba(244, 114, 182, 0.15); color: #f472b6;">
               <i class="fa-solid fa-chart-pie"></i>
             </div>
             <div class="stat-info">
@@ -2243,7 +944,7 @@
             </div>
           </div>
           <div class="stat-card">
-            <div class="stat-icon" style="background: rgba(16, 185, 129, 0.15); color: var(--success);">
+            <div class="stat-icon" style="background: rgba(52, 211, 153, 0.15); color: var(--success);">
               <i class="fa-solid fa-shield-halved"></i>
             </div>
             <div class="stat-info">
@@ -2255,8 +956,8 @@
         </div>
 
         <div class="dash-card">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px;">
-            <h3 style="font-size: 15px; font-weight: 800; color: #fff;">Grafik Aktivasi Bulanan (2026)</h3>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+            <h3 style="font-size: 15px; font-weight: 800; color: #fbcfe8;">Grafik Aktivasi Bulanan (2026)</h3>
             <button type="button" class="ss-outlook-btn" id="exportStatistikBtn">
               <i class="fa-solid fa-download"></i> Unduh Laporan
             </button>
@@ -2267,7 +968,7 @@
         </div>
 
         <div class="dash-card">
-          <h3 style="font-size: 15px; font-weight: 800; color: #fff; margin-bottom: 14px;">Metrik Performa Layanan</h3>
+          <h3 style="font-size: 15px; font-weight: 800; color: #fbcfe8; margin-bottom: 12px;">Metrik Performa Layanan</h3>
           <div class="bulk-table-container">
             <table class="bulk-table">
               <thead>
@@ -2354,7 +1055,7 @@
           </div>
 
           <div id="tempMailInboxList" class="inbox-list">
-            <div style="text-align: center; color: var(--text-muted); padding: 16px 10px; font-size: 12px; background: var(--card-inner); border: 1px dashed var(--border-color); border-radius: 12px;">
+            <div style="text-align: center; color: var(--text-muted); padding: 16px 10px; font-size: 12px; background: var(--card-inner); border: 1px dashed var(--border-color); border-radius: 10px;">
               Belum ada pesan masuk. Email akan muncul di sini secara real-time.
             </div>
           </div>
@@ -2384,19 +1085,19 @@
           <div id="msgBox" class="message"></div>
 
           <div class="am-step-content-panel active" id="amPanel1">
-            <h3 style="font-size: 15px; font-weight: 800; color: #fff; margin-bottom: 16px;">Tahap 1: Hubungkan Akun Alight Motion</h3>
-
+            <h3 style="font-size: 15px; font-weight: 800; color: #fbcfe8; margin-bottom: 12px;">Tahap 1: Hubungkan Akun Alight Motion</h3>
+            
             <div class="auth-form-group">
               <label>Email Akun Alight Motion</label>
               <div style="display:flex; gap:8px; flex-wrap:wrap;">
                 <input type="email" id="emailInput" class="auth-input" placeholder="nama@email.com" style="flex: 1; min-width: 180px;">
-                <button type="button" id="sendBtn" class="btn-pink" style="width: auto; padding: 13px 18px; flex-shrink: 0;">Kirim Link</button>
+                <button type="button" id="sendBtn" class="btn-pink" style="width: auto; padding: 12px 16px; flex-shrink: 0;">Kirim Link</button>
               </div>
             </div>
 
             <div class="auth-form-group">
-              <label>Magic Link / URL Firebase Alight Creative</label>
-              <input type="url" id="magicInput" class="auth-input" placeholder="https://alight-creative.firebaseapp.com/...">
+              <label>Magic Link / URL Verifikasi Email</label>
+              <input type="url" id="magicInput" class="auth-input" placeholder="Paste link dari email di sini...">
             </div>
 
             <button type="button" id="nextToStep2Btn" class="btn-pink">
@@ -2405,14 +1106,14 @@
           </div>
 
           <div class="am-step-content-panel" id="amPanel2">
-            <h3 style="font-size: 15px; font-weight: 800; color: #fff; margin-bottom: 6px;">Tahap 2: Aktivasi Akun</h3>
+            <h3 style="font-size: 15px; font-weight: 800; color: #fbcfe8; margin-bottom: 6px;">Tahap 2: Aktivasi Akun</h3>
             <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">Selesaikan proses aktivasi untuk membuka lisensi premium permanen.</p>
 
-            <div style="display: flex; justify-content: space-between; gap: 10px; margin-top: 20px; flex-wrap: wrap;">
-              <button type="button" class="btn-pink" style="background: transparent; border: 1px solid var(--border-color); color: #fff; width: auto; box-shadow: none;" id="backToStep1Btn">
+            <div style="display: flex; justify-content: space-between; gap: 10px; margin-top: 20px;">
+              <button type="button" class="btn-pink" style="background: transparent; border: 1px solid var(--border-color); color: #fff; width: auto;" id="backToStep1Btn">
                 <i class="fa-solid fa-arrow-left"></i> Kembali
               </button>
-              <button type="button" id="proceedToStep3Btn" class="btn-pink" style="flex: 1; min-width: 180px;">
+              <button type="button" id="proceedToStep3Btn" class="btn-pink" style="flex: 1;">
                 Lanjut ke Tahap 3 (Premium Aktif) <i class="fa-solid fa-arrow-right"></i>
               </button>
             </div>
@@ -2420,7 +1121,7 @@
 
           <div class="am-step-content-panel" id="amPanel3">
             <div class="am-landing-box" style="padding: 10px 0;">
-              <div style="width: 56px; height: 56px; border-radius: 50%; background: var(--success-bg); border: 2px solid var(--success); display: flex; align-items: center; justify-content: center; color: var(--success); font-size: 24px; margin-bottom: 14px;">
+              <div style="width: 52px; height: 52px; border-radius: 50%; background: var(--success-bg); border: 2px solid var(--success); display: flex; align-items: center; justify-content: center; color: var(--success); font-size: 22px; margin-bottom: 12px;">
                 <i class="fa-solid fa-check"></i>
               </div>
 
@@ -2443,7 +1144,7 @@
               </div>
 
               <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
-                <button type="button" class="btn-pink" style="background: transparent; border: 1px solid var(--border-color); color: #fff; width: auto; padding: 11px 22px; font-size: 13px; box-shadow: none;" id="resetAmFormV1Btn">
+                <button type="button" class="btn-pink" style="background: transparent; border: 1px solid var(--border-color); color: #fff; width: auto; padding: 10px 20px; font-size: 13px;" id="resetAmFormV1Btn">
                   <i class="fa-solid fa-rotate-right"></i> Proses Akun Lain
                 </button>
               </div>
@@ -2476,7 +1177,7 @@
           <div id="msgBoxV2" class="message"></div>
 
           <div class="am-step-content-panel active" id="amV2Panel1">
-            <h3 style="font-size: 15px; font-weight: 800; color: #fff; margin-bottom: 16px;">Tahap 1: Hubungkan Akun V2</h3>
+            <h3 style="font-size: 15px; font-weight: 800; color: #fbcfe8; margin-bottom: 12px;">Tahap 1: Hubungkan Akun V2</h3>
 
             <div class="auth-form-group">
               <label>Paket / Durasi Premium</label>
@@ -2495,13 +1196,13 @@
               <label>Email Akun Alight Motion</label>
               <div style="display:flex; gap:8px; flex-wrap:wrap;">
                 <input type="email" id="emailInputV2" class="auth-input" placeholder="nama@email.com" style="flex: 1; min-width: 180px;">
-                <button type="button" id="sendBtnV2" class="btn-pink" style="width: auto; padding: 13px 18px; flex-shrink: 0;">Kirim Link</button>
+                <button type="button" id="sendBtnV2" class="btn-pink" style="width: auto; padding: 12px 16px; flex-shrink: 0;">Kirim Link</button>
               </div>
             </div>
 
             <div class="auth-form-group">
-              <label>Magic Link / URL Firebase Alight Creative</label>
-              <input type="url" id="magicInputV2" class="auth-input" placeholder="https://alight-creative.firebaseapp.com/...">
+              <label>Magic Link / URL Verifikasi Email</label>
+              <input type="url" id="magicInputV2" class="auth-input" placeholder="Paste link dari email di sini...">
             </div>
 
             <button type="button" id="nextToAmV2Step2Btn" class="btn-pink">
@@ -2510,14 +1211,14 @@
           </div>
 
           <div class="am-step-content-panel" id="amV2Panel2">
-            <h3 style="font-size: 15px; font-weight: 800; color: #fff; margin-bottom: 6px;">Tahap 2: Aktivasi Sistem V2</h3>
+            <h3 style="font-size: 15px; font-weight: 800; color: #fbcfe8; margin-bottom: 6px;">Tahap 2: Aktivasi Sistem V2</h3>
             <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">Selesaikan proses Engine V2 untuk mengaktifkan langganan.</p>
 
-            <div style="display: flex; justify-content: space-between; gap: 10px; margin-top: 20px; flex-wrap: wrap;">
-              <button type="button" class="btn-pink" style="background: transparent; border: 1px solid var(--border-color); color: #fff; width: auto; box-shadow: none;" id="backToAmV2Step1Btn">
+            <div style="display: flex; justify-content: space-between; gap: 10px; margin-top: 20px;">
+              <button type="button" class="btn-pink" style="background: transparent; border: 1px solid var(--border-color); color: #fff; width: auto;" id="backToAmV2Step1Btn">
                 <i class="fa-solid fa-arrow-left"></i> Kembali
               </button>
-              <button type="button" id="proceedToAmV2Step3Btn" class="btn-pink" style="flex: 1; min-width: 180px;">
+              <button type="button" id="proceedToAmV2Step3Btn" class="btn-pink" style="flex: 1;">
                 Aktivasi Lisensi Final <i class="fa-solid fa-arrow-right"></i>
               </button>
             </div>
@@ -2525,7 +1226,7 @@
 
           <div class="am-step-content-panel" id="amV2Panel3">
             <div class="am-landing-box" style="padding: 10px 0;">
-              <div style="width: 56px; height: 56px; border-radius: 50%; background: var(--success-bg); border: 2px solid var(--success); display: flex; align-items: center; justify-content: center; color: var(--success); font-size: 24px; margin-bottom: 14px;">
+              <div style="width: 52px; height: 52px; border-radius: 50%; background: var(--success-bg); border: 2px solid var(--success); display: flex; align-items: center; justify-content: center; color: var(--success); font-size: 22px; margin-bottom: 12px;">
                 <i class="fa-solid fa-check"></i>
               </div>
 
@@ -2551,7 +1252,7 @@
                 </div>
               </div>
 
-              <button type="button" class="btn-pink" style="background: transparent; border: 1px solid var(--border-color); color: #fff; width: auto; padding: 11px 22px; font-size: 13px; box-shadow: none;" id="resetAmFormV2Btn">
+              <button type="button" class="btn-pink" style="background: transparent; border: 1px solid var(--border-color); color: #fff; width: auto; padding: 10px 20px; font-size: 13px;" id="resetAmFormV2Btn">
                 <i class="fa-solid fa-rotate-right"></i> Proses Akun Lain
               </button>
             </div>
@@ -2584,14 +1285,14 @@
             <button type="button" id="startBulkBtn" class="btn-pink" style="flex: 1; min-width: 160px;">
               <i class="fa-solid fa-play"></i> Mulai Proses Bulk
             </button>
-            <button type="button" id="exportBulkBtn" class="btn-pink" style="background: transparent; border: 1px solid var(--border-color); color: #fff; width: auto; display: none; box-shadow: none;">
+            <button type="button" id="exportBulkBtn" class="btn-pink" style="background: transparent; border: 1px solid var(--border-color); color: #fff; width: auto; display: none;">
               <i class="fa-solid fa-download"></i> Unduh Hasil (.txt)
             </button>
           </div>
         </div>
 
         <div id="bulkResultCard" class="dash-card" style="display: none;">
-          <h3 style="font-size: 15px; font-weight: 800; color: #fff; margin-bottom: 14px;">Hasil Pemrosesan Bulk</h3>
+          <h3 style="font-size: 15px; font-weight: 800; color: #fbcfe8; margin-bottom: 10px;">Hasil Pemrosesan Bulk</h3>
           <div class="bulk-table-container">
             <table class="bulk-table">
               <thead>
@@ -2614,21 +1315,21 @@
 
         <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 10px;">
           <div class="donation-square-card">
-            <div style="font-size: 42px; margin-bottom: 8px; position: relative; z-index: 1;">💖</div>
-            <h2 style="font-size: 18px; font-weight: 800; color: #fff; margin-bottom: 6px; font-family: 'Space Grotesk', sans-serif; position: relative; z-index: 1;">Dukung Server Ayaka Store</h2>
-            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 18px; line-height: 1.5; position: relative; z-index: 1;">
+            <div style="font-size: 36px; color: #f472b6; margin-bottom: 8px;">💖</div>
+            <h2 style="font-size: 18px; font-weight: 800; color: #111; margin-bottom: 4px; font-family: 'Space Grotesk', sans-serif;">Dukung Server Ayaka Store</h2>
+            <p style="font-size: 12px; color: #4b5563; margin-bottom: 16px; line-height: 1.4;">
               Dukungan Anda membantu biaya server, database, & fitur otomasi baru.
             </p>
 
-            <div style="font-size: 14px; font-weight: 800; color: #fff; font-family: 'Space Grotesk', sans-serif; position: relative; z-index: 1;">OLPI STORE</div>
-            <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 20px; position: relative; z-index: 1;">NMID: ID1026559688191</div>
+            <div style="font-size: 14px; font-weight: 800; color: #000; font-family: 'Space Grotesk', sans-serif;">OLPI STORE</div>
+            <div style="font-size: 11px; color: #6b7280; margin-bottom: 20px;">NMID: ID1026559688191</div>
 
-            <button type="button" class="btn-pink" id="showQrBtn" style="width: 100%; padding: 13px; font-size: 13px; border-radius: 12px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+            <button type="button" class="btn-pink" id="showQrBtn" style="width: 100%; padding: 13px; font-size: 13px; border-radius: 12px; box-shadow: 3px 3px 0px #000; display: flex; align-items: center; justify-content: center; gap: 8px;">
               <i class="fa-solid fa-qrcode"></i> Tampilkan Kode QR
             </button>
           </div>
 
-          <a href="https://wa.me/6282339430604?text=Halo%20Ayaka%20Store,%20saya%20ingin%20mengirimkan%20donasi/dukungan" target="_blank" class="btn-pink" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; max-width: 380px; padding: 13px 24px; border-radius: 14px; text-decoration: none;">
+          <a href="https://wa.me/6282339430604?text=Halo%20Ayaka%20Store,%20saya%20ingin%20mengirimkan%20donasi/dukungan" target="_blank" class="btn-pink" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; max-width: 380px; padding: 12px 24px; border-radius: 14px; box-shadow: 4px 4px 0px #000000; text-decoration: none;">
             <i class="fa-brands fa-whatsapp" style="font-size: 18px;"></i> Konfirmasi Donasi via WhatsApp
           </a>
         </div>
@@ -2657,22 +1358,22 @@
         </div>
 
         <div class="dash-card">
-          <h3 style="font-size: 16px; font-weight: 800; color: #fff; margin-bottom: 16px;"><i class="fa-solid fa-circle-play" style="color: var(--accent-pink);"></i> Panduan Aktivasi Alight Motion</h3>
+          <h3 style="font-size: 16px; font-weight: 800; color: #fbcfe8; margin-bottom: 16px;"><i class="fa-solid fa-circle-play"></i> Panduan Aktivasi Alight Motion</h3>
           
           <div style="display: grid; gap: 14px;">
-            <div style="background: var(--card-inner); border: 1px solid var(--border-color); border-radius: 14px; padding: 16px; transition: all 0.22s ease;">
+            <div style="background: var(--card-inner); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px;">
               <h4 style="color: #fff; font-size: 14px; margin-bottom: 6px;">1. Buka Menu Aktivasi / AM Generator</h4>
-              <p style="font-size: 12px; color: var(--text-muted); line-height: 1.55;">Masukkan email akun Alight Motion Anda pada kolom yang telah disediakan, lalu klik <b style="color: var(--accent-cyan);">Kirim Link</b>.</p>
+              <p style="font-size: 12px; color: var(--text-muted);">Masukkan email akun Alight Motion Anda pada kolom yang telah disediakan, lalu klik <b>Kirim Link</b>.</p>
             </div>
 
-            <div style="background: var(--card-inner); border: 1px solid var(--border-color); border-radius: 14px; padding: 16px; transition: all 0.22s ease;">
+            <div style="background: var(--card-inner); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px;">
               <h4 style="color: #fff; font-size: 14px; margin-bottom: 6px;">2. Dapatkan Magic Link / Verifikasi</h4>
-              <p style="font-size: 12px; color: var(--text-muted); line-height: 1.55;">Buka email Anda (bisa menggunakan Auto Temp Mail jika tidak ada email pribadi), lalu salin URL verifikasi yang dikirimkan oleh Alight Motion.</p>
+              <p style="font-size: 12px; color: var(--text-muted);">Buka email Anda (bisa menggunakan Auto Temp Mail jika tidak ada email pribadi), lalu salin URL verifikasi yang dikirimkan oleh Alight Motion.</p>
             </div>
 
-            <div style="background: var(--card-inner); border: 1px solid var(--border-color); border-radius: 14px; padding: 16px; transition: all 0.22s ease;">
+            <div style="background: var(--card-inner); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px;">
               <h4 style="color: #fff; font-size: 14px; margin-bottom: 6px;">3. Tempel Link & Aktivasi</h4>
-              <p style="font-size: 12px; color: var(--text-muted); line-height: 1.55;">Tempelkan tautan Magic Link tersebut di form panel dan klik <b style="color: var(--accent-cyan);">Lanjut ke Tahap Aktivasi</b>. Sistem akan memproses lisensi secara otomatis dalam hitungan detik.</p>
+              <p style="font-size: 12px; color: var(--text-muted);">Tempelkan tautan Magic Link tersebut di form panel dan klik <b>Lanjut ke Tahap Aktivasi</b>. Sistem akan memproses lisensi secara otomatis dalam hitungan detik.</p>
             </div>
           </div>
         </div>
@@ -2685,20 +1386,17 @@
     <div class="qr-modal-card">
       <div class="qr-modal-close-btn" id="closeQrModalBtn"><i class="fa-solid fa-xmark"></i></div>
       
-      <div style="font-size: 12px; font-weight: 800; color: var(--accent-pink); letter-spacing: 1px; text-transform: uppercase;">SCAN QRIS DONASI</div>
-      <h3 style="font-size: 20px; font-weight: 800; color: #fff; margin: 6px 0 4px 0; font-family: 'Space Grotesk', sans-serif;">OLPI STORE</h3>
-      <div style="font-size: 11px; color: var(--text-muted);">NMID: ID1026559688191</div>
+      <div style="font-size: 12px; font-weight: 800; color: #ec4899; letter-spacing: 1px; text-transform: uppercase;">SCAN QRIS DONASI</div>
+      <h3 style="font-size: 20px; font-weight: 800; color: #111; margin: 4px 0 2px 0; font-family: 'Space Grotesk', sans-serif;">OLPI STORE</h3>
+      <div style="font-size: 11px; color: #4b5563;">NMID: ID1026559688191</div>
 
-      <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=00020101021126570011ID.DANA.WWW011893600915303359272702090335927270303UMI51440014ID.CO.QRIS.WWW0215ID10265596881910303UMI5204654053033605802ID5910OLPI%20STORE6012Kab.%20Sumbawa6105843856304A947" 
-           alt="QRIS OLPI STORE Pop-up" 
-           class="qr-code-modal-img"
-           onerror="this.onerror=null; this.src='https://placehold.co/250x250/14142a/ffffff?text=QR+Code+Tidak+Ditemukan'">
+      <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=00020101021126570011ID.DANA.WWW011893600915303359272702090335927270303UMI51440014ID.CO.QRIS.WWW0215ID10265596881910303UMI5204654053033605802ID5910OLPI%20STORE6012Kab.%20Sumbawa6105843856304A947" alt="QRIS OLPI STORE Pop-up" class="qr-code-modal-img">
 
-      <div style="font-size: 12px; font-weight: 700; color: #fff; margin-top: 4px;">DANA, OVO, GoPay, ShopeePay & M-Banking</div>
-      <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 16px;">Kab. Sumbawa</div>
+      <div style="font-size: 12px; font-weight: 700; color: #111; margin-top: 4px;">DANA, OVO, GoPay, ShopeePay & M-Banking</div>
+      <div style="font-size: 11px; color: #6b7280; margin-bottom: 16px;">Kab. Sumbawa</div>
 
       <div style="display: flex; flex-direction: column; gap: 8px;">
-        <a href="https://wa.me/6282339430604?text=Halo%20Ayaka%20Store,%20saya%20sudah%20mengirimkan%20donasi" target="_blank" class="btn-pink" style="padding: 11px 16px; font-size: 12px; text-decoration: none; border-radius: 10px;">
+        <a href="https://wa.me/6282339430604?text=Halo%20Ayaka%20Store,%20saya%20sudah%20mengirimkan%20donasi" target="_blank" class="btn-pink" style="padding: 10px 16px; font-size: 12px; text-decoration: none; border-radius: 10px;">
           <i class="fa-brands fa-whatsapp"></i> Konfirmasi via WhatsApp
         </a>
       </div>
@@ -2864,6 +1562,123 @@
     }
 
     // ============================================================
+    // ⏱️ SERVER UPTIME — AUTO START TIME (MONOTONIC, ANTI-TURUN)
+    // ============================================================
+    // Start time TIDAK di-hardcode. Diambil otomatis dari:
+    //   1. localStorage (paling cepat & paling awal diketahui)
+    //   2. Upstash Redis (global, tersinkron antar device)
+    //   3. Date.now() (fallback pertama kali saja, lalu di-SETNX ke Redis)
+    //
+    // Logika anti-turun:
+    //   - Ambil timestamp start PALING AWAL (paling lama uptime-nya)
+    //   - Simpan nilai uptime maksimum di localStorage — kalau nilai baru lebih
+    //     kecil, pakai nilai maksimum (tidak pernah turun).
+
+    const UPTIME_REDIS_KEY       = "ayaka:server_start_ms";
+    const UPTIME_LOCAL_START_KEY = "ayaka:server_start_ms_local";
+    const UPTIME_LOCAL_MAX_KEY   = "ayaka:uptime_max_seconds";
+
+    let __serverStartMs     = null;
+    let __maxUptimeSeconds  = 0;
+    let __uptimeInitialized = false;
+
+    // Muat dari localStorage dulu (sinkron, cepat)
+    try {
+      const localStart = localStorage.getItem(UPTIME_LOCAL_START_KEY);
+      if (localStart) {
+        const n = parseInt(localStart, 10);
+        if (!isNaN(n) && n > 0) __serverStartMs = n;
+      }
+      const maxSaved = localStorage.getItem(UPTIME_LOCAL_MAX_KEY);
+      if (maxSaved) {
+        const n = parseInt(maxSaved, 10);
+        if (!isNaN(n) && n > 0) __maxUptimeSeconds = n;
+      }
+    } catch (e) { /* ignore */ }
+
+    /**
+     * Inisialisasi server start time.
+     * Prioritas: paling AWAL di antara {Redis, localStorage, Date.now()}.
+     */
+    async function initServerStartTime() {
+      // 1. Cek Redis
+      const res = await redisGet(UPTIME_REDIS_KEY);
+      if (res && !res.__error && res.value) {
+        const n = parseInt(res.value, 10);
+        if (!isNaN(n) && n > 0) {
+          // Ambil yang PALING AWAL (uptime paling lama)
+          if (__serverStartMs === null || n < __serverStartMs) {
+            __serverStartMs = n;
+          }
+        }
+      } else if (res && !res.__error && !res.value) {
+        // Redis kosong → seed pakai nilai lokal atau sekarang
+        const seed = __serverStartMs || Date.now();
+        const setnxRes = await redisSetNX(UPTIME_REDIS_KEY, seed);
+        if (setnxRes === 1 || setnxRes === "1") {
+          __serverStartMs = seed;
+        } else {
+          // Race: device lain baru set → ambil lagi
+          const r2 = await redisGet(UPTIME_REDIS_KEY);
+          if (r2 && !r2.__error && r2.value) {
+            const n2 = parseInt(r2.value, 10);
+            if (!isNaN(n2) && n2 > 0) {
+              if (__serverStartMs === null || n2 < __serverStartMs) {
+                __serverStartMs = n2;
+              }
+            }
+          }
+        }
+      }
+
+      // 2. Fallback terakhir
+      if (!__serverStartMs || isNaN(__serverStartMs) || __serverStartMs <= 0) {
+        __serverStartMs = Date.now();
+      }
+
+      // 3. Simpan ke localStorage (pakai yang paling awal)
+      try {
+        const localStart = localStorage.getItem(UPTIME_LOCAL_START_KEY);
+        if (localStart) {
+          const n = parseInt(localStart, 10);
+          if (!isNaN(n) && n > 0 && n < __serverStartMs) {
+            __serverStartMs = n;
+          }
+        }
+        localStorage.setItem(UPTIME_LOCAL_START_KEY, String(__serverStartMs));
+      } catch (e) { /* ignore */ }
+
+      __uptimeInitialized = true;
+      console.log("🕒 Server start time initialized:", new Date(__serverStartMs).toISOString());
+    }
+
+    /**
+     * Hitung uptime dalam DETIK dari __serverStartMs.
+     * - Pakai Math.floor
+     * - Tidak pernah negatif
+     * - Anti-turun: kalau diffSec < max sebelumnya → pakai max sebelumnya
+     */
+    function computeStableUptimeSeconds() {
+      if (!__serverStartMs) return __maxUptimeSeconds || 0;
+
+      let diffSec = Math.floor((Date.now() - __serverStartMs) / 1000);
+      if (diffSec < 0) diffSec = 0;
+
+      if (diffSec < __maxUptimeSeconds) {
+        diffSec = __maxUptimeSeconds;
+      } else if (diffSec > __maxUptimeSeconds) {
+        __maxUptimeSeconds = diffSec;
+        try { localStorage.setItem(UPTIME_LOCAL_MAX_KEY, String(diffSec)); } catch (e) { /* ignore */ }
+      }
+      return diffSec;
+    }
+
+    // Expose untuk debug
+    window.computeStableUptimeSeconds = computeStableUptimeSeconds;
+    window.getServerStartMs = () => __serverStartMs;
+    window.isUptimeReady = () => __uptimeInitialized;
+
+    // ============================================================
     // 🕒 UTIL: Timezone-aware WIB (Asia/Jakarta)
     // ============================================================
     const WIB_TZ = "Asia/Jakarta";
@@ -2876,6 +1691,7 @@
       return `${y}-${m}-${day}`;
     }
 
+    // Ambil komponen waktu WIB
     function getWIBDateParts(dateObj) {
       const d = dateObj || new Date();
       const wib = new Date(d.toLocaleString("en-US", { timeZone: WIB_TZ }));
@@ -3353,62 +2169,16 @@
     window.fetchRecentActivationsFromRedis = fetchRecentActivationsFromRedis;
 
     // ============================================================
-    // 🚀 SISTEM UPTIME, VISITOR, & AKTIVASI VIA UPSTASH REDIS
+    // 🚀 SISTEM UPTIME (AUTO), VISITOR, & AKTIVASI
     // ============================================================
     document.addEventListener("DOMContentLoaded", async () => {
 
-      const UPTIME_KEY = "ayaka:start_time";
+      // 🔑 Key aktivasi
       const KEY_TOTAL_AKTIVASI = "ayaka:total_aktivasi";
 
-      let globalServerStartTime = null;
-
-      async function initServerStartTime() {
-        try {
-          const getResult = await redisGet(UPTIME_KEY);
-
-          if (getResult && !getResult.__error && getResult.value) {
-            const num = parseInt(getResult.value);
-            if (num > 0 && !isNaN(num)) {
-              globalServerStartTime = num;
-              console.log("📡 Uptime dimuat dari Redis:", new Date(num).toISOString());
-              return;
-            }
-          }
-
-          if (getResult && getResult.__error) {
-            console.warn("⚠️ Redis GET error — pakai fallback lokal");
-            globalServerStartTime = Date.now();
-            return;
-          }
-
-          const now = Date.now();
-          const setnxResult = await redisSetNX(UPTIME_KEY, now);
-
-          if (setnxResult === 1 || setnxResult === "1") {
-            globalServerStartTime = now;
-            console.log("🌱 Uptime diinisialisasi pertama kali:", new Date(now).toISOString());
-            return;
-          }
-
-          const getResult2 = await redisGet(UPTIME_KEY);
-          if (getResult2 && !getResult2.__error && getResult2.value) {
-            const num2 = parseInt(getResult2.value);
-            if (num2 > 0 && !isNaN(num2)) {
-              globalServerStartTime = num2;
-              console.log("📡 Uptime dimuat setelah race:", new Date(num2).toISOString());
-              return;
-            }
-          }
-
-          globalServerStartTime = now;
-          console.warn("⚠️ Fallback: pakai timestamp lokal");
-
-        } catch (err) {
-          console.warn("initServerStartTime exception:", err);
-          globalServerStartTime = Date.now();
-        }
-      }
-
+      // --------------------------------------------------------
+      // Track visitor via IP
+      // --------------------------------------------------------
       async function trackVisitor() {
         try {
           let ip = "unknown";
@@ -3451,6 +2221,9 @@
         }
       }
 
+      // --------------------------------------------------------
+      // Fetch TOTAL AKTIVASI & HARI INI dari Redis
+      // --------------------------------------------------------
       async function fetchAktivasiStatsFromRedis() {
         try {
           const todayStr = getLocalDateStr();
@@ -3488,42 +2261,44 @@
 
       window.fetchAktivasiStatsFromRedis = fetchAktivasiStatsFromRedis;
 
+      // --------------------------------------------------------
+      // ✅ UPDATE UPTIME UI — AUTO START, MONOTONIC (anti-turun)
+      // --------------------------------------------------------
       function updateGlobalUptimeUI() {
-        if (!globalServerStartTime) return;
+        const diffSec = computeStableUptimeSeconds();
 
-        const uptimeCounterEl = document.getElementById("serverUptimeCounter");
-        const uptimeDaysEl = document.getElementById("uptimeDays");
-        const uptimeHoursEl = document.getElementById("uptimeHours");
-        const uptimeMinutesEl = document.getElementById("uptimeMinutes");
-        const uptimeSecondsEl = document.getElementById("uptimeSeconds");
-        const widgetUptimeVal = document.getElementById("widgetUptimeVal");
+        const uptimeCounterEl   = document.getElementById("serverUptimeCounter");
+        const uptimeDaysEl      = document.getElementById("uptimeDays");
+        const uptimeHoursEl     = document.getElementById("uptimeHours");
+        const uptimeMinutesEl   = document.getElementById("uptimeMinutes");
+        const uptimeSecondsEl   = document.getElementById("uptimeSeconds");
+        const widgetUptimeVal   = document.getElementById("widgetUptimeVal");
+        const uptimeDaysCountEl = document.getElementById("uptimeDaysCount");
 
-        const currentMillis = Date.now();
-        let diffSec = Math.floor((currentMillis - globalServerStartTime) / 1000);
-        if (diffSec < 0) diffSec = 0;
+        const totalDays  = Math.floor(diffSec / 86400);              // Math.floor — hanya naik
+        const hours      = Math.floor((diffSec % 86400) / 3600);
+        const minutes    = Math.floor((diffSec % 3600) / 60);
+        const seconds    = diffSec % 60;
 
-        const hoursTotal = Math.floor(diffSec / 3600);
-        const days = Math.floor(diffSec / (3600 * 24));
-        const remSec = diffSec % (3600 * 24);
-        const hours = Math.floor(remSec / 3600);
-        const minutes = Math.floor((remSec % 3600) / 60);
-        const seconds = diffSec % 60;
-
-        const formattedDays = days + "d";
-        const formattedHours = String(hours).padStart(2, "0") + "h";
-        const formattedMinutes = String(minutes).padStart(2, "0") + "m";
-        const formattedSeconds = String(seconds).padStart(2, "0") + "s";
-
+        // 🔹 HEADER utama → format "XX Days"
         if (uptimeCounterEl) {
-          uptimeCounterEl.textContent = `${days}d ${String(hours).padStart(2, "0")}h ${String(minutes).padStart(2, "0")}m ${formattedSeconds}`;
+          uptimeCounterEl.textContent = `${totalDays.toLocaleString("id-ID")} Days`;
         }
-        if (uptimeDaysEl) uptimeDaysEl.textContent = formattedDays;
-        if (uptimeHoursEl) uptimeHoursEl.textContent = formattedHours;
-        if (uptimeMinutesEl) uptimeMinutesEl.textContent = formattedMinutes;
-        if (uptimeSecondsEl) uptimeSecondsEl.textContent = formattedSeconds;
-        
+
+        // 🔹 Split display di Server Status
+        if (uptimeDaysEl)    uptimeDaysEl.textContent    = totalDays + "d";
+        if (uptimeHoursEl)   uptimeHoursEl.textContent   = String(hours).padStart(2, "0") + "h";
+        if (uptimeMinutesEl) uptimeMinutesEl.textContent = String(minutes).padStart(2, "0") + "m";
+        if (uptimeSecondsEl) uptimeSecondsEl.textContent = String(seconds).padStart(2, "0") + "s";
+
+        // 🔹 Widget dashboard → format "XX Days"
         if (widgetUptimeVal) {
-          widgetUptimeVal.textContent = `${hoursTotal}j...`;
+          widgetUptimeVal.textContent = `${totalDays} Days`;
+        }
+
+        // 🔹 Info uptime kecil di Auto Temp Mail
+        if (uptimeDaysCountEl) {
+          uptimeDaysCountEl.textContent = totalDays;
         }
       }
 
@@ -3539,7 +2314,6 @@
           const now = Date.now();
           const msIntoSecond = now % 1000;
           let delay = 1000 - msIntoSecond;
-
           if (delay < 8) delay += 1000;
 
           window.__ayakaUptimeTimer = setTimeout(tick, delay);
@@ -3548,6 +2322,9 @@
         tick();
       }
 
+      // --------------------------------------------------------
+      // 🔥 Live DateTime Widget — pakai WIB (Asia/Jakarta)
+      // --------------------------------------------------------
       function updateLiveDateTimeWidget() {
         const dateEl = document.getElementById("widgetDateVal");
         const timeEl = document.getElementById("widgetTimeVal");
@@ -3582,13 +2359,13 @@
 
               if (batteryIconEl) {
                 if (isCharging) {
-                  batteryIconEl.innerHTML = `<i class="fa-solid fa-battery-charging" style="color:#22c55e;"></i>`;
+                  batteryIconEl.innerHTML = `<i class="fa-solid fa-battery-charging" style="color:#15803d;"></i>`;
                 } else if (level <= 20) {
-                  batteryIconEl.innerHTML = `<i class="fa-solid fa-battery-quarter" style="color:#ef4444;"></i>`;
+                  batteryIconEl.innerHTML = `<i class="fa-solid fa-battery-quarter" style="color:#dc2626;"></i>`;
                 } else if (level <= 70) {
-                  batteryIconEl.innerHTML = `<i class="fa-solid fa-battery-half" style="color:#fbbf24;"></i>`;
+                  batteryIconEl.innerHTML = `<i class="fa-solid fa-battery-half"></i>`;
                 } else {
-                  batteryIconEl.innerHTML = `<i class="fa-solid fa-battery-full" style="color:#22c55e;"></i>`;
+                  batteryIconEl.innerHTML = `<i class="fa-solid fa-battery-full" style="color:#16a34a;"></i>`;
                 }
               }
             }
@@ -3604,7 +2381,12 @@
         }
       }
 
+      // --------------------------------------------------------
+      // INIT SEMUA
+      // --------------------------------------------------------
+      // ⏱️ Inisialisasi start time (dari Redis + localStorage)
       await initServerStartTime();
+
       updateGlobalUptimeUI();
       startSmoothUptimeTicker();
 
@@ -3621,18 +2403,13 @@
       updateLiveDateTimeWidget();
       initDashboardBatteryStatus();
 
+      // --------------------------------------------------------
+      // Refresh periodik (5 detik) — visitor, aktivasi, recent.
+      // Uptime TIDAK di-sync via Redis karena start time sudah permanen
+      // (anti-turun). Cukup pakai computeStableUptimeSeconds().
+      // --------------------------------------------------------
       setInterval(async () => {
-        const getResult = await redisGet(UPTIME_KEY);
-        if (getResult && !getResult.__error && getResult.value) {
-          const num = parseInt(getResult.value);
-          if (num > 0 && !isNaN(num)) {
-            if (!globalServerStartTime || num < globalServerStartTime) {
-              globalServerStartTime = num;
-              console.log("🔄 Uptime sync: pakai timestamp lebih awal dari Redis");
-            }
-          }
-        }
-
+        // Visitor
         const totalResult = await redisGet("total_visitors");
         if (totalResult && !totalResult.__error && totalResult.value) {
           const total = parseInt(totalResult.value) || 0;
@@ -3640,10 +2417,16 @@
           if (el) el.textContent = total.toLocaleString("id-ID");
         }
 
+        // Aktivasi stats
         await fetchAktivasiStatsFromRedis();
+
+        // Recent aktivasi
         await fetchRecentActivationsFromRedis();
       }, 5000);
 
+      // --------------------------------------------------------
+      // 🔥 INCREMENT AKTIVASI → REDIS + recent
+      // --------------------------------------------------------
       window.incrementAyakaActivationStats = async function(incrementCount = 1, userEmail = "", planName = "AM Premium Annual 1 Year") {
         try {
           if (!userEmail) {
@@ -3669,6 +2452,9 @@
         }
       };
 
+      // --------------------------------------------------------
+      // EVENT HANDLER AKTIVASI
+      // --------------------------------------------------------
       const proceedStep3Btn = document.getElementById("proceedToStep3Btn");
       if (proceedStep3Btn) {
         proceedStep3Btn.addEventListener("click", () => {
