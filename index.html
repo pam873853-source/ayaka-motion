@@ -2,9 +2,9 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="google-site-verification" content="-slmDiv0Kk6tYoNbi-JY9gLE39Bjz6psf0gqom0FFZk" />
-  <title>AYAKA MOTION - Activation Manual</title>
+  <title>AYAKA STORE - Dashboard & Monitoring Baterai</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
@@ -16,16 +16,21 @@
   <script src="https://cdn.jsdelivr.net/npm/suncalc@1.9.0/suncalc.min.js"></script>
 
   <!-- ============================================================
-       KONFIGURASI UPSTASH REDIS & SUPABASE
+       KONFIGURASI UPSTASH REDIS
        ============================================================ -->
   <script>
-    window.UPSTASH_URL   = "https://adequate-worm-234162.upstash.io";
-    window.UPSTASH_TOKEN = "gQAAAAAAA5KyAAIgcDFmNWE3NDE0ZmVhN2Y0ZmI0ODIyYmIwNmU0YjQxYjdiZQ";
-    window.NEXT_PUBLIC_SUPABASE_URL = 'https://jbzykcuhpfkrgnimjtxx.supabase.co';
-    window.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_Usw8tFE0HQyAJo7NyvIvTA_fHfXGGZ-';
+    // ==========================================================
+    // ⚙️ GANTI 2 BARIS DI BAWAH INI DENGAN MILIK KAMU
+    // ==========================================================
+    window.UPSTASH_URL   = "https://adequate-worm-234162.upstash.io";        // ← GANTI
+    window.UPSTASH_TOKEN = "gQAAAAAAA5KyAAIgcDFmNWE3NDE0ZmVhN2Y0ZmI0ODIyYmIwNmU0YjQxYjdiZQ";    // ← GANTI
+    // ==========================================================
   </script>
 
   <script>
+    window.NEXT_PUBLIC_SUPABASE_URL = 'https://jbzykcuhpfkrgnimjtxx.supabase.co';
+    window.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_Usw8tFE0HQyAJo7NyvIvTA_fHfXGGZ-';
+
     const SUPABASE_URL = window.NEXT_PUBLIC_SUPABASE_URL;
     const SUPABASE_PUBLISHABLE_KEY = window.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
     window.SUPABASE_URL = SUPABASE_URL;
@@ -42,683 +47,191 @@
     }
   </script>
 
+  <link rel="stylesheet" href="style.css">
   <style>
-    :root {
-      --bg-color: #f8f9fa;
-      --card-bg: #ffffff;
-      --black: #000000;
-      --yellow: #fde047;
-      --green: #a3e635;
-      --pink: #ec4899;
-      --text-main: #111111;
-      --text-muted: #6b7280;
-      --border-color: #000000;
-      --shadow: 4px 4px 0px #000000;
-      --shadow-sm: 3px 3px 0px #000000;
-      --radius: 16px;
+    .custom-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 240px));
+      gap: 16px;
+      margin-bottom: 24px;
+      justify-content: start;
     }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      -webkit-tap-highlight-color: transparent;
+    @media (max-width: 600px) {
+      .custom-stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+      }
     }
-
-    body {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      background-color: var(--bg-color);
-      color: var(--text-main);
-      padding-bottom: 90px;
-      min-height: 100vh;
-      overflow-x: hidden;
+    .custom-stat-square-box {
+      background: #ffffff;
+      border: 2.5px solid #000000;
+      border-radius: 16px;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      max-width: 220px;
+      max-height: 220px;
+      padding: 18px;
+      box-shadow: 4px 4px 0px #000000;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
-
-    /* ================= TOP NAV ================= */
-    .top-nav {
+    .custom-stat-square-box:hover {
+      transform: translateY(-2px);
+      box-shadow: 6px 6px 0px #000000;
+    }
+    .custom-stat-square-box.yellow-box { background: #ffeb3b; }
+    .custom-stat-header-row {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      padding: 12px 16px;
-      background: var(--card-bg);
-      border-bottom: 2px solid var(--black);
-      position: sticky;
-      top: 0;
-      z-index: 100;
+      align-items: flex-start;
+      width: 100%;
     }
-
-    .nav-left {
+    .custom-stat-title-text {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: #333333;
+    }
+    .custom-stat-icon-elem { font-size: 24px; color: #b0b0b0; }
+    .yellow-box .custom-stat-icon-elem { color: #795548; opacity: 0.85; }
+    .custom-stat-number-val {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 34px;
+      font-weight: 800;
+      color: #000000;
+      line-height: 1;
+    }
+    .widget-info-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 24px;
+      width: 100%;
+      max-width: 720px;
+    }
+    @media (max-width: 640px) {
+      .widget-info-row {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+    }
+    .widget-mini-card {
+      border: 3px solid #000000;
+      border-radius: 16px;
+      padding: 10px 14px;
+      box-shadow: 4px 4px 0px #000000;
       display: flex;
-      align-items: center;
-      gap: 8px;
+      flex-direction: column;
+      justify-content: center;
+      height: 75px;
+      box-sizing: border-box;
+      transition: transform 0.15s ease;
     }
-
-    .logo-box {
-      width: 34px;
-      height: 34px;
-      background: var(--black);
-      color: var(--yellow);
-      border-radius: 8px;
+    .widget-mini-card:hover { transform: translateY(-2px); }
+    .widget-mini-card.bg-white { background-color: #ffffff; color: #111111; }
+    .widget-mini-card.bg-yellow { background-color: #fde047; color: #111111; }
+    .widget-mini-card.bg-green { background-color: #a3e635; color: #111111; }
+    .widget-mini-card.bg-blue { background-color: #bae6fd; color: #111111; }
+    .widget-header-text {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: #4b5563;
+      text-transform: uppercase;
+      margin-bottom: 2px;
+    }
+    .widget-body-content { display: flex; align-items: center; gap: 8px; }
+    .widget-icon {
+      font-size: 20px;
+      color: #374151;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 18px;
-      border: 2px solid var(--black);
+      width: 24px;
     }
-
-    .brand-name {
+    .widget-value-text {
       font-family: 'Space Grotesk', sans-serif;
+      font-size: 15px;
       font-weight: 800;
-      font-size: 16px;
-      letter-spacing: -0.5px;
-    }
-
-    .tag-badge {
-      background: var(--black);
-      color: var(--yellow);
-      font-size: 10px;
-      font-weight: 800;
-      padding: 2px 8px;
-      border-radius: 4px;
-      letter-spacing: 0.5px;
-    }
-
-    .nav-right {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .contact-btn {
-      background: var(--green);
-      color: var(--black);
-      font-size: 11px;
-      font-weight: 800;
-      padding: 8px 14px;
-      border-radius: 20px;
-      border: 2px solid var(--black);
-      text-decoration: none;
-      box-shadow: var(--shadow-sm);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      transition: transform 0.1s;
-    }
-
-    .contact-btn:active {
-      transform: translate(2px, 2px);
-      box-shadow: 1px 1px 0px var(--black);
-    }
-
-    /* ================= MAIN CONTENT ================= */
-    .main-content {
-      padding: 16px;
-      max-width: 480px;
-      margin: 0 auto;
-    }
-
-    /* ================= CONTENT SECTIONS ================= */
-    .content-section {
-      display: none;
-    }
-
-    .content-section.active {
-      display: block;
-      animation: fadeIn 0.3s ease-out;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* ================= WIDGETS ================= */
-    .widgets-row {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      margin-bottom: 16px;
-    }
-
-    .widget-card {
-      background: var(--card-bg);
-      border: 2px solid var(--black);
-      border-radius: 12px;
-      padding: 10px;
-      box-shadow: var(--shadow-sm);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .widget-card.yellow {
-      background: var(--yellow);
-    }
-
-    .widget-card.green {
-      background: var(--green);
-    }
-
-    .widget-icon {
-      font-size: 16px;
-      color: var(--black);
-    }
-
-    .widget-info {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .widget-label {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 9px;
-      font-weight: 800;
-      letter-spacing: 0.5px;
-      color: var(--text-muted);
-      text-transform: uppercase;
-    }
-
-    .widget-value {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 12px;
-      font-weight: 800;
-      color: var(--black);
+      color: #000000;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
-
-    /* ================= HERO SECTION ================= */
-    .hero-section {
-      margin-bottom: 20px;
-    }
-
-    .hero-badge {
-      display: inline-flex;
+    .bottom-nav-container {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100% - 32px);
+      max-width: 500px;
+      background: linear-gradient(135deg, #f5f3ff 0%, #edf2fe 50%, #f1f5f9 100%);
+      border-radius: 28px;
+      padding: 8px 12px;
+      display: flex;
+      justify-content: space-around;
       align-items: center;
-      gap: 6px;
-      background: var(--yellow);
-      border: 2px solid var(--black);
-      border-radius: 20px;
-      padding: 4px 12px;
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: 0.5px;
-      box-shadow: var(--shadow-sm);
-      margin-bottom: 10px;
-      text-transform: uppercase;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.4) inset;
+      z-index: 9999;
+      backdrop-filter: blur(12px);
     }
-
-    .hero-title {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 28px;
-      font-weight: 800;
-      line-height: 1.1;
-      margin-bottom: 8px;
-      letter-spacing: -0.5px;
-    }
-
-    .hero-desc {
-      font-size: 13px;
-      color: var(--text-muted);
-      line-height: 1.5;
-      font-weight: 500;
-    }
-
-    /* ================= STATS ROW ================= */
-    .stats-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-bottom: 16px;
-    }
-
-    .stat-card {
-      background: var(--card-bg);
-      border: 2px solid var(--black);
-      border-radius: var(--radius);
-      padding: 16px;
-      box-shadow: var(--shadow);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      position: relative;
-    }
-
-    .stat-card.yellow {
-      background: var(--yellow);
-    }
-
-    .stat-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 8px;
-    }
-
-    .stat-title {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: 0.5px;
-      color: var(--text-muted);
-      text-transform: uppercase;
-    }
-
-    .stat-icon {
-      font-size: 18px;
-      color: rgba(0,0,0,0.2);
-    }
-
-    .stat-value {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 32px;
-      font-weight: 800;
-      line-height: 1;
-      color: var(--black);
-    }
-
-    /* ================= TABS ================= */
-    .tabs-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 16px;
-    }
-
-    .tab-btn {
-      padding: 14px;
-      border-radius: 12px;
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 14px;
-      font-weight: 800;
-      border: 2px solid var(--black);
-      cursor: pointer;
-      transition: all 0.2s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-
-    .tab-btn.active {
-      background: var(--black);
-      color: #ffffff;
-      box-shadow: var(--shadow-sm);
-    }
-
-    .tab-btn:not(.active) {
-      background: var(--card-bg);
-      color: var(--text-muted);
-      box-shadow: none;
-      border-color: #d1d5db;
-    }
-
-    /* ================= FORM PANEL ================= */
-    .form-panel {
-      background: var(--card-bg);
-      border: 2px solid var(--black);
-      border-radius: var(--radius);
-      padding: 16px;
-      box-shadow: var(--shadow);
-      margin-bottom: 16px;
-      display: none;
-    }
-
-    .form-panel.active {
-      display: block;
-      animation: fadeIn 0.3s ease-out;
-    }
-
-    .step-label {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: 1px;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      margin-bottom: 12px;
-      display: block;
-    }
-
-    .input-group {
-      margin-bottom: 14px;
-    }
-
-    .input-group label {
-      display: block;
-      font-size: 13px;
-      font-weight: 700;
-      margin-bottom: 6px;
-      color: var(--black);
-    }
-
-    .input-field {
-      width: 100%;
-      padding: 14px;
-      border: 2px solid var(--black);
-      border-radius: 10px;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 14px;
-      background: #f3f4f6;
-      outline: none;
-      transition: border-color 0.2s;
-    }
-
-    .input-field:focus {
-      border-color: var(--pink);
-      background: #ffffff;
-    }
-
-    .input-textarea {
-      width: 100%;
-      padding: 14px;
-      border: 2px solid var(--black);
-      border-radius: 10px;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 13px;
-      background: #f3f4f6;
-      outline: none;
-      transition: border-color 0.2s;
-      min-height: 120px;
-      resize: vertical;
-    }
-
-    .input-textarea:focus {
-      border-color: var(--pink);
-      background: #ffffff;
-    }
-
-    .input-select {
-      width: 100%;
-      padding: 14px;
-      border: 2px solid var(--black);
-      border-radius: 10px;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 14px;
-      background: #f3f4f6;
-      outline: none;
-      transition: border-color 0.2s;
-      cursor: pointer;
-    }
-
-    .input-select:focus {
-      border-color: var(--pink);
-      background: #ffffff;
-    }
-
-    .btn-green {
-      width: 100%;
-      padding: 16px;
-      background: var(--green);
-      color: var(--black);
-      border: 2px solid var(--black);
-      border-radius: 12px;
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 15px;
-      font-weight: 800;
-      cursor: pointer;
-      box-shadow: var(--shadow);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      margin-bottom: 10px;
-      transition: transform 0.1s;
-    }
-
-    .btn-green:active {
-      transform: translate(2px, 2px);
-      box-shadow: 2px 2px 0px var(--black);
-    }
-
-    .btn-green:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
-
-    .btn-white {
-      width: 100%;
-      padding: 16px;
-      background: #ffffff;
-      color: var(--black);
-      border: 2px solid var(--black);
-      border-radius: 12px;
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 15px;
-      font-weight: 800;
-      cursor: pointer;
-      box-shadow: var(--shadow-sm);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      margin-bottom: 16px;
-      transition: transform 0.1s;
-    }
-
-    .btn-white:active {
-      transform: translate(2px, 2px);
-      box-shadow: 1px 1px 0px var(--black);
-    }
-
-    .btn-pink {
-      width: 100%;
-      padding: 16px;
-      background: var(--pink);
-      color: #ffffff;
-      border: 2px solid var(--black);
-      border-radius: 12px;
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 15px;
-      font-weight: 800;
-      cursor: pointer;
-      box-shadow: var(--shadow);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      margin-bottom: 10px;
-      transition: transform 0.1s;
-    }
-
-    .btn-pink:active {
-      transform: translate(2px, 2px);
-      box-shadow: 2px 2px 0px var(--black);
-    }
-
-    /* ================= OUTPUT BOX ================= */
-    .output-box {
-      border: 2px dashed #d1d5db;
-      border-radius: 12px;
-      padding: 24px 16px;
+    .bottom-nav-item {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      text-align: center;
-      background: #f9fafb;
-      position: relative;
+      padding: 10px 16px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      color: #2d3748;
+      text-decoration: none;
+      flex: 1;
+      max-width: 110px;
+      user-select: none;
     }
-
-    .output-badge {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 9px;
+    .bottom-nav-item i { font-size: 22px; margin-bottom: 4px; transition: transform 0.2s ease; }
+    .bottom-nav-item span {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 13px;
       font-weight: 800;
-      letter-spacing: 1px;
-      color: var(--text-muted);
-      text-transform: uppercase;
+      letter-spacing: -0.2px;
     }
-
-    .output-icon {
-      font-size: 32px;
-      color: #d1d5db;
-      margin-bottom: 8px;
+    .bottom-nav-item.active {
+      background: #000000;
+      color: #ffffff !important;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
-
-    .output-title {
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--text-main);
-      margin-bottom: 4px;
-    }
-
-    .output-desc {
-      font-size: 12px;
-      color: var(--text-muted);
-    }
-
-    /* ================= BULK RESULT TABLE ================= */
-    .bulk-table-container {
-      overflow-x: auto;
-      border-radius: 12px;
-      border: 2px solid var(--black);
+    .bottom-nav-item.active i { color: #ffffff !important; transform: scale(1.05); }
+    .bottom-nav-item:hover:not(.active) { background: rgba(0, 0, 0, 0.05); color: #000000; }
+    .content-container { padding-bottom: 110px !important; }
+    .donation-square-card {
       background: #ffffff;
-      margin-top: 12px;
-    }
-
-    .bulk-table {
+      border: 3px solid #000000;
+      border-radius: 20px;
+      box-shadow: 6px 6px 0px #000000;
       width: 100%;
-      border-collapse: collapse;
-      font-size: 12px;
-      min-width: 400px;
-    }
-
-    .bulk-table thead {
-      background: var(--black);
-      color: var(--yellow);
-    }
-
-    .bulk-table th {
-      padding: 10px 8px;
-      text-align: left;
-      font-family: 'Space Grotesk', sans-serif;
-      font-weight: 800;
-      font-size: 10px;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-      white-space: nowrap;
-    }
-
-    .bulk-table td {
-      padding: 10px 8px;
-      border-top: 1px solid #e5e7eb;
-      font-weight: 600;
-      color: var(--black);
-      vertical-align: top;
-      word-break: break-all;
-    }
-
-    .bulk-table tbody tr:hover {
-      background: #fef3c7;
-    }
-
-    .badge-success {
-      display: inline-block;
-      background: #dcfce7;
-      color: #15803d;
-      font-size: 10px;
-      font-weight: 800;
-      padding: 2px 8px;
-      border-radius: 20px;
-      border: 1px solid #22c55e;
-    }
-
-    .badge-fail {
-      display: inline-block;
-      background: #fee2e2;
-      color: #b91c1c;
-      font-size: 10px;
-      font-weight: 800;
-      padding: 2px 8px;
-      border-radius: 20px;
-      border: 1px solid #ef4444;
-    }
-
-    .badge-process {
-      display: inline-block;
-      background: #fef9c3;
-      color: #a16207;
-      font-size: 10px;
-      font-weight: 800;
-      padding: 2px 8px;
-      border-radius: 20px;
-      border: 1px solid #eab308;
-    }
-
-    /* ================= DONASI CARD ================= */
-    .donasi-card {
-      background: #ffffff;
-      border: 3px solid var(--black);
-      border-radius: 20px;
-      box-shadow: 6px 6px 0px var(--black);
-      width: 100%;
+      max-width: 380px;
+      margin: 0 auto 20px auto;
       padding: 24px 20px;
       text-align: center;
       box-sizing: border-box;
-      margin-bottom: 20px;
+      position: relative;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
-
-    .donasi-icon {
-      font-size: 42px;
-      color: var(--pink);
-      margin-bottom: 10px;
-    }
-
-    .donasi-title {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 20px;
-      font-weight: 800;
-      color: var(--black);
-      margin-bottom: 6px;
-    }
-
-    .donasi-desc {
-      font-size: 12px;
-      color: var(--text-muted);
-      line-height: 1.5;
-      margin-bottom: 16px;
-    }
-
-    .donasi-store {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 14px;
-      font-weight: 800;
-      color: var(--black);
-    }
-
-    .donasi-nmid {
-      font-size: 11px;
-      color: var(--text-muted);
-      margin-bottom: 20px;
-    }
-
-    .donasi-methods {
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--black);
-      margin-bottom: 4px;
-    }
-
-    .donasi-loc {
-      font-size: 11px;
-      color: var(--text-muted);
-      margin-bottom: 16px;
-    }
-
-    /* ================= MODAL QR POPUP ================= */
+    .donation-square-card:hover { transform: translateY(-2px); box-shadow: 8px 8px 0px #000000; }
     .qr-modal-overlay {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.8);
-      backdrop-filter: blur(6px);
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(8px);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -726,571 +239,1268 @@
       opacity: 0;
       visibility: hidden;
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      padding: 12px;
+      padding: 16px;
       box-sizing: border-box;
     }
-
-    .qr-modal-overlay.active {
-      opacity: 1;
-      visibility: visible;
-    }
-
+    .qr-modal-overlay.active { opacity: 1; visibility: visible; }
     .qr-modal-card {
-      background: #ffffff;
-      border: 3px solid var(--black);
-      border-radius: 20px;
-      box-shadow: 8px 8px 0px var(--black);
+      background: #fffbdf;
+      border: 3.5px solid #000000;
+      border-radius: 24px;
+      box-shadow: 8px 8px 0px #000000;
       width: 100%;
-      max-width: 420px;
-      padding: 14px;
+      max-width: 360px;
+      padding: 24px 20px;
       text-align: center;
       position: relative;
       transform: scale(0.85);
       transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
       box-sizing: border-box;
-      max-height: 94vh;
-      overflow-y: auto;
     }
-
-    .qr-modal-overlay.active .qr-modal-card {
-      transform: scale(1);
-    }
-
+    .qr-modal-overlay.active .qr-modal-card { transform: scale(1); }
     .qr-modal-close-btn {
       position: absolute;
-      top: 10px;
-      right: 10px;
-      width: 34px;
-      height: 34px;
-      background: var(--black);
+      top: 12px;
+      right: 12px;
+      width: 32px;
+      height: 32px;
+      background: #000000;
       color: #ffffff;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      font-size: 15px;
-      z-index: 10;
-      border: 2px solid #ffffff;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-      transition: transform 0.15s;
+      font-size: 14px;
+      transition: transform 0.15s ease;
     }
-
-    .qr-modal-close-btn:hover {
-      transform: scale(1.1);
-    }
-
-    .qr-modal-label {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 11px;
-      font-weight: 800;
-      color: var(--pink);
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      margin-bottom: 4px;
-      margin-top: 6px;
-    }
-
-    .qr-modal-title {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 20px;
-      font-weight: 800;
-      color: var(--black);
-      margin-bottom: 2px;
-    }
-
-    .qr-modal-nmid {
-      font-size: 11px;
-      color: var(--text-muted);
-      margin-bottom: 12px;
-    }
-
-    .qr-modal-img {
+    .qr-modal-close-btn:hover { transform: scale(1.1); }
+    .qr-code-modal-img {
+      max-width: 220px;
       width: 100%;
-      max-width: 380px;
       height: auto;
-      border: 2px solid var(--black);
-      border-radius: 14px;
-      padding: 0;
+      border: 2px solid #000;
+      border-radius: 12px;
+      padding: 8px;
       background: #ffffff;
-      margin: 0 auto 14px auto;
-      box-shadow: var(--shadow-sm);
-      display: block;
-      object-fit: contain;
+      margin: 12px 0;
+      box-shadow: 3px 3px 0px #000000;
     }
-
-    .qr-modal-methods {
-      font-size: 12px;
+    .tutorial-video-card {
+      background: var(--card-inner);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    .tutorial-video-card h4 {
+      color: #fbcfe8;
+      font-size: 15px;
       font-weight: 700;
-      color: var(--black);
-      margin-bottom: 4px;
-    }
-
-    .qr-modal-loc {
-      font-size: 11px;
-      color: var(--text-muted);
-      margin-bottom: 16px;
-    }
-
-    /* ================= BOTTOM NAV ================= */
-    .bottom-nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: #ffffff;
-      border-top: 2px solid var(--black);
+      margin-bottom: 12px;
       display: flex;
-      justify-content: space-around;
       align-items: center;
-      padding: 8px 0;
-      z-index: 1000;
-      box-shadow: 0 -4px 10px rgba(0,0,0,0.05);
+      gap: 8px;
+    }
+    .tutorial-video-wrapper {
+      width: 100%;
       max-width: 480px;
       margin: 0 auto;
+      background: #000000;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 2px solid #000000;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      position: relative;
     }
-
-    .bottom-nav-item {
+    .tutorial-video-wrapper video {
+      width: 100% !important;
+      height: auto !important;
+      display: block;
+      border-radius: 12px;
+      outline: none;
+      object-fit: contain;
+      transform: translateZ(0);
+      background: #000000;
+    }
+    .recent-act-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(34, 197, 94, 0.15);
+      color: #4ade80;
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .recent-live-dot {
+      width: 8px;
+      height: 8px;
+      background-color: #22c55e;
+      border-radius: 50%;
+      animation: livePulse 1.5s infinite;
+    }
+    @keyframes livePulse {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
+      70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+    }
+    .recent-act-item {
       display: flex;
-      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px;
+      background: var(--card-inner);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      margin-bottom: 8px;
+      transition: all 0.25s ease;
+      animation: fadeInSlide 0.4s ease-out forwards;
+    }
+    @keyframes fadeInSlide {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .recent-act-item:hover { border-color: #f472b6; background: rgba(244, 114, 182, 0.05); }
+    .recent-act-user { display: flex; align-items: center; gap: 12px; }
+    .recent-act-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+      color: #fff;
+      display: flex;
       align-items: center;
       justify-content: center;
-      gap: 4px;
-      text-decoration: none;
-      color: var(--text-muted);
-      font-size: 10px;
+      font-weight: 800;
+      font-size: 14px;
+      box-shadow: 0 2px 8px rgba(236, 72, 153, 0.3);
+    }
+    .recent-act-info-text { display: flex; flex-direction: column; }
+    .recent-act-email {
       font-weight: 700;
-      padding: 6px 12px;
-      border-radius: 12px;
-      transition: all 0.2s;
-      cursor: pointer;
-      flex: 1;
-      background: none;
-      border: none;
-      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 13px;
+      color: #ffffff;
+      font-family: 'Space Grotesk', sans-serif;
     }
-
-    .bottom-nav-item i {
-      font-size: 18px;
-    }
-
-    .bottom-nav-item.active {
-      color: var(--black);
-    }
-
-    .bottom-nav-item.active i {
-      color: var(--yellow);
-      background: var(--black);
+    .recent-act-plan { font-size: 11px; color: var(--text-muted); }
+    .recent-act-time {
+      font-size: 11px;
+      font-weight: 600;
+      color: #a7f3d0;
+      background: rgba(16, 185, 129, 0.1);
       padding: 4px 8px;
       border-radius: 8px;
-      box-shadow: 2px 2px 0px rgba(0,0,0,0.2);
+      border: 1px solid rgba(16, 185, 129, 0.2);
     }
-
-    /* ================= RESPONSIVE ================= */
-    @media (max-width: 480px) {
-      .hero-title { font-size: 24px; }
-      .stat-value { font-size: 28px; }
-      .brand-name { font-size: 14px; }
-      .contact-btn { font-size: 10px; padding: 6px 10px; }
-      .qr-modal-card { padding: 12px; }
-      .qr-modal-img { max-width: 100%; }
+    .realtime-sky-bar {
+      position: relative;
+      width: 100%;
+      height: 150px;
+      border-radius: 18px;
+      overflow: hidden;
+      margin-bottom: 12px;
+      border: 3px solid #000000;
+      box-shadow: 6px 6px 0px #000000;
+      transition: background 3s ease-in-out;
+      isolation: isolate;
+    }
+    .realtime-sky-bar { background: linear-gradient(180deg, #4facfe 0%, #a1c4fd 60%, #e0f2ff 100%); }
+    .realtime-sky-bar.theme-morning { background: linear-gradient(180deg, #ff9a8b 0%, #ffb47d 35%, #ffd89b 65%, #ffefd5 100%); }
+    .realtime-sky-bar.theme-day { background: linear-gradient(180deg, #4facfe 0%, #a1c4fd 60%, #e0f2ff 100%); }
+    .realtime-sky-bar.theme-evening { background: linear-gradient(180deg, #2c1e57 0%, #8a4d8e 35%, #ff7b54 70%, #ffb26b 100%); }
+    .realtime-sky-bar.theme-night { background: linear-gradient(180deg, #0b1026 0%, #14203f 40%, #1e2f57 70%, #2a4168 100%); }
+    .sky-time-label {
+      position: absolute;
+      top: 10px;
+      right: 14px;
+      z-index: 20;
+      background: rgba(0, 0, 0, 0.55);
+      color: #ffffff;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      padding: 5px 12px;
+      border-radius: 20px;
+      border: 1.5px solid rgba(255, 255, 255, 0.35);
+      backdrop-filter: blur(6px);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.6s ease;
+      text-transform: uppercase;
+    }
+    .sky-time-label i { font-size: 13px; }
+    .sky-info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+      padding: 10px 14px;
+      background: #ffffff;
+      border: 2.5px solid #000000;
+      border-radius: 12px;
+      box-shadow: 4px 4px 0px #000000;
+      font-family: 'Space Grotesk', sans-serif;
+      flex-wrap: wrap;
+    }
+    .sky-loc-label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: #111111;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .sky-loc-label i { color: #ec4899; font-size: 13px; }
+    .sky-phase-label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.8px;
+      color: #111111;
+      text-transform: uppercase;
+      background: #fde047;
+      padding: 4px 10px;
+      border-radius: 20px;
+      border: 1.5px solid #000000;
+      white-space: nowrap;
+    }
+    .sky-sun {
+      position: absolute;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #fff8b0 0%, #ffd93d 45%, #ff9500 100%);
+      box-shadow: 0 0 30px 12px rgba(255, 217, 61, 0.75), 0 0 60px 20px rgba(255, 149, 0, 0.35);
+      z-index: 5;
+      transform: translate(-50%, -50%);
+      transition: left 4.5s linear, top 4.5s linear, opacity 2s ease;
+      animation: sunPulse 4s ease-in-out infinite;
+      pointer-events: none;
+    }
+    @keyframes sunPulse {
+      0%, 100% { box-shadow: 0 0 30px 12px rgba(255, 217, 61, 0.75), 0 0 60px 20px rgba(255, 149, 0, 0.35); }
+      50%      { box-shadow: 0 0 40px 16px rgba(255, 217, 61, 0.9), 0 0 80px 26px rgba(255, 149, 0, 0.45); }
+    }
+    .sky-moon {
+      position: absolute;
+      width: 46px;
+      height: 46px;
+      z-index: 5;
+      transform: translate(-50%, -50%);
+      transition: left 4.5s linear, top 4.5s linear, opacity 2s ease;
+      filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.65)) drop-shadow(0 0 16px rgba(180, 200, 255, 0.45));
+      pointer-events: none;
+    }
+    .sky-moon svg { width: 100%; height: 100%; display: block; }
+    .sky-stars {
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      opacity: 0;
+      transition: opacity 2s ease-in-out;
+      pointer-events: none;
+    }
+    .sky-stars.active { opacity: 1; }
+    .sky-star {
+      position: absolute;
+      background: #ffffff;
+      border-radius: 50%;
+      animation: twinkle 2.4s ease-in-out infinite;
+    }
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.25; transform: scale(0.8); }
+      50%      { opacity: 1;    transform: scale(1.15); }
+    }
+    .sky-cloud {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.92);
+      border-radius: 50%;
+      filter: blur(0.3px);
+      z-index: 4;
+      transition: opacity 1.5s ease-in-out;
+    }
+    .sky-cloud::before,
+    .sky-cloud::after {
+      content: "";
+      position: absolute;
+      background: inherit;
+      border-radius: 50%;
+    }
+    .sky-cloud.cloud-1 { width: 50px; height: 22px; top: 30px; left: -80px; animation: cloudDrift1 28s linear infinite; }
+    .sky-cloud.cloud-1::before { width: 28px; height: 28px; top: -12px; left: 8px; }
+    .sky-cloud.cloud-1::after { width: 22px; height: 22px; top: -8px; left: 26px; }
+    .sky-cloud.cloud-2 { width: 70px; height: 26px; top: 62px; left: -120px; animation: cloudDrift2 38s linear infinite; opacity: 0.78; }
+    .sky-cloud.cloud-2::before { width: 36px; height: 36px; top: -18px; left: 12px; }
+    .sky-cloud.cloud-2::after { width: 26px; height: 26px; top: -12px; left: 40px; }
+    .sky-cloud.cloud-3 { width: 42px; height: 20px; top: 15px; left: -100px; animation: cloudDrift3 45s linear infinite; opacity: 0.7; }
+    .sky-cloud.cloud-3::before { width: 24px; height: 24px; top: -11px; left: 8px; }
+    .sky-cloud.cloud-3::after { width: 20px; height: 20px; top: -7px; left: 22px; }
+    @keyframes cloudDrift1 { 0% { transform: translateX(0); } 100% { transform: translateX(calc(100vw + 200px)); } }
+    @keyframes cloudDrift2 { 0% { transform: translateX(0); } 100% { transform: translateX(calc(100vw + 260px)); } }
+    @keyframes cloudDrift3 { 0% { transform: translateX(0); } 100% { transform: translateX(calc(100vw + 220px)); } }
+    .sky-horizon {
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 100%;
+      height: 18px;
+      z-index: 6;
+      transition: all 1.5s ease-in-out;
+      pointer-events: none;
+      opacity: 0.85;
+    }
+    .sky-horizon::before,
+    .sky-horizon::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      background: inherit;
+    }
+    .sky-horizon::before {
+      width: 55%; height: 100%; left: -4%;
+      clip-path: polygon(0 100%, 22% 42%, 40% 68%, 60% 25%, 80% 55%, 100% 100%);
+    }
+    .sky-horizon::after {
+      width: 60%; height: 100%; right: -4%;
+      clip-path: polygon(0 100%, 18% 60%, 34% 32%, 52% 55%, 70% 38%, 88% 60%, 100% 100%);
+    }
+    .theme-morning .sky-horizon { background: #b5714b; }
+    .theme-day     .sky-horizon { background: #4f7d54; }
+    .theme-evening .sky-horizon { background: #3b1e42; }
+    .theme-night   .sky-horizon { background: #131c33; }
+    .theme-night .sky-time-label {
+      background: rgba(255, 255, 255, 0.14);
+      border-color: rgba(180, 210, 255, 0.5);
+      color: #dbeafe;
+    }
+    .theme-night .sky-cloud { opacity: 0.15 !important; }
+    .theme-evening .sky-cloud { opacity: 0.55; }
+    @media (max-width: 600px) {
+      .realtime-sky-bar { height: 125px; border-radius: 14px; }
+      .sky-sun, .sky-moon { width: 34px; height: 34px; }
+      .sky-time-label { font-size: 10px; padding: 4px 9px; }
+      .sky-loc-label { font-size: 10px; }
+      .sky-phase-label { font-size: 10px; padding: 3px 8px; }
+      .sky-info-row { padding: 8px 10px; }
     }
   </style>
 </head>
 <body>
 
-  <!-- ================= TOP NAV ================= -->
-  <header class="top-nav">
-    <div class="nav-left">
-      <div class="logo-box">
-        <i class="fa-solid fa-bolt"></i>
-      </div>
-      <span class="brand-name">AYAKA MOTION</span>
-      <span class="tag-badge">AM PREM</span>
+  <div class="sakura-container" id="sakuraContainer"></div>
+
+  <div class="floating-wa-container" id="floatingWaContainer">
+    <a href="https://wa.me/6282339430604" target="_blank" rel="noopener noreferrer" class="floating-wa-btn" id="floatingWaBtn" title="Hubungi WhatsApp AYAKA STORE">
+      <i class="fa-brands fa-whatsapp"></i>
+      <span class="floating-wa-badge">1</span>
+    </a>
+  </div>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">AS</div>
+      <div class="sidebar-title">AYAKA STORE</div>
+      <button type="button" class="btn-toggle-sidebar" id="sidebarToggleBtn">
+        <i class="fa-solid fa-chevron-left"></i>
+      </button>
     </div>
-    <div class="nav-right">
-      <a href="https://wa.me/6282339430604" target="_blank" class="contact-btn">
-        <i class="fa-brands fa-whatsapp"></i> Contact Owner
-      </a>
+
+    <div class="sidebar-menu">
+      <div class="nav-item active" id="nav-dashboard" data-view="dashboard">
+        <i class="fa-solid fa-house"></i>
+        <span>Dashboard</span>
+      </div>
+      <div class="nav-item" id="nav-server-status" data-view="server-status">
+        <i class="fa-solid fa-signal"></i>
+        <span>Server Status</span>
+      </div>
+      <div class="nav-item" id="nav-statistik" data-view="statistik">
+        <i class="fa-solid fa-chart-line"></i>
+        <span>Statistik Store</span>
+      </div>
+      <div class="nav-item" id="nav-temp-mail" data-view="temp-mail">
+        <i class="fa-solid fa-envelope-open-text"></i>
+        <span>Auto Temp Mail</span>
+      </div>
+      <div class="nav-item" id="nav-am-generator" data-view="am-generator">
+        <i class="fa-solid fa-wand-magic-sparkles"></i>
+        <span>AM Generator</span>
+      </div>
+      <div class="nav-item" id="nav-am-generator-v2" data-view="am-generator-v2">
+        <i class="fa-solid fa-bolt-lightning"></i>
+        <span>AM Generator V2</span>
+      </div>
+      <div class="nav-item" id="nav-am-bulk" data-view="am-bulk">
+        <i class="fa-solid fa-layer-group"></i>
+        <span>Bulk Akun AM</span>
+      </div>
+      <div class="nav-item" id="nav-dukung" data-view="dukung">
+        <i class="fa-solid fa-heart"></i>
+        <span>Dukung / Donasi</span>
+      </div>
+      <div class="nav-item" id="nav-tutorial" data-view="tutorial">
+        <i class="fa-solid fa-circle-play"></i>
+        <span>Tutorial</span>
+      </div>
     </div>
-  </header>
 
-  <!-- ================= MAIN CONTENT ================= -->
-  <main class="main-content">
-
-    <!-- ================= SECTION: HOME ================= -->
-    <section class="content-section active" id="sectionHome">
-
-      <!-- Widgets Row -->
-      <div class="widgets-row">
-        <div class="widget-card">
-          <div class="widget-icon"><i class="fa-regular fa-calendar"></i></div>
-          <div class="widget-info">
-            <span class="widget-label">TANGGAL</span>
-            <span class="widget-value" id="widgetDateVal">Memuat...</span>
-          </div>
+    <div class="sidebar-user-footer">
+      <div class="user-profile-card">
+        <div class="user-avatar">A</div>
+        <div class="user-info">
+          <span class="user-name">Kamisato Ayaka</span>
+          <span class="user-email">admin@ayaka.store</span>
         </div>
-        <div class="widget-card yellow">
-          <div class="widget-icon"><i class="fa-regular fa-clock"></i></div>
-          <div class="widget-info">
-            <span class="widget-label">WAKTU WIB</span>
-            <span class="widget-value" id="widgetTimeVal">Memuat...</span>
-          </div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main-wrapper">
+    <div class="content-container">
+
+      <div class="realtime-sky-bar" id="realtimeSkyBar">
+        <div class="sky-stars" id="skyStars"></div>
+        <div class="sky-sun" id="skySun" style="left: 12%; top: 25%;"></div>
+        <div class="sky-moon" id="skyMoon" style="left: 15%; top: 22%; opacity: 0;">
+          <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
+            <defs>
+              <radialGradient id="moonSurfaceGrad" cx="35%" cy="35%" r="70%">
+                <stop offset="0%" stop-color="#ffffff"/>
+                <stop offset="55%" stop-color="#eef2fa"/>
+                <stop offset="100%" stop-color="#a9b7d0"/>
+              </radialGradient>
+            </defs>
+            <circle cx="50" cy="50" r="45" fill="#1c2740" opacity="0.85"/>
+            <path id="moonLitPath" d="" fill="url(#moonSurfaceGrad)"/>
+            <circle cx="38" cy="42" r="4" fill="rgba(140,155,180,0.35)"/>
+            <circle cx="60" cy="58" r="5" fill="rgba(140,155,180,0.3)"/>
+            <circle cx="55" cy="32" r="3" fill="rgba(140,155,180,0.3)"/>
+            <circle cx="35" cy="65" r="3.5" fill="rgba(140,155,180,0.3)"/>
+          </svg>
         </div>
-        <div class="widget-card green">
-          <div class="widget-icon"><i class="fa-solid fa-battery-three-quarters"></i></div>
-          <div class="widget-info">
-            <span class="widget-label">BATERAI</span>
-            <span class="widget-value" id="widgetBatteryVal">--%</span>
-          </div>
+        <div class="sky-cloud cloud-1"></div>
+        <div class="sky-cloud cloud-2"></div>
+        <div class="sky-cloud cloud-3"></div>
+        <div class="sky-horizon"></div>
+        <div class="sky-time-label" id="skyTimeLabel">
+          <i class="fa-solid fa-sun" id="skyTimeIcon"></i>
+          <span id="skyTimeText">Memuat...</span>
         </div>
       </div>
 
-      <!-- Hero Section -->
-      <section class="hero-section">
-        <div class="hero-badge">
-          <i class="fa-solid fa-house"></i> DASHBOARD
+      <div class="sky-info-row">
+        <div class="sky-loc-label" id="skyLocLabel">
+          <i class="fa-solid fa-location-dot"></i> <span id="skyLocationText">REALTIME SKY</span>
         </div>
-        <h1 class="hero-title">Selamat Datang<br>di AYAKA MOTION</h1>
-        <p class="hero-desc">Platform aktivasi Alight Motion Premium otomatis. Pilih menu di bawah untuk memulai proses aktivasi.</p>
-      </section>
+        <div class="sky-phase-label" id="skyPhaseLabel">🌙 --</div>
+      </div>
 
-      <!-- Stats Row -->
-      <section class="stats-row">
-        <div class="stat-card">
-          <div class="stat-header">
-            <span class="stat-title">TOTAL AKTIVASI</span>
-            <div class="stat-icon"><i class="fa-solid fa-trophy"></i></div>
-          </div>
-          <div class="stat-value" id="globalTotalAktivasi">0</div>
+      <div class="ayaka-banner">
+        <div class="ayaka-info">
+          <h3>Kamisato Ayaka • Cryo Frostflake Heron</h3>
+          <p>Elegansi Inazuma & Sistem Otomasi Berkecepatan Tinggi</p>
         </div>
-        <div class="stat-card yellow">
-          <div class="stat-header">
-            <span class="stat-title">HARI INI</span>
-            <div class="stat-icon"><i class="fa-solid fa-clock"></i></div>
-          </div>
-          <div class="stat-value" id="globalHariIniAktivasi">0</div>
-        </div>
-      </section>
+        <div style="font-size: 28px;">🌸❄️</div>
+      </div>
 
-      <!-- Info Card -->
-      <div class="form-panel active" style="display: block;">
-        <span class="step-label">INFORMASI LAYANAN</span>
-        <div style="display: grid; gap: 10px;">
-          <div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 10px; padding: 12px;">
-            <div style="font-size: 13px; font-weight: 800; margin-bottom: 4px; color: var(--black);">
-              <i class="fa-solid fa-bolt" style="color: #f59e0b;"></i> Aktivasi Manual
+      <section id="view-dashboard">
+        <div class="status-badge-inline">
+          <div class="status-ping-dot"></div>
+          <span>Ayaka Online / <span id="realtimePing">Measuring...</span></span>
+        </div>
+
+        <h1 class="dash-title">Dashboard Overview</h1>
+        <p class="dash-subtitle">Selamat datang di Panel Kontrol AYAKA STORE - Edisi Genshin Impact</p>
+
+        <div class="widget-info-row">
+          <div class="widget-mini-card bg-white">
+            <div class="widget-header-text">TANGGAL</div>
+            <div class="widget-body-content">
+              <div class="widget-icon"><i class="fa-regular fa-calendar-days"></i></div>
+              <div class="widget-value-text" id="widgetDateVal">Memuat...</div>
             </div>
-            <div style="font-size: 12px; color: var(--text-muted);">Aktivasi 1 akun Alight Motion Premium via magic link.</div>
           </div>
-          <div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 10px; padding: 12px;">
-            <div style="font-size: 13px; font-weight: 800; margin-bottom: 4px; color: var(--black);">
-              <i class="fa-solid fa-layer-group" style="color: #8b5cf6;"></i> Bulk Aktivasi
+
+          <div class="widget-mini-card bg-yellow">
+            <div class="widget-header-text">WAKTU</div>
+            <div class="widget-body-content">
+              <div class="widget-icon"><i class="fa-regular fa-clock"></i></div>
+              <div class="widget-value-text" id="widgetTimeVal">Memuat...</div>
             </div>
-            <div style="font-size: 12px; color: var(--text-muted);">Aktivasi banyak akun sekaligus secara massal.</div>
+          </div>
+
+          <div class="widget-mini-card bg-green">
+            <div class="widget-header-text">BATERAI</div>
+            <div class="widget-body-content">
+              <div class="widget-icon" id="widgetBatteryIcon"><i class="fa-solid fa-battery-half"></i></div>
+              <div class="widget-value-text" id="widgetBatteryVal">--%</div>
+            </div>
           </div>
         </div>
-      </div>
 
-    </section>
-
-    <!-- ================= SECTION: AKTIVASI ================= -->
-    <section class="content-section" id="sectionAktivasi">
-
-      <!-- Hero -->
-      <section class="hero-section">
-        <div class="hero-badge">
-          <i class="fa-solid fa-crown"></i> ACTIVATION MANUAL
-        </div>
-        <h1 class="hero-title">Kirim Link &<br>Verifikasi Link</h1>
-        <p class="hero-desc">Kirim magic link ke Gmail lalu verifikasi untuk aktivasi Alight Motion Premium 1 tahun — otomatis, tanpa kata sandi.</p>
-      </section>
-
-      <!-- Stats Row -->
-      <section class="stats-row">
-        <div class="stat-card">
-          <div class="stat-header">
-            <span class="stat-title">TOTAL AKTIVASI</span>
-            <div class="stat-icon"><i class="fa-solid fa-trophy"></i></div>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon" style="background: rgba(52, 211, 153, 0.15); color: var(--success);">
+              <i class="fa-solid fa-crown"></i>
+            </div>
+            <div class="stat-info">
+              <h3>Premium Status</h3>
+              <p style="color: var(--success); font-size: 16px;">Active</p>
+              <div class="stat-desc">Expires : 31/7/2027</div>
+            </div>
           </div>
-          <div class="stat-value" id="globalTotalAktivasi2">0</div>
-        </div>
-        <div class="stat-card yellow">
-          <div class="stat-header">
-            <span class="stat-title">HARI INI</span>
-            <div class="stat-icon"><i class="fa-solid fa-clock"></i></div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background: rgba(244, 114, 182, 0.15); color: var(--brand-blue);">
+              <i class="fa-solid fa-signal"></i>
+            </div>
+            <div class="stat-info">
+              <h3>Dashboard Latency</h3>
+              <p style="font-size: 16px;" id="dashboardPing">- ms</p>
+              <div class="stat-desc" id="dashboardStatusText">Checking connection...</div>
+            </div>
           </div>
-          <div class="stat-value" id="globalHariIniAktivasi2">0</div>
-        </div>
-      </section>
-
-      <!-- Tabs -->
-      <div class="tabs-row">
-        <button class="tab-btn active" id="tabKirimLink">
-          <i class="fa-solid fa-envelope"></i> Kirim Link
-        </button>
-        <button class="tab-btn" id="tabVerifikasi">
-          <i class="fa-solid fa-shield-halved"></i> Verifikasi
-        </button>
-      </div>
-
-      <!-- Panel: Kirim Link -->
-      <div class="form-panel active" id="panelKirimLink">
-        <span class="step-label">LANGKAH 1 - KIRIM MAGIC LINK</span>
-        
-        <div class="input-group">
-          <label>Alamat Gmail</label>
-          <input type="email" id="emailInput" class="input-field" placeholder="user@gmail.com">
         </div>
 
-        <button class="btn-green" id="sendMagicLinkBtn">
-          <i class="fa-solid fa-paper-plane"></i> Kirim Magic Link ke Email
-        </button>
-
-        <button class="btn-white" id="pasteMagicLinkBtn">
-          <i class="fa-solid fa-arrow-right"></i> Tempel Magic Link →
-        </button>
-
-        <div class="output-box" id="outputBox">
-          <span class="output-badge">STANDBY</span>
-          <div class="output-icon"><i class="fa-regular fa-envelope"></i></div>
-          <div class="output-title">Belum ada data</div>
-          <div class="output-desc">Masukkan Gmail lalu kirim magic link</div>
-        </div>
-      </div>
-
-      <!-- Panel: Verifikasi -->
-      <div class="form-panel" id="panelVerifikasi">
-        <span class="step-label">LANGKAH 2 - VERIFIKASI MAGIC LINK</span>
-        
-        <div class="input-group">
-          <label>Tempel Magic Link</label>
-          <input type="url" id="magicInput" class="input-field" placeholder="https://identitytoolkit.googleapis.com/...">
-        </div>
-
-        <button class="btn-green" id="verifyMagicLinkBtn">
-          <i class="fa-solid fa-check"></i> Verifikasi & Aktivasi
-        </button>
-
-        <div class="output-box" id="verifyOutputBox">
-          <span class="output-badge">STANDBY</span>
-          <div class="output-icon"><i class="fa-solid fa-shield-halved"></i></div>
-          <div class="output-title">Menunggu Magic Link</div>
-          <div class="output-desc">Tempel link verifikasi untuk memproses aktivasi</div>
-        </div>
-      </div>
-
-    </section>
-
-    <!-- ================= SECTION: BULK ================= -->
-    <section class="content-section" id="sectionBulk">
-
-      <section class="hero-section">
-        <div class="hero-badge">
-          <i class="fa-solid fa-layer-group"></i> BULK AKTIVASI
-        </div>
-        <h1 class="hero-title">Aktivasi Massal<br>Alight Motion</h1>
-        <p class="hero-desc">Aktivasi banyak akun Alight Motion Premium sekaligus. Format: <b>email | magic_link</b> per baris.</p>
-      </section>
-
-      <!-- Stats Row -->
-      <section class="stats-row">
-        <div class="stat-card">
-          <div class="stat-header">
-            <span class="stat-title">TOTAL AKTIVASI</span>
-            <div class="stat-icon"><i class="fa-solid fa-trophy"></i></div>
+        <div class="stats-grid" style="margin-top: -6px;">
+          <div class="stat-card" style="grid-column: 1 / -1;">
+            <div class="stat-icon" style="background: rgba(245, 158, 11, 0.15); color: #f59e0b;">
+              <i class="fa-solid fa-users"></i>
+            </div>
+            <div class="stat-info" style="width: 100%; min-width: 0;">
+              <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px;">
+                <h3>Total Pengunjung Global</h3>
+                <span style="font-size: 11px; font-weight: 700; color: #f59e0b; background: rgba(245, 158, 11, 0.1); padding: 2px 8px; border-radius: 20px; white-space: nowrap;" id="visitorBadgeLabel">
+                  Redis Connected
+                </span>
+              </div>
+              <p style="font-size: 20px; font-family: 'Space Grotesk', sans-serif; margin-top: 4px; color: #fff;" id="totalVisitorsCounter">Loading...</p>
+              <div class="stat-desc" id="visitorStatusDesc">Sinkronisasi otomatis global via Upstash Redis</div>
+            </div>
           </div>
-          <div class="stat-value" id="globalTotalAktivasi3">0</div>
         </div>
-        <div class="stat-card yellow">
-          <div class="stat-header">
-            <span class="stat-title">HARI INI</span>
-            <div class="stat-icon"><i class="fa-solid fa-clock"></i></div>
+
+        <div class="dash-card" style="margin-top: 20px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <h3 style="font-size: 15px; font-weight: 800; color: #fbcfe8; margin: 0;">Live Recent Aktivasi</h3>
+              <div class="recent-act-badge">
+                <div class="recent-live-dot"></div>
+                <span>LIVE REALTIME</span>
+              </div>
+            </div>
+            <span style="font-size: 12px; color: var(--text-muted);" id="recentCountText">Memuat data...</span>
           </div>
-          <div class="stat-value" id="globalHariIniAktivasi3">0</div>
+
+          <div id="recentActivationList"></div>
         </div>
       </section>
 
-      <!-- Form Bulk -->
-      <div class="form-panel active" style="display: block;">
-        <span class="step-label">FORM BULK AKTIVASI</span>
+      <section id="view-server-status" style="display: none;">
+        <h1 class="dash-title">Server Status</h1>
+        <p class="dash-subtitle">Pemantauan Status Layanan & Database Realtime</p>
 
-        <div class="input-group">
-          <label>Paket / Durasi Premium</label>
-          <select id="bulkProductSelect" class="input-select">
-            <option value="am.full.sub.annual.19q4">Annual Sub (1 Tahun)</option>
-            <option value="am.full.sub.monthly.19q4">Monthly Sub (1 Bulan)</option>
-          </select>
+        <div class="dash-card">
+          <div class="database-card-custom" id="totalGeneratedCardCustom">
+            <div class="db-card-header">
+              <div class="db-icon-box" style="color: #f472b6;">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+              </div>
+              <div class="db-text-group">
+                <div class="db-title">Total Akun Premium Generated</div>
+                <div class="db-subtitle">Live Counter Global (Upstash Redis)</div>
+              </div>
+            </div>
+            <div class="db-status-row" style="justify-content: space-between;">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <div class="db-blink-dot" style="background-color: #f472b6; box-shadow: 0 0 10px #f472b6;"></div>
+                <span id="totalGeneratedCounter" style="font-size: 24px; font-weight: 800; color: #fff; font-family: 'Space Grotesk', sans-serif;">Loading...</span>
+              </div>
+              <span id="lastGeneratedInfo" style="font-size: 11px; color: var(--text-muted);">Sinkronisasi aktif</span>
+            </div>
+          </div>
+
+          <div class="database-card-custom" id="dbCardCustom">
+            <div class="db-card-header">
+              <div class="db-icon-box">
+                <i class="fa-solid fa-database"></i>
+              </div>
+              <div class="db-text-group">
+                <div class="db-title">Database</div>
+                <div class="db-subtitle">Supabase PostgreSQL + Upstash Redis</div>
+              </div>
+            </div>
+            <div class="db-status-row">
+              <div class="db-blink-dot"></div>
+              <span id="supaStatusLabel">Connected</span>
+            </div>
+          </div>
         </div>
-
-        <div class="input-group">
-          <label>Daftar Akun (Format: <code>email | magic_link</code> per baris)</label>
-          <textarea id="bulkDataInput" class="input-textarea" placeholder="user1@gmail.com | https://identitytoolkit.googleapis.com/...&#10;user2@gmail.com | https://identitytoolkit.googleapis.com/...&#10;user3@gmail.com | https://identitytoolkit.googleapis.com/..."></textarea>
-        </div>
-
-        <button class="btn-green" id="startBulkBtn">
-          <i class="fa-solid fa-play"></i> Mulai Proses Bulk
-        </button>
-
-        <button class="btn-white" id="exportBulkBtn" style="display: none;">
-          <i class="fa-solid fa-download"></i> Unduh Hasil (.txt)
-        </button>
-
-        <div id="bulkStatusBox" class="output-box" style="margin-top: 12px;">
-          <span class="output-badge">STANDBY</span>
-          <div class="output-icon"><i class="fa-solid fa-layer-group"></i></div>
-          <div class="output-title">Belum ada proses</div>
-          <div class="output-desc">Masukkan daftar akun lalu mulai proses bulk</div>
-        </div>
-      </div>
-
-      <!-- Hasil Bulk -->
-      <div class="form-panel" id="bulkResultCard" style="display: none;">
-        <span class="step-label">HASIL PEMROSESAN BULK</span>
-        <div class="bulk-table-container">
-          <table class="bulk-table">
-            <thead>
-              <tr>
-                <th>No</th>
-                <th>Email</th>
-                <th>Order ID</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody id="bulkTableBody"></tbody>
-          </table>
-        </div>
-      </div>
-
-    </section>
-
-    <!-- ================= SECTION: DONASI ================= -->
-    <section class="content-section" id="sectionDonasi">
-
-      <section class="hero-section">
-        <div class="hero-badge">
-          <i class="fa-solid fa-heart"></i> DUKUNG KAMI
-        </div>
-        <h1 class="hero-title">Donasi &<br>Dukungan</h1>
-        <p class="hero-desc">Bantu dukung server AYAKA MOTION agar tetap berjalan gratis, stabil, dan terus berkembang.</p>
       </section>
 
-      <div class="donasi-card">
-        <div class="donasi-icon">💖</div>
-        <div class="donasi-title">Dukung Server Ayaka Motion</div>
-        <div class="donasi-desc">
-          Dukungan Anda membantu biaya server, database, & pengembangan fitur otomasi baru.
+      <section id="view-statistik" style="display: none;">
+        <h1 class="dash-title">Statistik Store & Aktivasi</h1>
+        <p class="dash-subtitle">Analisis Grafik Aktivasi Akun, Pengunjung, & Performa Layanan</p>
+
+        <div class="custom-stats-grid">
+          <div class="custom-stat-square-box">
+            <div class="custom-stat-header-row">
+              <span class="custom-stat-title-text">TOTAL AKTIVASI</span>
+              <div class="custom-stat-icon-elem">
+                <i class="fa-solid fa-trophy"></i>
+              </div>
+            </div>
+            <div class="custom-stat-number-val" id="globalTotalAktivasi">0</div>
+          </div>
+
+          <div class="custom-stat-square-box yellow-box">
+            <div class="custom-stat-header-row">
+              <span class="custom-stat-title-text">HARI INI</span>
+              <div class="custom-stat-icon-elem">
+                <i class="fa-solid fa-clock"></i>
+              </div>
+            </div>
+            <div class="custom-stat-number-val" id="globalHariIniAktivasi">0</div>
+          </div>
         </div>
 
-        <div class="donasi-store">OLPI STORE</div>
-        <div class="donasi-nmid">NMID: ID1026559688191</div>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon" style="background: rgba(244, 114, 182, 0.15); color: #f472b6;">
+              <i class="fa-solid fa-chart-pie"></i>
+            </div>
+            <div class="stat-info">
+              <h3>Total Sukses</h3>
+              <p id="statTotalSukses">0</p>
+              <div class="stat-desc">Akun Berhasil Digenerate</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background: rgba(52, 211, 153, 0.15); color: var(--success);">
+              <i class="fa-solid fa-shield-halved"></i>
+            </div>
+            <div class="stat-info">
+              <h3>Success Rate</h3>
+              <p style="color: var(--success);">99.8%</p>
+              <div class="stat-desc">Stabilitas Engine Aktif</div>
+            </div>
+          </div>
+        </div>
 
-        <div class="donasi-methods" style="margin-top: 16px;">DANA, OVO, GoPay, ShopeePay & M-Banking</div>
-        <div class="donasi-loc">Kab. Sumbawa</div>
+        <div class="dash-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+            <h3 style="font-size: 15px; font-weight: 800; color: #fbcfe8;">Grafik Aktivasi Bulanan (2026)</h3>
+            <button type="button" class="ss-outlook-btn" id="exportStatistikBtn">
+              <i class="fa-solid fa-download"></i> Unduh Laporan
+            </button>
+          </div>
+          <div style="position: relative; width: 100%; height: 260px;">
+            <canvas id="monthlyChart"></canvas>
+          </div>
+        </div>
 
-        <button type="button" class="btn-green" id="showQrBtn" style="margin-top: 8px;">
-          <i class="fa-solid fa-qrcode"></i> Tampilkan Kode QR
-        </button>
+        <div class="dash-card">
+          <h3 style="font-size: 15px; font-weight: 800; color: #fbcfe8; margin-bottom: 12px;">Metrik Performa Layanan</h3>
+          <div class="bulk-table-container">
+            <table class="bulk-table">
+              <thead>
+                <tr>
+                  <th>Fitur / Layanan</th>
+                  <th>Total Permintaan</th>
+                  <th>Status Server</th>
+                  <th>Performa</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><b>AM Generator V1</b></td>
+                  <td id="statCountV1">0 kali</td>
+                  <td><span style="color: var(--success);">Optimal</span></td>
+                  <td>99.9%</td>
+                </tr>
+                <tr>
+                  <td><b>AM Generator V2 (Advanced)</b></td>
+                  <td id="statCountV2">0 kali</td>
+                  <td><span style="color: var(--success);">Optimal</span></td>
+                  <td>99.8%</td>
+                </tr>
+                <tr>
+                  <td><b>Bulk Akun Massal</b></td>
+                  <td id="statCountBulk">0 batch</td>
+                  <td><span style="color: var(--success);">Optimal</span></td>
+                  <td>99.5%</td>
+                </tr>
+                <tr>
+                  <td><b>Auto Temp Mail Reader</b></td>
+                  <td>Aktif Sinkron</td>
+                  <td><span style="color: var(--success);">Connected</span></td>
+                  <td>Real-time</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
 
-        <a href="https://wa.me/6282339430604?text=Halo%20Ayaka%20Motion,%20saya%20ingin%20mengirimkan%20donasi/dukungan" target="_blank" class="btn-pink" style="text-decoration: none; margin-top: 4px;">
-          <i class="fa-brands fa-whatsapp"></i> Konfirmasi Donasi via WhatsApp
-        </a>
-      </div>
+      <section id="view-temp-mail" style="display: none;">
+        <div id="tempMailMsg" class="message"></div>
 
-    </section>
+        <div class="ss-replica-wrapper">
+          <div class="ss-top-header">
+            <span class="ss-label-title">ALAMAT EMAIL KAMU</span>
+            <button type="button" class="ss-outlook-btn" id="outlookReaderInfoBtn">
+              <i class="fa-solid fa-globe"></i> Outlook Reader
+            </button>
+          </div>
 
-  </main>
+          <div class="ss-email-box">
+            <div class="ss-email-left">
+              <i class="fa-regular fa-envelope ss-email-icon"></i>
+              <span id="tempMailAddress" class="ss-email-address">Membuat email...</span>
+            </div>
+            <button type="button" class="ss-copy-btn" id="copyTempMailBtn" title="Salin Email">
+              <i class="fa-regular fa-copy"></i>
+            </button>
+          </div>
 
-  <!-- ================= MODAL QR POPUP ================= -->
-  <div class="qr-modal-overlay" id="qrDonasiModal">
-    <div class="qr-modal-card">
-      <div class="qr-modal-close-btn" id="closeQrModalBtn"><i class="fa-solid fa-xmark"></i></div>
+          <div class="ss-domain-approved-box">
+            <i class="fa-solid fa-check"></i>
+            <span>Domain approved (verified)</span>
+          </div>
 
-      <div class="qr-modal-label">SCAN QRIS DONASI</div>
-      <div class="qr-modal-title">OLPI STORE</div>
-      <div class="qr-modal-nmid">NMID: ID1026559688191</div>
+          <button type="button" class="ss-custom-btn" id="customTempMailBtn">
+            <i class="fa-solid fa-pen"></i> Custom
+          </button>
 
-      <img src="8d9ab08d-053f-475f-ac6d-d0fe8981b85d.png" alt="QRIS OLPI STORE" class="qr-modal-img">
+          <div class="ss-action-row">
+            <button type="button" class="ss-refresh-btn" id="refreshTempMailBtn">
+              <i class="fa-solid fa-rotate" id="refreshInboxIcon"></i> Refresh
+            </button>
+            <button type="button" class="ss-new-btn" id="newTempMailBtn">
+              <i class="fa-solid fa-plus"></i> Buat Baru
+            </button>
+          </div>
 
-      <div class="qr-modal-methods">DANA, OVO, GoPay, ShopeePay & M-Banking</div>
-      <div class="qr-modal-loc">Kab. Sumbawa</div>
+          <div class="ss-inbox-section-title">
+            Kotak Masuk <span id="inboxCountBadge">(0)</span>
+            <span id="clearInboxBtn">Bersihkan</span>
+          </div>
 
-      <a href="https://wa.me/6282339430604?text=Halo%20Ayaka%20Motion,%20saya%20sudah%20mengirimkan%20donasi" target="_blank" class="btn-pink" style="text-decoration: none; margin-top: 4px;">
-        <i class="fa-brands fa-whatsapp"></i> Konfirmasi via WhatsApp
-      </a>
+          <div id="tempMailInboxList" class="inbox-list">
+            <div style="text-align: center; color: var(--text-muted); padding: 16px 10px; font-size: 12px; background: var(--card-inner); border: 1px dashed var(--border-color); border-radius: 10px;">
+              Belum ada pesan masuk. Email akan muncul di sini secara real-time.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="view-am-generator" style="display: none;">
+        <h1 class="dash-title">AM Generator</h1>
+        <p class="dash-subtitle">Verifikasi & Aktivasi Lisensi Alight Motion (3 Langkah Mudah)</p>
+
+        <div class="am-steps-container">
+          <div class="am-step-card active" id="amStepTab1" data-step="1">
+            <div class="am-step-number">1</div>
+            <div class="am-step-label">Hubungkan&#10;Akun</div>
+          </div>
+          <div class="am-step-card" id="amStepTab2" data-step="2">
+            <div class="am-step-number">2</div>
+            <div class="am-step-label">Aktivasi&#10;Akun</div>
+          </div>
+          <div class="am-step-card" id="amStepTab3" data-step="3">
+            <div class="am-step-number">3</div>
+            <div class="am-step-label">Premium&#10;Aktif!</div>
+          </div>
+        </div>
+
+        <div class="dash-card">
+          <div id="msgBox" class="message"></div>
+
+          <div class="am-step-content-panel active" id="amPanel1">
+            <h3 style="font-size: 15px; font-weight: 800; color: #fbcfe8; margin-bottom: 12px;">Tahap 1: Hubungkan Akun Alight Motion</h3>
+            
+            <div class="auth-form-group">
+              <label>Email Akun Alight Motion</label>
+              <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                <input type="email" id="emailInput" class="auth-input" placeholder="nama@email.com" style="flex: 1; min-width: 180px;">
+                <button type="button" id="sendBtn" class="btn-pink" style="width: auto; padding: 12px 16px; flex-shrink: 0;">Kirim Link</button>
+              </div>
+            </div>
+
+            <div class="auth-form-group">
+              <label>Magic Link / URL Verifikasi Email</label>
+              <input type="url" id="magicInput" class="auth-input" placeholder="Paste link dari email di sini...">
+            </div>
+
+            <button type="button" id="nextToStep2Btn" class="btn-pink">
+              <i class="fa-solid fa-arrow-right"></i> Lanjut ke Tahap 2 (Aktivasi Akun)
+            </button>
+          </div>
+
+          <div class="am-step-content-panel" id="amPanel2">
+            <h3 style="font-size: 15px; font-weight: 800; color: #fbcfe8; margin-bottom: 6px;">Tahap 2: Aktivasi Akun</h3>
+            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">Selesaikan proses aktivasi untuk membuka lisensi premium permanen.</p>
+
+            <div style="display: flex; justify-content: space-between; gap: 10px; margin-top: 20px;">
+              <button type="button" class="btn-pink" style="background: transparent; border: 1px solid var(--border-color); color: #fff; width: auto;" id="backToStep1Btn">
+                <i class="fa-solid fa-arrow-left"></i> Kembali
+              </button>
+              <button type="button" id="proceedToStep3Btn" class="btn-pink" style="flex: 1;">
+                Lanjut ke Tahap 3 (Premium Aktif) <i class="fa-solid fa-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="am-step-content-panel" id="amPanel3">
+            <div class="am-landing-box" style="padding: 10px 0;">
+              <div style="width: 52px; height: 52px; border-radius: 50%; background: var(--success-bg); border: 2px solid var(--success); display: flex; align-items: center; justify-content: center; color: var(--success); font-size: 22px; margin-bottom: 12px;">
+                <i class="fa-solid fa-check"></i>
+              </div>
+
+              <h2 class="am-hero-title">Premium Aktif!</h2>
+              <p class="am-hero-desc">Verifikasi akun telah selesai. Akun Alight Motion Anda kini resmi aktif.</p>
+
+              <div class="res-data-box">
+                <div class="res-data-row">
+                  <span class="lbl">Email:</span>
+                  <span class="val" id="resEmail">-</span>
+                </div>
+                <div class="res-data-row">
+                  <span class="lbl">Order ID:</span>
+                  <span class="val" id="resOrderId">-</span>
+                </div>
+                <div class="res-data-row">
+                  <span class="lbl">Status Aktivasi:</span>
+                  <span class="val" style="color: var(--success);">SUCCESS</span>
+                </div>
+              </div>
+
+              <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
+                <button type="button" class="btn-pink" style="background: transparent; border: 1px solid var(--border-color); color: #fff; width: auto; padding: 10px 20px; font-size: 13px;" id="resetAmFormV1Btn">
+                  <i class="fa-solid fa-rotate-right"></i> Proses Akun Lain
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <section id="view-am-generator-v2" style="display: none;">
+        <h1 class="dash-title">AM Generator V2</h1>
+        <p class="dash-subtitle">Verifikasi & Aktivasi Lisensi Alight Motion Advanced API (V2)</p>
+
+        <div class="am-steps-container">
+          <div class="am-step-card active" id="amV2StepTab1" data-step="1">
+            <div class="am-step-number">1</div>
+            <div class="am-step-label">Hubungkan&#10;Akun</div>
+          </div>
+          <div class="am-step-card" id="amV2StepTab2" data-step="2">
+            <div class="am-step-number">2</div>
+            <div class="am-step-label">Aktivasi&#10;Akun</div>
+          </div>
+          <div class="am-step-card" id="amV2StepTab3" data-step="3">
+            <div class="am-step-number">3</div>
+            <div class="am-step-label">Premium&#10;Aktif!</div>
+          </div>
+        </div>
+
+        <div class="dash-card">
+          <div id="msgBoxV2" class="message"></div>
+
+          <div class="am-step-content-panel active" id="amV2Panel1">
+            <h3 style="font-size: 15px; font-weight: 800; color: #fbcfe8; margin-bottom: 12px;">Tahap 1: Hubungkan Akun V2</h3>
+
+            <div class="auth-form-group">
+              <label>Paket / Durasi Premium</label>
+              <select id="v2ProductSelect" class="auth-select">
+                <option value="am.full.sub.annual.19q4">Annual Sub (1 Tahun)</option>
+                <option value="am.full.sub.monthly.19q4">Monthly Sub (1 Bulan)</option>
+              </select>
+            </div>
+
+            <div class="auth-form-group">
+              <label>Prefix Order ID (Opsional)</label>
+              <input type="text" id="v2PrefixInput" class="auth-input" value="GPA" placeholder="Contoh: GPA / AYAKA">
+            </div>
+
+            <div class="auth-form-group">
+              <label>Email Akun Alight Motion</label>
+              <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                <input type="email" id="emailInputV2" class="auth-input" placeholder="nama@email.com" style="flex: 1; min-width: 180px;">
+                <button type="button" id="sendBtnV2" class="btn-pink" style="width: auto; padding: 12px 16px; flex-shrink: 0;">Kirim Link</button>
+              </div>
+            </div>
+
+            <div class="auth-form-group">
+              <label>Magic Link / URL Verifikasi Email</label>
+              <input type="url" id="magicInputV2" class="auth-input" placeholder="Paste link dari email di sini...">
+            </div>
+
+            <button type="button" id="nextToAmV2Step2Btn" class="btn-pink">
+              <i class="fa-solid fa-arrow-right"></i> Lanjut ke Tahap 2 (Aktivasi Akun)
+            </button>
+          </div>
+
+          <div class="am-step-content-panel" id="amV2Panel2">
+            <h3 style="font-size: 15px; font-weight: 800; color: #fbcfe8; margin-bottom: 6px;">Tahap 2: Aktivasi Sistem V2</h3>
+            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">Selesaikan proses Engine V2 untuk mengaktifkan langganan.</p>
+
+            <div style="display: flex; justify-content: space-between; gap: 10px; margin-top: 20px;">
+              <button type="button" class="btn-pink" style="background: transparent; border: 1px solid var(--border-color); color: #fff; width: auto;" id="backToAmV2Step1Btn">
+                <i class="fa-solid fa-arrow-left"></i> Kembali
+              </button>
+              <button type="button" id="proceedToAmV2Step3Btn" class="btn-pink" style="flex: 1;">
+                Aktivasi Lisensi Final <i class="fa-solid fa-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="am-step-content-panel" id="amV2Panel3">
+            <div class="am-landing-box" style="padding: 10px 0;">
+              <div style="width: 52px; height: 52px; border-radius: 50%; background: var(--success-bg); border: 2px solid var(--success); display: flex; align-items: center; justify-content: center; color: var(--success); font-size: 22px; margin-bottom: 12px;">
+                <i class="fa-solid fa-check"></i>
+              </div>
+
+              <h2 class="am-hero-title">Aktivasi V2 Berhasil!</h2>
+              <p class="am-hero-desc">Akun Alight Motion Anda telah sukses ditingkatkan via Engine V2.</p>
+
+              <div class="res-data-box">
+                <div class="res-data-row">
+                  <span class="lbl">Email:</span>
+                  <span class="val" id="resEmailV2">-</span>
+                </div>
+                <div class="res-data-row">
+                  <span class="lbl">Order ID:</span>
+                  <span class="val" id="resOrderIdV2">-</span>
+                </div>
+                <div class="res-data-row">
+                  <span class="lbl">Engine:</span>
+                  <span class="val" style="color: #f472b6;">AM DIRECT V2</span>
+                </div>
+                <div class="res-data-row">
+                  <span class="lbl">Status Aktivasi:</span>
+                  <span class="val" style="color: var(--success);">SUCCESS</span>
+                </div>
+              </div>
+
+              <button type="button" class="btn-pink" style="background: transparent; border: 1px solid var(--border-color); color: #fff; width: auto; padding: 10px 20px; font-size: 13px;" id="resetAmFormV2Btn">
+                <i class="fa-solid fa-rotate-right"></i> Proses Akun Lain
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <section id="view-am-bulk" style="display: none;">
+        <h1 class="dash-title">Bulk Akun AM</h1>
+        <p class="dash-subtitle">Aktivasi Lisensi Alight Motion Secara Massal Sekaligus</p>
+
+        <div class="dash-card">
+          <div id="msgBoxBulk" class="message"></div>
+
+          <div class="auth-form-group">
+            <label>Paket / Durasi Premium</label>
+            <select id="bulkProductSelect" class="auth-select">
+              <option value="am.full.sub.annual.19q4">Annual Sub (1 Tahun)</option>
+              <option value="am.full.sub.monthly.19q4">Monthly Sub (1 Bulan)</option>
+            </select>
+          </div>
+
+          <div class="auth-form-group">
+            <label>Daftar Akun (Format: <code>email | magic_link</code> atau <code>email,magic_link</code> per baris)</label>
+            <textarea id="bulkDataInput" class="auth-textarea" placeholder="user1@gmail.com | https://identitytoolkit.googleapis.com/...&#10;user2@gmail.com | https://identitytoolkit.googleapis.com/..."></textarea>
+          </div>
+
+          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <button type="button" id="startBulkBtn" class="btn-pink" style="flex: 1; min-width: 160px;">
+              <i class="fa-solid fa-play"></i> Mulai Proses Bulk
+            </button>
+            <button type="button" id="exportBulkBtn" class="btn-pink" style="background: transparent; border: 1px solid var(--border-color); color: #fff; width: auto; display: none;">
+              <i class="fa-solid fa-download"></i> Unduh Hasil (.txt)
+            </button>
+          </div>
+        </div>
+
+        <div id="bulkResultCard" class="dash-card" style="display: none;">
+          <h3 style="font-size: 15px; font-weight: 800; color: #fbcfe8; margin-bottom: 10px;">Hasil Pemrosesan Bulk</h3>
+          <div class="bulk-table-container">
+            <table class="bulk-table">
+              <thead>
+                <tr>
+                  <th>Perangkat / No</th>
+                  <th>Email</th>
+                  <th>Order ID</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="bulkTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="view-dukung" style="display: none;">
+        <h1 class="dash-title">Dukung / Donasi</h1>
+        <p class="dash-subtitle">Bantu Dukung Server AYAKA STORE Agar Tetap Berjalan Gratis & Stabil</p>
+
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 10px;">
+          <div class="donation-square-card">
+            <div style="font-size: 36px; color: #f472b6; margin-bottom: 8px;">💖</div>
+            <h2 style="font-size: 18px; font-weight: 800; color: #111; margin-bottom: 4px; font-family: 'Space Grotesk', sans-serif;">Dukung Server Ayaka Store</h2>
+            <p style="font-size: 12px; color: #4b5563; margin-bottom: 16px; line-height: 1.4;">
+              Dukungan Anda membantu biaya server, database, & fitur otomasi baru.
+            </p>
+
+            <div style="font-size: 14px; font-weight: 800; color: #000; font-family: 'Space Grotesk', sans-serif;">OLPI STORE</div>
+            <div style="font-size: 11px; color: #6b7280; margin-bottom: 20px;">NMID: ID1026559688191</div>
+
+            <button type="button" class="btn-pink" id="showQrBtn" style="width: 100%; padding: 13px; font-size: 13px; border-radius: 12px; box-shadow: 3px 3px 0px #000; display: flex; align-items: center; justify-content: center; gap: 8px;">
+              <i class="fa-solid fa-qrcode"></i> Tampilkan Kode QR
+            </button>
+          </div>
+
+          <a href="https://wa.me/6282339430604?text=Halo%20Ayaka%20Store,%20saya%20ingin%20mengirimkan%20donasi/dukungan" target="_blank" class="btn-pink" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; max-width: 380px; padding: 12px 24px; border-radius: 14px; box-shadow: 4px 4px 0px #000000; text-decoration: none;">
+            <i class="fa-brands fa-whatsapp" style="font-size: 18px;"></i> Konfirmasi Donasi via WhatsApp
+          </a>
+        </div>
+      </section>
+
+      <section id="view-tutorial" style="display: none;">
+        <h1 class="dash-title">Tutorial & Panduan</h1>
+        <p class="dash-subtitle">Langkah Mudah Menggunakan Seluruh Layanan Otomasi AYAKA STORE</p>
+
+        <div class="tutorial-video-card">
+          <h4><i class="fa-solid fa-video" style="color: #f472b6;"></i> Video Tutorial Aktivasi AM Premium</h4>
+          <div class="tutorial-video-wrapper">
+            <video 
+              controls 
+              playsinline 
+              preload="metadata" 
+              width="100%" 
+              poster=""
+              controlsList="nodownload"
+            >
+              <source src="utorial-baru%20am-premium-E373B9E.mp4" type="video/mp4">
+              <source src="utorial-baru am-premium-E373B9E.mp4" type="video/mp4">
+              Browser Anda tidak mendukung pemutar video HTML5. Silakan perbarui browser Anda.
+            </video>
+          </div>
+        </div>
+
+        <div class="dash-card">
+          <h3 style="font-size: 16px; font-weight: 800; color: #fbcfe8; margin-bottom: 16px;"><i class="fa-solid fa-circle-play"></i> Panduan Aktivasi Alight Motion</h3>
+          
+          <div style="display: grid; gap: 14px;">
+            <div style="background: var(--card-inner); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px;">
+              <h4 style="color: #fff; font-size: 14px; margin-bottom: 6px;">1. Buka Menu Aktivasi / AM Generator</h4>
+              <p style="font-size: 12px; color: var(--text-muted);">Masukkan email akun Alight Motion Anda pada kolom yang telah disediakan, lalu klik <b>Kirim Link</b>.</p>
+            </div>
+
+            <div style="background: var(--card-inner); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px;">
+              <h4 style="color: #fff; font-size: 14px; margin-bottom: 6px;">2. Dapatkan Magic Link / Verifikasi</h4>
+              <p style="font-size: 12px; color: var(--text-muted);">Buka email Anda (bisa menggunakan Auto Temp Mail jika tidak ada email pribadi), lalu salin URL verifikasi yang dikirimkan oleh Alight Motion.</p>
+            </div>
+
+            <div style="background: var(--card-inner); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px;">
+              <h4 style="color: #fff; font-size: 14px; margin-bottom: 6px;">3. Tempel Link & Aktivasi</h4>
+              <p style="font-size: 12px; color: var(--text-muted);">Tempelkan tautan Magic Link tersebut di form panel dan klik <b>Lanjut ke Tahap Aktivasi</b>. Sistem akan memproses lisensi secara otomatis dalam hitungan detik.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
     </div>
   </div>
 
-  <!-- ================= BOTTOM NAV ================= -->
-  <nav class="bottom-nav">
-    <button class="bottom-nav-item active" data-section="Home">
-      <i class="fa-solid fa-house"></i>
-      <span>Home</span>
-    </button>
-    <button class="bottom-nav-item" data-section="Aktivasi">
-      <i class="fa-solid fa-bolt"></i>
-      <span>Aktivasi</span>
-    </button>
-    <button class="bottom-nav-item" data-section="Bulk">
-      <i class="fa-solid fa-layer-group"></i>
-      <span>Bulk</span>
-    </button>
-    <button class="bottom-nav-item" data-section="Donasi">
-      <i class="fa-solid fa-heart"></i>
-      <span>Donasi</span>
-    </button>
-  </nav>
+  <div class="qr-modal-overlay" id="qrDonasiModal">
+    <div class="qr-modal-card">
+      <div class="qr-modal-close-btn" id="closeQrModalBtn"><i class="fa-solid fa-xmark"></i></div>
+      
+      <div style="font-size: 12px; font-weight: 800; color: #ec4899; letter-spacing: 1px; text-transform: uppercase;">SCAN QRIS DONASI</div>
+      <h3 style="font-size: 20px; font-weight: 800; color: #111; margin: 4px 0 2px 0; font-family: 'Space Grotesk', sans-serif;">OLPI STORE</h3>
+      <div style="font-size: 11px; color: #4b5563;">NMID: ID1026559688191</div>
 
-  <!-- ================= JAVASCRIPT LOGIC ================= -->
+      <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=00020101021126570011ID.DANA.WWW011893600915303359272702090335927270303UMI51440014ID.CO.QRIS.WWW0215ID10265596881910303UMI5204654053033605802ID5910OLPI%20STORE6012Kab.%20Sumbawa6105843856304A947" alt="QRIS OLPI STORE Pop-up" class="qr-code-modal-img">
+
+      <div style="font-size: 12px; font-weight: 700; color: #111; margin-top: 4px;">DANA, OVO, GoPay, ShopeePay & M-Banking</div>
+      <div style="font-size: 11px; color: #6b7280; margin-bottom: 16px;">Kab. Sumbawa</div>
+
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <a href="https://wa.me/6282339430604?text=Halo%20Ayaka%20Store,%20saya%20sudah%20mengirimkan%20donasi" target="_blank" class="btn-pink" style="padding: 10px 16px; font-size: 12px; text-decoration: none; border-radius: 10px;">
+          <i class="fa-brands fa-whatsapp"></i> Konfirmasi via WhatsApp
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-nav-container">
+    <div class="bottom-nav-item active" data-view="dashboard">
+      <i class="fa-solid fa-house"></i>
+      <span>Dashboard</span>
+    </div>
+    <div class="bottom-nav-item" data-view="am-generator">
+      <i class="fa-solid fa-percent"></i>
+      <span>Aktivasi</span>
+    </div>
+    <div class="bottom-nav-item" data-view="dukung">
+      <i class="fa-solid fa-heart"></i>
+      <span>Dukung</span>
+    </div>
+    <div class="bottom-nav-item" data-view="tutorial">
+      <i class="fa-solid fa-circle-play"></i>
+      <span>Tutorial</span>
+    </div>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="auth.js"></script>
+  <script src="main.js"></script>
+  
   <script>
     // ============================================================
     // 🌐 UPSTASH REDIS REST API CLIENT
     // ============================================================
     const UPSTASH_URL   = window.UPSTASH_URL;
     const UPSTASH_TOKEN = window.UPSTASH_TOKEN;
-    const UPSTASH_HEADERS = { Authorization: `Bearer ${UPSTASH_TOKEN}` };
 
+    const UPSTASH_HEADERS = {
+      Authorization: `Bearer ${UPSTASH_TOKEN}`,
+    };
+
+    // ---------- String ops ----------
     async function redisGet(key) {
       try {
-        const res = await fetch(`${UPSTASH_URL}/get/${encodeURIComponent(key)}`, { headers: UPSTASH_HEADERS });
-        if (!res.ok) return { __error: true };
+        const res = await fetch(`${UPSTASH_URL}/get/${encodeURIComponent(key)}`, {
+          headers: UPSTASH_HEADERS,
+        });
+        if (!res.ok) {
+          console.warn("redisGet HTTP error:", res.status);
+          return { __error: true };
+        }
         const json = await res.json();
         return { value: json.result };
       } catch (e) {
+        console.warn("redisGet exception:", e);
         return { __error: true };
       }
     }
 
     async function redisSet(key, value) {
       try {
-        const res = await fetch(`${UPSTASH_URL}/set/${encodeURIComponent(key)}/${encodeURIComponent(value)}`, { headers: UPSTASH_HEADERS });
+        const res = await fetch(`${UPSTASH_URL}/set/${encodeURIComponent(key)}/${encodeURIComponent(value)}`, {
+          headers: UPSTASH_HEADERS,
+        });
         const json = await res.json();
         return json.result;
-      } catch (e) { return null; }
+      } catch (e) {
+        console.warn("redisSet error:", e);
+        return null;
+      }
+    }
+
+    async function redisSetNX(key, value) {
+      try {
+        const res = await fetch(`${UPSTASH_URL}/setnx/${encodeURIComponent(key)}/${encodeURIComponent(value)}`, {
+          headers: UPSTASH_HEADERS,
+        });
+        const json = await res.json();
+        return json.result;
+      } catch (e) {
+        console.warn("redisSetNX error:", e);
+        return null;
+      }
     }
 
     async function redisIncr(key) {
       try {
-        const res = await fetch(`${UPSTASH_URL}/incr/${encodeURIComponent(key)}`, { headers: UPSTASH_HEADERS });
+        const res = await fetch(`${UPSTASH_URL}/incr/${encodeURIComponent(key)}`, {
+          headers: UPSTASH_HEADERS,
+        });
         const json = await res.json();
         return json.result;
-      } catch (e) { return null; }
+      } catch (e) {
+        console.warn("redisIncr error:", e);
+        return null;
+      }
     }
 
     async function redisIncrBy(key, amount) {
       try {
-        const res = await fetch(`${UPSTASH_URL}/incrby/${encodeURIComponent(key)}/${amount}`, { headers: UPSTASH_HEADERS });
+        const res = await fetch(`${UPSTASH_URL}/incrby/${encodeURIComponent(key)}/${amount}`, {
+          headers: UPSTASH_HEADERS,
+        });
         const json = await res.json();
         return json.result;
-      } catch (e) { return null; }
+      } catch (e) {
+        console.warn("redisIncrBy error:", e);
+        return null;
+      }
     }
 
     async function redisExpire(key, seconds) {
       try {
-        const res = await fetch(`${UPSTASH_URL}/expire/${encodeURIComponent(key)}/${seconds}`, { headers: UPSTASH_HEADERS });
+        const res = await fetch(`${UPSTASH_URL}/expire/${encodeURIComponent(key)}/${seconds}`, {
+          headers: UPSTASH_HEADERS,
+        });
         const json = await res.json();
         return json.result;
-      } catch (e) { return null; }
+      } catch (e) {
+        console.warn("redisExpire error:", e);
+        return null;
+      }
+    }
+
+    // ---------- 🔥 LIST ops (untuk Live Recent Aktivasi) ----------
+    async function redisLpush(key, value) {
+      try {
+        const res = await fetch(`${UPSTASH_URL}/lpush/${encodeURIComponent(key)}/${encodeURIComponent(value)}`, {
+          headers: UPSTASH_HEADERS,
+        });
+        const json = await res.json();
+        return json.result;
+      } catch (e) {
+        console.warn("redisLpush error:", e);
+        return null;
+      }
+    }
+
+    async function redisLtrim(key, start, stop) {
+      try {
+        const res = await fetch(`${UPSTASH_URL}/ltrim/${encodeURIComponent(key)}/${start}/${stop}`, {
+          headers: UPSTASH_HEADERS,
+        });
+        const json = await res.json();
+        return json.result;
+      } catch (e) {
+        console.warn("redisLtrim error:", e);
+        return null;
+      }
+    }
+
+    async function redisLrange(key, start, stop) {
+      try {
+        const res = await fetch(`${UPSTASH_URL}/lrange/${encodeURIComponent(key)}/${start}/${stop}`, {
+          headers: UPSTASH_HEADERS,
+        });
+        if (!res.ok) return { __error: true };
+        const json = await res.json();
+        return { value: json.result };
+      } catch (e) {
+        console.warn("redisLrange error:", e);
+        return { __error: true };
+      }
     }
 
     // ============================================================
@@ -1306,103 +1516,600 @@
       return `${y}-${m}-${day}`;
     }
 
+    // Ambil komponen waktu WIB
     function getWIBDateParts(dateObj) {
       const d = dateObj || new Date();
+      // toLocaleString dengan en-US agar getHours, getDate, dll. bisa dipakai konsisten
       const wib = new Date(d.toLocaleString("en-US", { timeZone: WIB_TZ }));
       return {
-        year: wib.getFullYear(), month: wib.getMonth() + 1, date: wib.getDate(),
-        day: wib.getDay(), hours: wib.getHours(), minutes: wib.getMinutes(), seconds: wib.getSeconds()
+        year: wib.getFullYear(),
+        month: wib.getMonth() + 1,
+        date: wib.getDate(),
+        day: wib.getDay(),
+        hours: wib.getHours(),
+        minutes: wib.getMinutes(),
+        seconds: wib.getSeconds()
       };
     }
 
+    function formatWIBTime(dateObj) {
+      const d = dateObj || new Date();
+      // Format HH:MM:SS WIB
+      const str = d.toLocaleTimeString("id-ID", {
+        timeZone: WIB_TZ,
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false
+      });
+      // id-ID pakai titik (HH.MM.SS), ganti ke titik dua
+      return str.replace(/\./g, ":");
+    }
+
     // ============================================================
-    // 🚀 INITIALIZATION & UI UPDATES
+    // KONEKSI LANGSUNG KE DATABASE SUPABASE
     // ============================================================
     document.addEventListener("DOMContentLoaded", async () => {
+      try {
+        if (typeof window.supabaseClient === 'undefined' || !window.supabaseClient) {
+          console.warn("⚠️ Supabase Client belum siap, mencoba ulang...");
+          return;
+        }
 
-      // ---- 1. Bottom Nav Section Switching ----
-      const navItems = document.querySelectorAll(".bottom-nav-item");
-      const sections = document.querySelectorAll(".content-section");
+        const { data, error } = await window.supabaseClient
+          .from('products')
+          .select('*');
 
-      function switchSection(sectionName) {
-        sections.forEach(sec => sec.classList.remove("active"));
-        const target = document.getElementById(`section${sectionName}`);
-        if (target) target.classList.add("active");
+        if (error) {
+          console.warn('⚠️ Products fetch info:', error.message);
+          window.ayakaProductsData = [];
+        } else {
+          window.ayakaProductsData = data || [];
 
-        navItems.forEach(item => {
-          if (item.getAttribute("data-section") === sectionName) {
+          console.log('%c🌐 WEB GLOBAL', 'font-size:20px;font-weight:900;color:#22c55e;');
+          console.log('%c✅ Connected to: jbzykcuhpfkrgnimjtxx.supabase.co', 'color:#22c55e;font-weight:700;');
+          console.log('%c📦 Products loaded: ' + (data ? data.length : 0), 'color:#38bdf8;font-weight:700;');
+          console.log('%c🚀 Supabase LIVE!', 'color:#ec4899;font-weight:800;');
+        }
+
+        const visitorBadgeLabel = document.getElementById("visitorBadgeLabel");
+        if (visitorBadgeLabel) visitorBadgeLabel.textContent = "Redis + Supabase";
+      } catch (e) {
+        console.warn("Supabase connection test failed:", e);
+      }
+    });
+
+    // ============================================================
+    // NAVIGATION ROUTING & ACTIVE TAB SYNC
+    // ============================================================
+    document.addEventListener("DOMContentLoaded", () => {
+      const bottomNavItems = document.querySelectorAll(".bottom-nav-item");
+      const sidebarNavItems = document.querySelectorAll(".sidebar-menu .nav-item");
+      const sections = document.querySelectorAll(".content-container section");
+
+      function switchView(targetView) {
+        sections.forEach(sec => sec.style.display = "none");
+
+        const targetSection = document.getElementById(`view-${targetView}`);
+        if (targetSection) {
+          targetSection.style.display = "block";
+        }
+
+        bottomNavItems.forEach(item => {
+          if (item.getAttribute("data-view") === targetView) {
             item.classList.add("active");
           } else {
             item.classList.remove("active");
           }
         });
 
-        window.scrollTo({ top: 0, behavior: "smooth" });
+        sidebarNavItems.forEach(item => {
+          if (item.getAttribute("data-view") === targetView) {
+            item.classList.add("active");
+          } else {
+            item.classList.remove("active");
+          }
+        });
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       }
 
-      navItems.forEach(item => {
+      bottomNavItems.forEach(item => {
         item.addEventListener("click", () => {
-          const sectionName = item.getAttribute("data-section");
-          if (sectionName) switchSection(sectionName);
+          const targetView = item.getAttribute("data-view");
+          if (targetView) switchView(targetView);
         });
       });
 
-      // ---- 2. Tab Switching Logic (Aktivasi Section) ----
-      const tabKirimLink = document.getElementById("tabKirimLink");
-      const tabVerifikasi = document.getElementById("tabVerifikasi");
-      const panelKirimLink = document.getElementById("panelKirimLink");
-      const panelVerifikasi = document.getElementById("panelVerifikasi");
-
-      tabKirimLink.addEventListener("click", () => {
-        tabKirimLink.classList.add("active");
-        tabVerifikasi.classList.remove("active");
-        panelKirimLink.classList.add("active");
-        panelVerifikasi.classList.remove("active");
+      sidebarNavItems.forEach(item => {
+        item.addEventListener("click", () => {
+          const targetView = item.getAttribute("data-view");
+          if (targetView) switchView(targetView);
+        });
       });
 
-      tabVerifikasi.addEventListener("click", () => {
-        tabVerifikasi.classList.add("active");
-        tabKirimLink.classList.remove("active");
-        panelVerifikasi.classList.add("active");
-        panelKirimLink.classList.remove("active");
-      });
-
-      document.getElementById("pasteMagicLinkBtn").addEventListener("click", () => {
-        tabVerifikasi.click();
-      });
-
-      // ---- 3. Modal QR Donasi ----
       const qrModal = document.getElementById("qrDonasiModal");
       const showQrBtn = document.getElementById("showQrBtn");
       const closeQrBtn = document.getElementById("closeQrModalBtn");
 
-      if (showQrBtn) {
-        showQrBtn.addEventListener("click", (e) => {
-          e.preventDefault();
-          qrModal.classList.add("active");
-        });
+      function openQrPopup(e) {
+        if (e) e.stopPropagation();
+        if (qrModal) qrModal.classList.add("active");
       }
 
-      if (closeQrBtn) {
-        closeQrBtn.addEventListener("click", () => {
-          qrModal.classList.remove("active");
-        });
+      function closeQrPopup() {
+        if (qrModal) qrModal.classList.remove("active");
       }
+
+      if (showQrBtn) showQrBtn.addEventListener("click", openQrPopup);
+      if (closeQrBtn) closeQrBtn.addEventListener("click", closeQrPopup);
 
       if (qrModal) {
         qrModal.addEventListener("click", (e) => {
-          if (e.target === qrModal) qrModal.classList.remove("active");
+          if (e.target === qrModal) closeQrPopup();
         });
       }
+    });
 
-      // ---- 4. Live Clock & Battery ----
+    // ============================================================
+    // ANIMASI LANGIT ASTRONOMIS REAL-TIME (SunCalc)
+    // ============================================================
+    document.addEventListener("DOMContentLoaded", async () => {
+      const skyBar = document.getElementById("realtimeSkyBar");
+      const skySun = document.getElementById("skySun");
+      const skyMoon = document.getElementById("skyMoon");
+      const skyStars = document.getElementById("skyStars");
+      const skyTimeIcon = document.getElementById("skyTimeIcon");
+      const skyTimeText = document.getElementById("skyTimeText");
+      const skyPhaseLabel = document.getElementById("skyPhaseLabel");
+      const skyLocationText = document.getElementById("skyLocationText");
+      const moonLitPath = document.getElementById("moonLitPath");
+
+      if (!skyBar) return;
+
+      const hasSunCalc = typeof window.SunCalc !== 'undefined';
+
+      let userLat = -6.2088;
+      let userLng = 106.8456;
+      let locationName = "JAKARTA (DEFAULT)";
+
+      if (navigator.geolocation) {
+        try {
+          const pos = await new Promise((resolve, reject) => {
+            navigator.geolocation.getCurrentPosition(resolve, reject, {
+              timeout: 6000,
+              maximumAge: 600000,
+              enableHighAccuracy: false
+            });
+          });
+          userLat = pos.coords.latitude;
+          userLng = pos.coords.longitude;
+          locationName = "LIVE GPS";
+        } catch (e) {
+          locationName = "JAKARTA (DEFAULT)";
+        }
+      }
+
+      if (skyLocationText) skyLocationText.textContent = locationName;
+
+      function generateStars() {
+        if (!skyStars) return;
+        skyStars.innerHTML = "";
+        const totalStars = 50;
+        for (let i = 0; i < totalStars; i++) {
+          const star = document.createElement("div");
+          star.className = "sky-star";
+          const size = Math.random() * 2 + 1;
+          star.style.width = size + "px";
+          star.style.height = size + "px";
+          star.style.left = Math.random() * 100 + "%";
+          star.style.top = Math.random() * 75 + "%";
+          star.style.animationDelay = (Math.random() * 3) + "s";
+          star.style.animationDuration = (1.8 + Math.random() * 1.8) + "s";
+          skyStars.appendChild(star);
+        }
+      }
+      generateStars();
+
+      function getMoonPath(fraction, phase, r) {
+        const cx = 50, cy = 50;
+        const rx = r * Math.abs(2 * fraction - 1);
+        const waxing = phase < 0.5;
+
+        let outerSweep, innerSweep;
+
+        if (waxing) {
+          outerSweep = 1;
+          innerSweep = fraction > 0.5 ? 1 : 0;
+        } else {
+          outerSweep = 0;
+          innerSweep = fraction < 0.5 ? 1 : 0;
+        }
+
+        const startX = cx;
+        const startY = cy - r;
+        const endY = cy + r;
+
+        return `M ${startX} ${startY} A ${r} ${r} 0 0 ${outerSweep} ${startX} ${endY} A ${rx} ${r} 0 0 ${innerSweep} ${startX} ${startY} Z`;
+      }
+
+      function getPhaseName(phase) {
+        if (phase < 0.03 || phase >= 0.97) return "Bulan Baru";
+        if (phase < 0.22) return "Sabit Awal";
+        if (phase < 0.28) return "Kuartal Pertama";
+        if (phase < 0.47) return "Cembung Awal";
+        if (phase < 0.53) return "Bulan Penuh";
+        if (phase < 0.72) return "Cembung Akhir";
+        if (phase < 0.78) return "Kuartal Ketiga";
+        return "Sabit Akhir";
+      }
+
+      function getPhaseEmoji(phase) {
+        if (phase < 0.03 || phase >= 0.97) return "🌑";
+        if (phase < 0.22) return "🌒";
+        if (phase < 0.28) return "🌓";
+        if (phase < 0.47) return "🌔";
+        if (phase < 0.53) return "🌕";
+        if (phase < 0.72) return "🌖";
+        if (phase < 0.78) return "🌗";
+        return "🌘";
+      }
+
+      function azimuthToXPercent(azimuthRad) {
+        const azDeg = azimuthRad * 180 / Math.PI;
+        const clamped = Math.max(-110, Math.min(110, azDeg));
+        return 50 + (clamped / 110) * 48;
+      }
+
+      function altitudeToYPercent(altitudeRad) {
+        const altDeg = altitudeRad * 180 / Math.PI;
+        const clamped = Math.max(-10, Math.min(90, altDeg));
+        return 100 - ((clamped + 10) / 100) * 100;
+      }
+
+      function updateSky() {
+        const now = new Date();
+
+        if (!hasSunCalc) {
+          const wib = getWIBDateParts(now);
+          let theme = "day", label = "Siang", icon = "fa-solid fa-sun";
+          if (wib.hours >= 5 && wib.hours < 10) { theme = "morning"; label = "Pagi"; }
+          else if (wib.hours >= 10 && wib.hours < 15) { theme = "day"; label = "Siang"; }
+          else if (wib.hours >= 15 && wib.hours < 18) { theme = "evening"; label = "Sore"; icon = "fa-solid fa-cloud-sun"; }
+          else { theme = "night"; label = "Malam"; icon = "fa-solid fa-moon"; }
+
+          skyBar.classList.remove("theme-morning", "theme-day", "theme-evening", "theme-night");
+          skyBar.classList.add("theme-" + theme);
+          if (skyStars) skyStars.classList.toggle("active", theme === "night");
+          if (skyTimeIcon) skyTimeIcon.className = icon;
+          if (skyTimeText) skyTimeText.textContent = label;
+          return;
+        }
+
+        const sunPos = window.SunCalc.getPosition(now, userLat, userLng);
+        const moonPos = window.SunCalc.getMoonPosition(now, userLat, userLng);
+        const moonIllum = window.SunCalc.getMoonIllumination(now);
+
+        const sunAltDeg = sunPos.altitude * 180 / Math.PI;
+        const moonAltDeg = moonPos.altitude * 180 / Math.PI;
+
+        if (skySun) {
+          if (sunAltDeg > -3) {
+            const xPct = azimuthToXPercent(sunPos.azimuth);
+            const yPct = altitudeToYPercent(sunPos.altitude);
+            skySun.style.left = xPct + "%";
+            skySun.style.top = yPct + "%";
+            skySun.style.opacity = sunAltDeg > 0 ? "1" : "0.45";
+          } else {
+            skySun.style.opacity = "0";
+          }
+        }
+
+        if (skyMoon && moonLitPath) {
+          if (moonAltDeg > -3) {
+            const xPct = azimuthToXPercent(moonPos.azimuth);
+            const yPct = altitudeToYPercent(moonPos.altitude);
+            skyMoon.style.left = xPct + "%";
+            skyMoon.style.top = yPct + "%";
+            skyMoon.style.opacity = sunAltDeg > 0 ? "0.55" : "1";
+          } else {
+            skyMoon.style.opacity = "0";
+          }
+
+          const pathD = getMoonPath(moonIllum.fraction, moonIllum.phase, 45);
+          moonLitPath.setAttribute("d", pathD);
+        }
+
+        if (skyPhaseLabel) {
+          const phaseEmoji = getPhaseEmoji(moonIllum.phase);
+          const phaseName = getPhaseName(moonIllum.phase);
+          const fractionPct = Math.round(moonIllum.fraction * 100);
+          skyPhaseLabel.textContent = `${phaseEmoji} ${phaseName} • ${fractionPct}%`;
+        }
+
+        const isRising = sunPos.azimuth < 0;
+        let theme, label, icon;
+
+        if (sunAltDeg > 10) {
+          theme = "day"; label = "Siang"; icon = "fa-solid fa-sun";
+        } else if (sunAltDeg > 0) {
+          if (isRising) {
+            theme = "morning"; label = "Pagi"; icon = "fa-solid fa-sun";
+          } else {
+            theme = "evening"; label = "Sore"; icon = "fa-solid fa-cloud-sun";
+          }
+        } else if (sunAltDeg > -6) {
+          if (isRising) {
+            theme = "morning"; label = "Fajar"; icon = "fa-solid fa-sun";
+          } else {
+            theme = "evening"; label = "Senja"; icon = "fa-solid fa-cloud-moon";
+          }
+        } else {
+          theme = "night"; label = "Malam"; icon = "fa-solid fa-moon";
+        }
+
+        skyBar.classList.remove("theme-morning", "theme-day", "theme-evening", "theme-night");
+        skyBar.classList.add("theme-" + theme);
+
+        if (skyStars) skyStars.classList.toggle("active", theme === "night");
+        if (skyTimeIcon) skyTimeIcon.className = icon;
+        if (skyTimeText) skyTimeText.textContent = label;
+      }
+
+      updateSky();
+      setInterval(updateSky, 5000);
+    });
+
+    // ============================================================
+    // MASK EMAIL UNTUK PRIVASI
+    // ============================================================
+    function maskEmailAddress(emailStr) {
+      if (!emailStr || typeof emailStr !== 'string' || !emailStr.includes('@')) {
+        return "user****@gmail.com";
+      }
+      const parts = emailStr.split('@');
+      const username = parts[0];
+      const domain = parts[1];
+
+      if (username.length <= 2) {
+        return username.substring(0, 1) + "****@" + domain;
+      }
+      if (username.length <= 4) {
+        return username.substring(0, 2) + "****@" + domain;
+      }
+      return username.substring(0, 3) + "****" + username.substring(username.length - 1) + "@" + domain;
+    }
+
+    // ============================================================
+    // 🔥 LIVE RECENT AKTIVASI — Via Upstash Redis LIST
+    // ============================================================
+    const RECENT_AKTIVASI_KEY = "ayaka:recent_aktivasi";
+    const RECENT_MAX_ITEMS = 20;      // simpan max 20 di Redis
+    const RECENT_RENDER_COUNT = 10;   // tampilkan 10 terbaru di UI
+
+    let activeRecentList = [];
+
+    function timeAgoFromTs(ts) {
+      const diff = Math.floor((Date.now() - ts) / 1000);
+      if (diff < 5) return "Baru Saja";
+      if (diff < 60) return `${diff} detik lalu`;
+      if (diff < 3600) return `${Math.floor(diff / 60)} menit lalu`;
+      if (diff < 86400) return `${Math.floor(diff / 3600)} jam lalu`;
+      return `${Math.floor(diff / 86400)} hari lalu`;
+    }
+
+    function renderRecentActivationUI() {
+      const container = document.getElementById("recentActivationList");
+      const recentCountText = document.getElementById("recentCountText");
+
+      if (!container) return;
+
+      if (recentCountText) {
+        recentCountText.textContent = `${activeRecentList.length} Aktivasi Terakhir`;
+      }
+
+      if (activeRecentList.length === 0) {
+        container.innerHTML = `
+          <div style="text-align: center; color: var(--text-muted); padding: 18px; font-size: 12px; background: var(--card-inner); border: 1px dashed var(--border-color); border-radius: 12px;">
+            Belum ada aktivitas lisensi terbaru. Selesaikan aktivasi akun untuk menampilkan data secara real-time.
+          </div>
+        `;
+        return;
+      }
+
+      let htmlContent = "";
+      activeRecentList.forEach((item) => {
+        const email = item.email || "user@gmail.com";
+        const masked = maskEmailAddress(email);
+        const firstLetter = (item.initial || email.charAt(0) || "A").toUpperCase();
+        const plan = item.plan || item.type || "AM Premium Annual 1 Year";
+        const timeAgo = item.time ? timeAgoFromTs(item.time) : "Baru Saja";
+
+        htmlContent += `
+          <div class="recent-act-item">
+            <div class="recent-act-user">
+              <div class="recent-act-avatar">${firstLetter}</div>
+              <div class="recent-act-info-text">
+                <span class="recent-act-email">${masked}</span>
+                <span class="recent-act-plan">${plan}</span>
+              </div>
+            </div>
+            <div class="recent-act-time">
+              <i class="fa-regular fa-clock" style="margin-right: 4px;"></i>${timeAgo}
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = htmlContent;
+    }
+
+    // 🔥 Simpan aktivasi baru ke Redis LIST (LPUSH + LTRIM)
+    window.addLiveRecentActivation = async function(rawEmail, planType) {
+      try {
+        if (!rawEmail) rawEmail = "user" + Math.floor(1000 + Math.random() * 9000) + "@gmail.com";
+
+        const initial = (rawEmail.charAt(0) || "A").toUpperCase();
+        const data = {
+          email: rawEmail,
+          plan: planType || "AM Premium Annual 1 Year",
+          time: Date.now(),
+          initial: initial
+        };
+
+        const jsonStr = JSON.stringify(data);
+
+        // LPUSH ke Redis (paling baru di depan)
+        await redisLpush(RECENT_AKTIVASI_KEY, jsonStr);
+
+        // Potong jadi max RECENT_MAX_ITEMS
+        await redisLtrim(RECENT_AKTIVASI_KEY, 0, RECENT_MAX_ITEMS - 1);
+
+        console.log("✅ Recent aktivasi tersimpan di Redis:", maskEmailAddress(rawEmail));
+
+        // Refresh UI langsung
+        await fetchRecentActivationsFromRedis();
+      } catch (err) {
+        console.warn("Gagal simpan recent aktivasi ke Redis:", err);
+      }
+    };
+
+    // 🔥 Ambil recent dari Redis dan render
+    async function fetchRecentActivationsFromRedis() {
+      try {
+        const result = await redisLrange(RECENT_AKTIVASI_KEY, 0, RECENT_RENDER_COUNT - 1);
+
+        if (result && !result.__error && Array.isArray(result.value)) {
+          const parsed = [];
+          for (const rawItem of result.value) {
+            try {
+              const obj = typeof rawItem === "string" ? JSON.parse(rawItem) : rawItem;
+              if (obj && obj.email) parsed.push(obj);
+            } catch (parseErr) {
+              console.warn("Skip item recent (bukan JSON valid):", rawItem);
+            }
+          }
+          activeRecentList = parsed;
+          renderRecentActivationUI();
+        } else if (result && !result.__error && !result.value) {
+          // List kosong
+          activeRecentList = [];
+          renderRecentActivationUI();
+        }
+      } catch (err) {
+        console.warn("fetchRecentActivationsFromRedis error:", err);
+      }
+    }
+
+    window.fetchRecentActivationsFromRedis = fetchRecentActivationsFromRedis;
+
+    // ============================================================
+    // 🚀 SISTEM VISITOR & AKTIVASI VIA UPSTASH REDIS
+    // ============================================================
+    document.addEventListener("DOMContentLoaded", async () => {
+
+      const KEY_TOTAL_AKTIVASI = "ayaka:total_aktivasi";
+
+      // --------------------------------------------------------
+      // Track visitor via IP
+      // --------------------------------------------------------
+      async function trackVisitor() {
+        try {
+          let ip = "unknown";
+
+          try {
+            const ipRes = await fetch("https://api.ipify.org?format=json");
+            const ipData = await ipRes.json();
+            if (ipData && ipData.ip) ip = ipData.ip;
+          } catch (e) {
+            console.warn("Gagal ambil IP:", e);
+          }
+
+          const visitorKey = `visitor:${ip}`;
+          const existsResult = await redisGet(visitorKey);
+
+          if (existsResult && existsResult.__error) {
+            console.warn("⚠️ Visitor check error — skip increment");
+            return null;
+          }
+
+          const exists = existsResult && existsResult.value;
+
+          if (!exists) {
+            await redisIncr("total_visitors");
+            await redisSet(visitorKey, "1");
+            await redisExpire(visitorKey, 3600);
+            console.log("🆕 Visitor baru tercatat:", ip);
+          } else {
+            console.log("👤 Visitor sudah tercatat dalam 1 jam terakhir:", ip);
+          }
+
+          const totalResult = await redisGet("total_visitors");
+          if (totalResult && !totalResult.__error && totalResult.value) {
+            return parseInt(totalResult.value) || 0;
+          }
+          return null;
+        } catch (err) {
+          console.warn("trackVisitor error:", err);
+          return null;
+        }
+      }
+
+      // --------------------------------------------------------
+      // Fetch TOTAL AKTIVASI & HARI INI dari Redis
+      // --------------------------------------------------------
+      async function fetchAktivasiStatsFromRedis() {
+        try {
+          const todayStr = getLocalDateStr();
+          const dailyKey = `ayaka:aktivasi:${todayStr}`;
+
+          const totalResult = await redisGet(KEY_TOTAL_AKTIVASI);
+          const totalAktivasi = (totalResult && !totalResult.__error && totalResult.value)
+            ? parseInt(totalResult.value) || 0
+            : 0;
+
+          const dailyResult = await redisGet(dailyKey);
+          const dailyAktivasi = (dailyResult && !dailyResult.__error && dailyResult.value)
+            ? parseInt(dailyResult.value) || 0
+            : 0;
+
+          const elTotalGen = document.getElementById("totalGeneratedCounter");
+          const elStatSukses = document.getElementById("statTotalSukses");
+          const elGlobalTotal = document.getElementById("globalTotalAktivasi");
+          const elGlobalHariIni = document.getElementById("globalHariIniAktivasi");
+
+          const formattedTotal = totalAktivasi.toLocaleString("id-ID");
+          const formattedDaily = dailyAktivasi.toLocaleString("id-ID");
+
+          if (elTotalGen) elTotalGen.textContent = formattedTotal;
+          if (elStatSukses) elStatSukses.textContent = formattedTotal;
+          if (elGlobalTotal) elGlobalTotal.textContent = formattedTotal;
+          if (elGlobalHariIni) elGlobalHariIni.textContent = formattedDaily;
+
+          return { totalAktivasi, dailyAktivasi };
+        } catch (err) {
+          console.warn("fetchAktivasiStatsFromRedis error:", err);
+          return null;
+        }
+      }
+
+      window.fetchAktivasiStatsFromRedis = fetchAktivasiStatsFromRedis;
+
+      // --------------------------------------------------------
+      // 🔥 Live DateTime Widget — pakai WIB (Asia/Jakarta)
+      // --------------------------------------------------------
       function updateLiveDateTimeWidget() {
         const dateEl = document.getElementById("widgetDateVal");
         const timeEl = document.getElementById("widgetTimeVal");
         const wib = getWIBDateParts(new Date());
+
         const daysShort = ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"];
-        
-        if (dateEl) dateEl.textContent = `${daysShort[wib.day]}, ${wib.date}/${wib.month}`;
+        const dayStr = daysShort[wib.day];
+
+        if (dateEl) {
+          dateEl.textContent = `${dayStr}, ${wib.date}/${wib.month}`;
+        }
+
         if (timeEl) {
           const hh = String(wib.hours).padStart(2, "0");
           const mm = String(wib.minutes).padStart(2, "0");
@@ -1410,338 +2117,194 @@
           timeEl.textContent = `${hh}:${mm}:${ss}`;
         }
       }
-      setInterval(updateLiveDateTimeWidget, 1000);
-      updateLiveDateTimeWidget();
 
-      function initBatteryStatus() {
+      function initDashboardBatteryStatus() {
         const batteryValEl = document.getElementById("widgetBatteryVal");
-        const batteryIconEl = document.querySelector(".widget-card.green .widget-icon i");
-        
+        const batteryIconEl = document.getElementById("widgetBatteryIcon");
+
         if ('getBattery' in navigator) {
           navigator.getBattery().then(battery => {
             function updateAllBatteryInfo() {
               const level = Math.round(battery.level * 100);
               const isCharging = battery.charging;
+
               if (batteryValEl) batteryValEl.textContent = `${level}%`;
+
               if (batteryIconEl) {
-                if (isCharging) batteryIconEl.className = "fa-solid fa-battery-charging";
-                else if (level <= 20) batteryIconEl.className = "fa-solid fa-battery-quarter";
-                else if (level <= 70) batteryIconEl.className = "fa-solid fa-battery-half";
-                else batteryIconEl.className = "fa-solid fa-battery-full";
+                if (isCharging) {
+                  batteryIconEl.innerHTML = `<i class="fa-solid fa-battery-charging" style="color:#15803d;"></i>`;
+                } else if (level <= 20) {
+                  batteryIconEl.innerHTML = `<i class="fa-solid fa-battery-quarter" style="color:#dc2626;"></i>`;
+                } else if (level <= 70) {
+                  batteryIconEl.innerHTML = `<i class="fa-solid fa-battery-half"></i>`;
+                } else {
+                  batteryIconEl.innerHTML = `<i class="fa-solid fa-battery-full" style="color:#16a34a;"></i>`;
+                }
               }
             }
+
             updateAllBatteryInfo();
             battery.addEventListener('levelchange', updateAllBatteryInfo);
             battery.addEventListener('chargingchange', updateAllBatteryInfo);
-          }).catch(() => { if (batteryValEl) batteryValEl.textContent = "N/A"; });
+          }).catch(err => {
+            if (batteryValEl) batteryValEl.textContent = "N/A";
+          });
         } else {
           if (batteryValEl) batteryValEl.textContent = "N/A";
         }
       }
-      initBatteryStatus();
 
-      // ---- 5. Fetch Stats (Total Aktivasi & Hari Ini) ----
-      async function fetchAktivasiStatsFromRedis() {
-        try {
-          const todayStr = getLocalDateStr();
-          const dailyKey = `ayaka:aktivasi:${todayStr}`;
-          const KEY_TOTAL_AKTIVASI = "ayaka:total_aktivasi";
-
-          const totalResult = await redisGet(KEY_TOTAL_AKTIVASI);
-          const totalAktivasi = (totalResult && !totalResult.__error && totalResult.value) ? parseInt(totalResult.value) || 0 : 0;
-
-          const dailyResult = await redisGet(dailyKey);
-          const dailyAktivasi = (dailyResult && !dailyResult.__error && dailyResult.value) ? parseInt(dailyResult.value) || 0 : 0;
-
-          const formattedTotal = totalAktivasi.toLocaleString("id-ID");
-          const formattedDaily = dailyAktivasi.toLocaleString("id-ID");
-
-          ["globalTotalAktivasi", "globalTotalAktivasi2", "globalTotalAktivasi3"].forEach(id => {
-            const el = document.getElementById(id);
-            if (el) el.textContent = formattedTotal;
-          });
-
-          ["globalHariIniAktivasi", "globalHariIniAktivasi2", "globalHariIniAktivasi3"].forEach(id => {
-            const el = document.getElementById(id);
-            if (el) el.textContent = formattedDaily;
-          });
-        } catch (err) {
-          console.warn("fetchAktivasiStatsFromRedis error:", err);
-        }
+      // --------------------------------------------------------
+      // INIT SEMUA
+      // --------------------------------------------------------
+      const visitorCount = await trackVisitor();
+      if (visitorCount !== null) {
+        const el = document.getElementById("totalVisitorsCounter");
+        if (el) el.textContent = Number(visitorCount).toLocaleString("id-ID");
       }
-      await fetchAktivasiStatsFromRedis();
-      setInterval(fetchAktivasiStatsFromRedis, 10000);
 
-      // ---- 6. Increment Aktivasi ----
+      await fetchAktivasiStatsFromRedis();
+
+      // 🔥 Load recent activations dari Redis
+      await fetchRecentActivationsFromRedis();
+
+      // Clock & battery
+      setInterval(updateLiveDateTimeWidget, 1000);
+      updateLiveDateTimeWidget();
+      initDashboardBatteryStatus();
+
+      // --------------------------------------------------------
+      // 🔄 Refresh periodik (5 detik)
+      // --------------------------------------------------------
+      setInterval(async () => {
+        // Visitor
+        const totalResult = await redisGet("total_visitors");
+        if (totalResult && !totalResult.__error && totalResult.value) {
+          const total = parseInt(totalResult.value) || 0;
+          const el = document.getElementById("totalVisitorsCounter");
+          if (el) el.textContent = total.toLocaleString("id-ID");
+        }
+
+        // Aktivasi stats
+        await fetchAktivasiStatsFromRedis();
+
+        // 🔥 Recent aktivasi dari Redis (agar update realtime antar device)
+        await fetchRecentActivationsFromRedis();
+      }, 5000);
+
+      // --------------------------------------------------------
+      // 🔥 INCREMENT AKTIVASI → REDIS + recent
+      // --------------------------------------------------------
       window.incrementAyakaActivationStats = async function(incrementCount = 1, userEmail = "", planName = "AM Premium Annual 1 Year") {
         try {
-          if (!userEmail) userEmail = document.getElementById("emailInput")?.value || "ayaka_user@gmail.com";
+          if (!userEmail) {
+            userEmail = document.getElementById("emailInput")?.value || document.getElementById("emailInputV2")?.value || "ayaka_user@gmail.com";
+          }
+
           const todayStr = getLocalDateStr();
           const dailyKey = `ayaka:aktivasi:${todayStr}`;
-          const KEY_TOTAL_AKTIVASI = "ayaka:total_aktivasi";
 
+          // 1. Simpan recent aktivasi ke Redis LIST (non-blocking)
+          window.addLiveRecentActivation(userEmail, planName).catch(err => {
+            console.warn("Gagal simpan recent aktivasi:", err);
+          });
+
+          // 2. INCR TOTAL AKTIVASI
           await redisIncrBy(KEY_TOTAL_AKTIVASI, incrementCount);
+
+          // 3. INCR HARI INI
           await redisIncrBy(dailyKey, incrementCount);
+
+          // 4. TTL 90 hari untuk key harian
           await redisExpire(dailyKey, 60 * 60 * 24 * 90);
-          
+
+          console.log(`✅ Aktivasi +${incrementCount} → total & daily updated in Redis`);
+
+          // 5. Refresh UI
           await fetchAktivasiStatsFromRedis();
         } catch (err) {
-          console.warn("Gagal update aktivasi:", err);
+          console.warn("Gagal memperbarui increment aktivasi:", err);
         }
       };
 
-      // ---- 7. Action Handler: Kirim Magic Link ----
-      const sendMagicLinkBtn = document.getElementById("sendMagicLinkBtn");
-      const outputBox = document.getElementById("outputBox");
-
-      sendMagicLinkBtn.addEventListener("click", async () => {
-        const email = document.getElementById("emailInput").value.trim();
-        if (!email || !email.includes("@")) {
-          alert("Mohon masukkan alamat Gmail yang valid!");
-          return;
-        }
-
-        sendMagicLinkBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Mengirim...`;
-        sendMagicLinkBtn.disabled = true;
-        outputBox.innerHTML = `
-          <span class="output-badge">PROSES</span>
-          <div class="output-icon"><i class="fa-solid fa-spinner fa-spin"></i></div>
-          <div class="output-title">Mengirim Magic Link...</div>
-          <div class="output-desc">Mohon tunggu sebentar, sistem sedang memproses.</div>
-        `;
-
-        setTimeout(() => {
-          sendMagicLinkBtn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> Kirim Magic Link ke Email`;
-          sendMagicLinkBtn.disabled = false;
-
-          outputBox.innerHTML = `
-            <span class="output-badge">SUKSES</span>
-            <div class="output-icon" style="color: #22c55e;"><i class="fa-solid fa-check-circle"></i></div>
-            <div class="output-title">Magic Link Terkirim!</div>
-            <div class="output-desc">Silakan cek kotak masuk Gmail Anda dan tempel link verifikasi di tab "Verifikasi".</div>
-          `;
-
+      // --------------------------------------------------------
+      // EVENT HANDLER AKTIVASI
+      // --------------------------------------------------------
+      const proceedStep3Btn = document.getElementById("proceedToStep3Btn");
+      if (proceedStep3Btn) {
+        proceedStep3Btn.addEventListener("click", () => {
+          const emailVal = document.getElementById("emailInput")?.value || "";
           if (typeof window.incrementAyakaActivationStats === 'function') {
-            window.incrementAyakaActivationStats(1, email, "AM Premium Annual 1 Year");
+            window.incrementAyakaActivationStats(1, emailVal, "AM Premium Annual 1 Year");
           }
+        });
+      }
 
-          setTimeout(() => {
-            document.getElementById("tabVerifikasi").click();
-          }, 2000);
+      const proceedAmV2Step3Btn = document.getElementById("proceedToAmV2Step3Btn");
+      if (proceedAmV2Step3Btn) {
+        proceedAmV2Step3Btn.addEventListener("click", () => {
+          const emailValV2 = document.getElementById("emailInputV2")?.value || "";
+          const sel = document.getElementById("v2ProductSelect");
+          const planText = sel ? sel.options[sel.selectedIndex].text : "AM Premium V2";
+          if (typeof window.incrementAyakaActivationStats === 'function') {
+            window.incrementAyakaActivationStats(1, emailValV2, planText);
+          }
+        });
+      }
 
-        }, 2500);
-      });
-
-      // ---- 8. Action Handler: Verifikasi Magic Link ----
-      const verifyMagicLinkBtn = document.getElementById("verifyMagicLinkBtn");
-      const verifyOutputBox = document.getElementById("verifyOutputBox");
-
-      verifyMagicLinkBtn.addEventListener("click", () => {
-        const magicLink = document.getElementById("magicInput").value.trim();
-        if (!magicLink) {
-          alert("Mohon tempel Magic Link terlebih dahulu!");
-          return;
-        }
-
-        verifyMagicLinkBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Memverifikasi...`;
-        verifyMagicLinkBtn.disabled = true;
-        verifyOutputBox.innerHTML = `
-          <span class="output-badge">PROSES</span>
-          <div class="output-icon"><i class="fa-solid fa-spinner fa-spin"></i></div>
-          <div class="output-title">Memverifikasi Link...</div>
-          <div class="output-desc">Sistem sedang mengaktifkan lisensi premium Anda.</div>
-        `;
-
-        setTimeout(() => {
-          verifyMagicLinkBtn.innerHTML = `<i class="fa-solid fa-check"></i> Verifikasi & Aktivasi`;
-          verifyMagicLinkBtn.disabled = false;
-
-          verifyOutputBox.innerHTML = `
-            <span class="output-badge">SUKSES</span>
-            <div class="output-icon" style="color: #22c55e;"><i class="fa-solid fa-shield-halved"></i></div>
-            <div class="output-title">Premium Aktif!</div>
-            <div class="output-desc">Akun Alight Motion Anda telah sukses diaktifkan selama 1 tahun.</div>
-          `;
-          
-          alert("Aktivasi Berhasil! Akun Alight Motion Premium Anda sudah aktif.");
-        }, 3000);
-      });
-
-      // ============================================================
-      // 🚀 BULK PROCESSING - Memanggil API dari file terpisah
-      // ============================================================
       const startBulkBtn = document.getElementById("startBulkBtn");
-      const exportBulkBtn = document.getElementById("exportBulkBtn");
-      const bulkTableBody = document.getElementById("bulkTableBody");
-      const bulkResultCard = document.getElementById("bulkResultCard");
-      const bulkStatusBox = document.getElementById("bulkStatusBox");
-
-      let bulkResultsCache = [];
-
-      startBulkBtn.addEventListener("click", async () => {
-        const textarea = document.getElementById("bulkDataInput");
-        const productSelect = document.getElementById("bulkProductSelect");
-
-        if (!textarea || !textarea.value.trim()) {
-          alert("Mohon masukkan daftar akun terlebih dahulu!");
-          return;
-        }
-
-        const lines = textarea.value.trim().split("\n").filter(l => l.trim().length > 0);
-        if (lines.length === 0) {
-          alert("Daftar akun kosong!");
-          return;
-        }
-
-        const accounts = lines.map((line, idx) => {
-          const parts = line.split(/[|,]/);
-          return {
-            no: idx + 1,
-            email: (parts[0] || "").trim(),
-            magicLink: (parts[1] || "").trim()
-          };
-        }).filter(a => a.email && a.email.includes("@"));
-
-        if (accounts.length === 0) {
-          alert("Tidak ada akun valid yang ditemukan! Pastikan format: email | magic_link");
-          return;
-        }
-
-        startBulkBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Memproses ${accounts.length} akun...`;
-        startBulkBtn.disabled = true;
-        bulkResultCard.style.display = "block";
-        bulkTableBody.innerHTML = "";
-        bulkResultsCache = [];
-
-        bulkStatusBox.innerHTML = `
-          <span class="output-badge">PROSES</span>
-          <div class="output-icon"><i class="fa-solid fa-spinner fa-spin"></i></div>
-          <div class="output-title">Memproses Bulk...</div>
-          <div class="output-desc">${accounts.length} akun sedang diproses. Mohon tunggu.</div>
-        `;
-
-        accounts.forEach(acc => {
-          const tr = document.createElement("tr");
-          tr.id = `bulk-row-${acc.no}`;
-          tr.innerHTML = `
-            <td>${acc.no}</td>
-            <td>${acc.email}</td>
-            <td>-</td>
-            <td><span class="badge-process">PROCESS</span></td>
-          `;
-          bulkTableBody.appendChild(tr);
-        });
-
-        const productValue = productSelect ? productSelect.value : "am.full.sub.annual.19q4";
-        const productText = productSelect ? productSelect.options[productSelect.selectedIndex].text : "Annual Sub (1 Tahun)";
-
-        // ============================================================
-        // 🔥 PANGGIL API BULK DARI FILE TERPISAH
-        // ============================================================
-        for (const acc of accounts) {
-          let result = null;
-
-          try {
-            if (window.BulkAPI && typeof window.BulkAPI.process === "function") {
-              result = await window.BulkAPI.process(acc.email, acc.magicLink, productValue);
-            } else if (typeof window.processBulkAccount === "function") {
-              result = await window.processBulkAccount(acc.email, acc.magicLink, productValue);
-            } else {
-              await new Promise(r => setTimeout(r, 800));
-              result = {
-                success: true,
-                orderId: "ORD-" + Date.now().toString(36).toUpperCase() + "-" + acc.no,
-                message: "Aktivasi berhasil (simulasi)"
-              };
-            }
-          } catch (err) {
-            result = { success: false, orderId: "-", message: err.message || "Error" };
-          }
-
-          const row = document.getElementById(`bulk-row-${acc.no}`);
-          if (row) {
-            if (result && result.success) {
-              row.children[2].textContent = result.orderId || "-";
-              row.children[3].innerHTML = `<span class="badge-success">SUCCESS</span>`;
-            } else {
-              row.children[2].textContent = "-";
-              row.children[3].innerHTML = `<span class="badge-fail">FAILED</span>`;
+      if (startBulkBtn) {
+        startBulkBtn.addEventListener("click", () => {
+          const textarea = document.getElementById("bulkDataInput");
+          if (textarea && textarea.value.trim() !== "") {
+            const lines = textarea.value.trim().split("\n").filter(l => l.trim().length > 0);
+            if (lines.length > 0 && typeof window.incrementAyakaActivationStats === 'function') {
+              lines.forEach((line) => {
+                const parts = line.split(/[|,]/);
+                const em = parts[0] ? parts[0].trim() : "";
+                window.incrementAyakaActivationStats(1, em, "AM Premium Bulk");
+              });
             }
           }
-
-          bulkResultsCache.push({
-            no: acc.no,
-            email: acc.email,
-            orderId: result?.orderId || "-",
-            status: result?.success ? "SUCCESS" : "FAILED",
-            message: result?.message || ""
-          });
-
-          if (result && result.success && typeof window.incrementAyakaActivationStats === "function") {
-            window.incrementAyakaActivationStats(1, acc.email, productText + " (Bulk)");
-          }
-        }
-
-        const successCount = bulkResultsCache.filter(r => r.status === "SUCCESS").length;
-        const failCount = bulkResultsCache.filter(r => r.status === "FAILED").length;
-
-        startBulkBtn.innerHTML = `<i class="fa-solid fa-play"></i> Mulai Proses Bulk`;
-        startBulkBtn.disabled = false;
-        exportBulkBtn.style.display = "flex";
-
-        bulkStatusBox.innerHTML = `
-          <span class="output-badge">SELESAI</span>
-          <div class="output-icon" style="color: ${failCount === 0 ? "#22c55e" : "#f59e0b"};"><i class="fa-solid fa-flag-checkered"></i></div>
-          <div class="output-title">Proses Bulk Selesai</div>
-          <div class="output-desc">✅ ${successCount} sukses &nbsp;•&nbsp; ❌ ${failCount} gagal dari ${accounts.length} akun</div>
-        `;
-      });
-
-      // Export hasil bulk ke file .txt
-      exportBulkBtn.addEventListener("click", () => {
-        if (bulkResultsCache.length === 0) {
-          alert("Belum ada hasil untuk diunduh!");
-          return;
-        }
-
-        let content = "========================================\n";
-        content += "   HASIL BULK AKTIVASI - AYAKA MOTION\n";
-        content += "   Tanggal: " + new Date().toLocaleString("id-ID", { timeZone: WIB_TZ }) + "\n";
-        content += "========================================\n\n";
-
-        bulkResultsCache.forEach(r => {
-          content += `[${r.no}] ${r.email}\n`;
-          content += `     Order ID : ${r.orderId}\n`;
-          content += `     Status   : ${r.status}\n`;
-          if (r.message) content += `     Message  : ${r.message}\n`;
-          content += `\n`;
         });
+      }
 
-        content += "========================================\n";
-        content += `Total: ${bulkResultsCache.length} akun\n`;
-        content += `Sukses: ${bulkResultsCache.filter(r => r.status === "SUCCESS").length}\n`;
-        content += `Gagal : ${bulkResultsCache.filter(r => r.status === "FAILED").length}\n`;
-        content += "========================================\n";
+      const resetV1Btn = document.getElementById("resetAmFormV1Btn");
+      if (resetV1Btn) {
+        resetV1Btn.addEventListener("click", () => {
+          const emailInput = document.getElementById("emailInput");
+          const magicInput = document.getElementById("magicInput");
+          if (emailInput) emailInput.value = "";
+          if (magicInput) magicInput.value = "";
 
-        const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = `bulk-result-${Date.now()}.txt`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-      });
+          document.querySelectorAll("#view-am-generator .am-step-card").forEach(el => el.classList.remove("active"));
+          document.querySelectorAll("#view-am-generator .am-step-content-panel").forEach(el => el.classList.remove("active"));
 
-      // ---- 9. Supabase Connection (Silent) ----
-      try {
-        if (window.supabaseClient) {
-          const { data, error } = await window.supabaseClient.from('products').select('*');
-          if (!error) console.log('✅ Supabase connected. Products loaded:', data?.length || 0);
-        }
-      } catch (e) {
-        console.warn("Supabase connection test failed:", e);
+          const tab1 = document.getElementById("amStepTab1");
+          const panel1 = document.getElementById("amPanel1");
+          if (tab1) tab1.classList.add("active");
+          if (panel1) panel1.classList.add("active");
+        });
+      }
+
+      const resetV2Btn = document.getElementById("resetAmFormV2Btn");
+      if (resetV2Btn) {
+        resetV2Btn.addEventListener("click", () => {
+          const emailInputV2 = document.getElementById("emailInputV2");
+          const magicInputV2 = document.getElementById("magicInputV2");
+          const prefixInputV2 = document.getElementById("v2PrefixInput");
+          if (emailInputV2) emailInputV2.value = "";
+          if (magicInputV2) magicInputV2.value = "";
+          if (prefixInputV2) prefixInputV2.value = "GPA";
+
+          document.querySelectorAll("#view-am-generator-v2 .am-step-card").forEach(el => el.classList.remove("active"));
+          document.querySelectorAll("#view-am-generator-v2 .am-step-content-panel").forEach(el => el.classList.remove("active"));
+
+          const tabV2_1 = document.getElementById("amV2StepTab1");
+          const panelV2_1 = document.getElementById("amV2Panel1");
+          if (tabV2_1) tabV2_1.classList.add("active");
+          if (panelV2_1) panelV2_1.classList.add("active");
+        });
       }
 
     });
