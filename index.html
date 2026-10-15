@@ -19,12 +19,8 @@
        KONFIGURASI UPSTASH REDIS
        ============================================================ -->
   <script>
-    // ==========================================================
-    // ⚙️ GANTI 2 BARIS DI BAWAH INI DENGAN MILIK KAMU
-    // ==========================================================
-    window.UPSTASH_URL   = "https://adequate-worm-234162.upstash.io";        // ← GANTI
-    window.UPSTASH_TOKEN = "gQAAAAAAA5KyAAIgcDFmNWE3NDE0ZmVhN2Y0ZmI0ODIyYmIwNmU0YjQxYjdiZQ";    // ← GANTI
-    // ==========================================================
+    window.UPSTASH_URL   = "https://adequate-worm-234162.upstash.io";
+    window.UPSTASH_TOKEN = "gQAAAAAAA5KyAAIgcDFmNWE3NDE0ZmVhN2Y0ZmI0ODIyYmIwNmU0YjQxYjdiZQ";
   </script>
 
   <script>
@@ -49,6 +45,36 @@
 
   <link rel="stylesheet" href="style.css">
   <style>
+    body {
+      background-color: #0b0f19;
+      color: #ffffff;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    .main-wrapper {
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 16px;
+      box-sizing: border-box;
+    }
+    .uptime-digits-row {
+      display: flex;
+      gap: 6px !important;
+      justify-content: flex-start;
+      align-items: center;
+      flex-wrap: nowrap;
+      overflow: hidden;
+    }
+    .system-uptime-card-custom .uptime-digits-row span {
+      font-size: 16px !important;
+      font-weight: 700 !important;
+      padding: 4px 8px !important;
+      background: rgba(192, 132, 252, 0.08);
+      border-radius: 6px;
+      white-space: nowrap;
+    }
     .custom-stats-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 240px));
@@ -108,11 +134,10 @@
     }
     .widget-info-row {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: 12px;
       margin-bottom: 24px;
       width: 100%;
-      max-width: 720px;
     }
     @media (max-width: 640px) {
       .widget-info-row {
@@ -287,8 +312,8 @@
       box-shadow: 3px 3px 0px #000000;
     }
     .tutorial-video-card {
-      background: var(--card-inner);
-      border: 1px solid var(--border-color);
+      background: var(--card-inner, #161f32);
+      border: 1px solid var(--border-color, #2d3748);
       border-radius: 16px;
       padding: 16px;
       margin-bottom: 20px;
@@ -353,8 +378,8 @@
       align-items: center;
       justify-content: space-between;
       padding: 12px;
-      background: var(--card-inner);
-      border: 1px solid var(--border-color);
+      background: var(--card-inner, #161f32);
+      border: 1px solid var(--border-color, #2d3748);
       border-radius: 12px;
       margin-bottom: 8px;
       transition: all 0.25s ease;
@@ -386,7 +411,7 @@
       color: #ffffff;
       font-family: 'Space Grotesk', sans-serif;
     }
-    .recent-act-plan { font-size: 11px; color: var(--text-muted); }
+    .recent-act-plan { font-size: 11px; color: var(--text-muted, #94a3b8); }
     .recent-act-time {
       font-size: 11px;
       font-weight: 600;
@@ -607,65 +632,6 @@
     </a>
   </div>
 
-  <aside class="sidebar" id="sidebar">
-    <div class="sidebar-header">
-      <div class="sidebar-logo">AS</div>
-      <div class="sidebar-title">AYAKA STORE</div>
-      <button type="button" class="btn-toggle-sidebar" id="sidebarToggleBtn">
-        <i class="fa-solid fa-chevron-left"></i>
-      </button>
-    </div>
-
-    <div class="sidebar-menu">
-      <div class="nav-item active" id="nav-dashboard" data-view="dashboard">
-        <i class="fa-solid fa-house"></i>
-        <span>Dashboard</span>
-      </div>
-      <div class="nav-item" id="nav-server-status" data-view="server-status">
-        <i class="fa-solid fa-signal"></i>
-        <span>Server Status</span>
-      </div>
-      <div class="nav-item" id="nav-statistik" data-view="statistik">
-        <i class="fa-solid fa-chart-line"></i>
-        <span>Statistik Store</span>
-      </div>
-      <div class="nav-item" id="nav-temp-mail" data-view="temp-mail">
-        <i class="fa-solid fa-envelope-open-text"></i>
-        <span>Auto Temp Mail</span>
-      </div>
-      <div class="nav-item" id="nav-am-generator" data-view="am-generator">
-        <i class="fa-solid fa-wand-magic-sparkles"></i>
-        <span>AM Generator</span>
-      </div>
-      <div class="nav-item" id="nav-am-generator-v2" data-view="am-generator-v2">
-        <i class="fa-solid fa-bolt-lightning"></i>
-        <span>AM Generator V2</span>
-      </div>
-      <div class="nav-item" id="nav-am-bulk" data-view="am-bulk">
-        <i class="fa-solid fa-layer-group"></i>
-        <span>Bulk Akun AM</span>
-      </div>
-      <div class="nav-item" id="nav-dukung" data-view="dukung">
-        <i class="fa-solid fa-heart"></i>
-        <span>Dukung / Donasi</span>
-      </div>
-      <div class="nav-item" id="nav-tutorial" data-view="tutorial">
-        <i class="fa-solid fa-circle-play"></i>
-        <span>Tutorial</span>
-      </div>
-    </div>
-
-    <div class="sidebar-user-footer">
-      <div class="user-profile-card">
-        <div class="user-avatar">A</div>
-        <div class="user-info">
-          <span class="user-name">Kamisato Ayaka</span>
-          <span class="user-email">admin@ayaka.store</span>
-        </div>
-      </div>
-    </div>
-  </aside>
-
   <div class="main-wrapper">
     <div class="content-container">
 
@@ -747,21 +713,29 @@
               <div class="widget-value-text" id="widgetBatteryVal">--%</div>
             </div>
           </div>
+
+          <div class="widget-mini-card bg-blue">
+            <div class="widget-header-text">UPTIME</div>
+            <div class="widget-body-content">
+              <div class="widget-icon"><i class="fa-solid fa-hourglass-half"></i></div>
+              <div class="widget-value-text" id="widgetUptimeVal">0 Days</div>
+            </div>
+          </div>
         </div>
 
         <div class="stats-grid">
           <div class="stat-card">
-            <div class="stat-icon" style="background: rgba(52, 211, 153, 0.15); color: var(--success);">
+            <div class="stat-icon" style="background: rgba(52, 211, 153, 0.15); color: var(--success, #22c55e);">
               <i class="fa-solid fa-crown"></i>
             </div>
             <div class="stat-info">
               <h3>Premium Status</h3>
-              <p style="color: var(--success); font-size: 16px;">Active</p>
+              <p style="color: var(--success, #22c55e); font-size: 16px;">Active</p>
               <div class="stat-desc">Expires : 31/7/2027</div>
             </div>
           </div>
           <div class="stat-card">
-            <div class="stat-icon" style="background: rgba(244, 114, 182, 0.15); color: var(--brand-blue);">
+            <div class="stat-icon" style="background: rgba(244, 114, 182, 0.15); color: var(--brand-blue, #38bdf8);">
               <i class="fa-solid fa-signal"></i>
             </div>
             <div class="stat-info">
@@ -772,7 +746,23 @@
           </div>
         </div>
 
-        <div class="stats-grid" style="margin-top: -6px;">
+        <div class="stats-grid" style="margin-top: 12px;">
+          <div class="stat-card" style="grid-column: 1 / -1;">
+            <div class="stat-icon" style="background: rgba(219, 39, 119, 0.15); color: #f472b6;">
+              <i class="fa-solid fa-clock-rotate-left"></i>
+            </div>
+            <div class="stat-info" style="width: 100%; min-width: 0;">
+              <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px;">
+                <h3>Server Uptime (Global Redis Sync)</h3>
+                <span id="uptimePercentage" style="font-size: 12px; font-weight: 700; color: var(--success, #22c55e);">100.00%</span>
+              </div>
+              <p style="font-size: 18px; font-family: 'Space Grotesk', sans-serif; margin-top: 4px;" id="serverUptimeCounter">0 Days</p>
+              <div class="stat-desc" id="uptimeLiveStatus">Status: Terkoneksi & Berjalan Normal</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="stats-grid" style="margin-top: 12px;">
           <div class="stat-card" style="grid-column: 1 / -1;">
             <div class="stat-icon" style="background: rgba(245, 158, 11, 0.15); color: #f59e0b;">
               <i class="fa-solid fa-users"></i>
@@ -799,7 +789,7 @@
                 <span>LIVE REALTIME</span>
               </div>
             </div>
-            <span style="font-size: 12px; color: var(--text-muted);" id="recentCountText">Memuat data...</span>
+            <span style="font-size: 12px; color: var(--text-muted, #94a3b8);" id="recentCountText">Memuat data...</span>
           </div>
 
           <div id="recentActivationList"></div>
@@ -826,7 +816,7 @@
                 <div class="db-blink-dot" style="background-color: #f472b6; box-shadow: 0 0 10px #f472b6;"></div>
                 <span id="totalGeneratedCounter" style="font-size: 24px; font-weight: 800; color: #fff; font-family: 'Space Grotesk', sans-serif;">Loading...</span>
               </div>
-              <span id="lastGeneratedInfo" style="font-size: 11px; color: var(--text-muted);">Sinkronisasi aktif</span>
+              <span id="lastGeneratedInfo" style="font-size: 11px; color: var(--text-muted, #94a3b8);">Sinkronisasi aktif</span>
             </div>
           </div>
 
@@ -843,6 +833,24 @@
             <div class="db-status-row">
               <div class="db-blink-dot"></div>
               <span id="supaStatusLabel">Connected</span>
+            </div>
+          </div>
+
+          <div class="system-uptime-card-custom">
+            <div class="db-card-header">
+              <div class="db-icon-box" style="color: #c084fc; background: #25132a; border-color: #583361;">
+                <i class="fa-solid fa-tv"></i>
+              </div>
+              <div class="db-text-group">
+                <div class="db-title">System Uptime Global</div>
+                <div class="db-subtitle">Waktu aktif sistem global (WIB)</div>
+              </div>
+            </div>
+            <div class="uptime-digits-row" id="systemUptimeCustomDisplay">
+              <span id="uptimeDays">0d</span>
+              <span id="uptimeHours">00h</span>
+              <span id="uptimeMinutes">00m</span>
+              <span id="uptimeSeconds">00s</span>
             </div>
           </div>
         </div>
@@ -886,12 +894,12 @@
             </div>
           </div>
           <div class="stat-card">
-            <div class="stat-icon" style="background: rgba(52, 211, 153, 0.15); color: var(--success);">
+            <div class="stat-icon" style="background: rgba(52, 211, 153, 0.15); color: var(--success, #22c55e);">
               <i class="fa-solid fa-shield-halved"></i>
             </div>
             <div class="stat-info">
               <h3>Success Rate</h3>
-              <p style="color: var(--success);">99.8%</p>
+              <p style="color: var(--success, #22c55e);">99.8%</p>
               <div class="stat-desc">Stabilitas Engine Aktif</div>
             </div>
           </div>
@@ -925,25 +933,25 @@
                 <tr>
                   <td><b>AM Generator V1</b></td>
                   <td id="statCountV1">0 kali</td>
-                  <td><span style="color: var(--success);">Optimal</span></td>
+                  <td><span style="color: var(--success, #22c55e);">Optimal</span></td>
                   <td>99.9%</td>
                 </tr>
                 <tr>
                   <td><b>AM Generator V2 (Advanced)</b></td>
                   <td id="statCountV2">0 kali</td>
-                  <td><span style="color: var(--success);">Optimal</span></td>
+                  <td><span style="color: var(--success, #22c55e);">Optimal</span></td>
                   <td>99.8%</td>
                 </tr>
                 <tr>
                   <td><b>Bulk Akun Massal</b></td>
                   <td id="statCountBulk">0 batch</td>
-                  <td><span style="color: var(--success);">Optimal</span></td>
+                  <td><span style="color: var(--success, #22c55e);">Optimal</span></td>
                   <td>99.5%</td>
                 </tr>
                 <tr>
                   <td><b>Auto Temp Mail Reader</b></td>
                   <td>Aktif Sinkron</td>
-                  <td><span style="color: var(--success);">Connected</span></td>
+                  <td><span style="color: var(--success, #22c55e);">Connected</span></td>
                   <td>Real-time</td>
                 </tr>
               </tbody>
@@ -975,7 +983,7 @@
 
           <div class="ss-domain-approved-box">
             <i class="fa-solid fa-check"></i>
-            <span>Domain approved (verified)</span>
+            <span>Domain approved (uptime <span id="uptimeDaysCount">14</span> days)</span>
           </div>
 
           <button type="button" class="ss-custom-btn" id="customTempMailBtn">
@@ -997,7 +1005,7 @@
           </div>
 
           <div id="tempMailInboxList" class="inbox-list">
-            <div style="text-align: center; color: var(--text-muted); padding: 16px 10px; font-size: 12px; background: var(--card-inner); border: 1px dashed var(--border-color); border-radius: 10px;">
+            <div style="text-align: center; color: var(--text-muted, #94a3b8); padding: 16px 10px; font-size: 12px; background: var(--card-inner, #161f32); border: 1px dashed var(--border-color, #2d3748); border-radius: 10px;">
               Belum ada pesan masuk. Email akan muncul di sini secara real-time.
             </div>
           </div>
@@ -1049,10 +1057,10 @@
 
           <div class="am-step-content-panel" id="amPanel2">
             <h3 style="font-size: 15px; font-weight: 800; color: #fbcfe8; margin-bottom: 6px;">Tahap 2: Aktivasi Akun</h3>
-            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">Selesaikan proses aktivasi untuk membuka lisensi premium permanen.</p>
+            <p style="font-size: 12px; color: var(--text-muted, #94a3b8); margin-bottom: 16px;">Selesaikan proses aktivasi untuk membuka lisensi premium permanen.</p>
 
             <div style="display: flex; justify-content: space-between; gap: 10px; margin-top: 20px;">
-              <button type="button" class="btn-pink" style="background: transparent; border: 1px solid var(--border-color); color: #fff; width: auto;" id="backToStep1Btn">
+              <button type="button" class="btn-pink" style="background: transparent; border: 1px solid var(--border-color, #2d3748); color: #fff; width: auto;" id="backToStep1Btn">
                 <i class="fa-solid fa-arrow-left"></i> Kembali
               </button>
               <button type="button" id="proceedToStep3Btn" class="btn-pink" style="flex: 1;">
@@ -1063,7 +1071,7 @@
 
           <div class="am-step-content-panel" id="amPanel3">
             <div class="am-landing-box" style="padding: 10px 0;">
-              <div style="width: 52px; height: 52px; border-radius: 50%; background: var(--success-bg); border: 2px solid var(--success); display: flex; align-items: center; justify-content: center; color: var(--success); font-size: 22px; margin-bottom: 12px;">
+              <div style="width: 52px; height: 52px; border-radius: 50%; background: var(--success-bg, rgba(34,197,94,0.1)); border: 2px solid var(--success, #22c55e); display: flex; align-items: center; justify-content: center; color: var(--success, #22c55e); font-size: 22px; margin-bottom: 12px;">
                 <i class="fa-solid fa-check"></i>
               </div>
 
@@ -1081,12 +1089,12 @@
                 </div>
                 <div class="res-data-row">
                   <span class="lbl">Status Aktivasi:</span>
-                  <span class="val" style="color: var(--success);">SUCCESS</span>
+                  <span class="val" style="color: var(--success, #22c55e);">SUCCESS</span>
                 </div>
               </div>
 
               <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
-                <button type="button" class="btn-pink" style="background: transparent; border: 1px solid var(--border-color); color: #fff; width: auto; padding: 10px 20px; font-size: 13px;" id="resetAmFormV1Btn">
+                <button type="button" class="btn-pink" style="background: transparent; border: 1px solid var(--border-color, #2d3748); color: #fff; width: auto; padding: 10px 20px; font-size: 13px;" id="resetAmFormV1Btn">
                   <i class="fa-solid fa-rotate-right"></i> Proses Akun Lain
                 </button>
               </div>
@@ -1154,10 +1162,10 @@
 
           <div class="am-step-content-panel" id="amV2Panel2">
             <h3 style="font-size: 15px; font-weight: 800; color: #fbcfe8; margin-bottom: 6px;">Tahap 2: Aktivasi Sistem V2</h3>
-            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">Selesaikan proses Engine V2 untuk mengaktifkan langganan.</p>
+            <p style="font-size: 12px; color: var(--text-muted, #94a3b8); margin-bottom: 16px;">Selesaikan proses Engine V2 untuk mengaktifkan langganan.</p>
 
             <div style="display: flex; justify-content: space-between; gap: 10px; margin-top: 20px;">
-              <button type="button" class="btn-pink" style="background: transparent; border: 1px solid var(--border-color); color: #fff; width: auto;" id="backToAmV2Step1Btn">
+              <button type="button" class="btn-pink" style="background: transparent; border: 1px solid var(--border-color, #2d3748); color: #fff; width: auto;" id="backToAmV2Step1Btn">
                 <i class="fa-solid fa-arrow-left"></i> Kembali
               </button>
               <button type="button" id="proceedToAmV2Step3Btn" class="btn-pink" style="flex: 1;">
@@ -1168,7 +1176,7 @@
 
           <div class="am-step-content-panel" id="amV2Panel3">
             <div class="am-landing-box" style="padding: 10px 0;">
-              <div style="width: 52px; height: 52px; border-radius: 50%; background: var(--success-bg); border: 2px solid var(--success); display: flex; align-items: center; justify-content: center; color: var(--success); font-size: 22px; margin-bottom: 12px;">
+              <div style="width: 52px; height: 52px; border-radius: 50%; background: var(--success-bg, rgba(34,197,94,0.1)); border: 2px solid var(--success, #22c55e); display: flex; align-items: center; justify-content: center; color: var(--success, #22c55e); font-size: 22px; margin-bottom: 12px;">
                 <i class="fa-solid fa-check"></i>
               </div>
 
@@ -1190,11 +1198,11 @@
                 </div>
                 <div class="res-data-row">
                   <span class="lbl">Status Aktivasi:</span>
-                  <span class="val" style="color: var(--success);">SUCCESS</span>
+                  <span class="val" style="color: var(--success, #22c55e);">SUCCESS</span>
                 </div>
               </div>
 
-              <button type="button" class="btn-pink" style="background: transparent; border: 1px solid var(--border-color); color: #fff; width: auto; padding: 10px 20px; font-size: 13px;" id="resetAmFormV2Btn">
+              <button type="button" class="btn-pink" style="background: transparent; border: 1px solid var(--border-color, #2d3748); color: #fff; width: auto; padding: 10px 20px; font-size: 13px;" id="resetAmFormV2Btn">
                 <i class="fa-solid fa-rotate-right"></i> Proses Akun Lain
               </button>
             </div>
@@ -1227,7 +1235,7 @@
             <button type="button" id="startBulkBtn" class="btn-pink" style="flex: 1; min-width: 160px;">
               <i class="fa-solid fa-play"></i> Mulai Proses Bulk
             </button>
-            <button type="button" id="exportBulkBtn" class="btn-pink" style="background: transparent; border: 1px solid var(--border-color); color: #fff; width: auto; display: none;">
+            <button type="button" id="exportBulkBtn" class="btn-pink" style="background: transparent; border: 1px solid var(--border-color, #2d3748); color: #fff; width: auto; display: none;">
               <i class="fa-solid fa-download"></i> Unduh Hasil (.txt)
             </button>
           </div>
@@ -1303,19 +1311,19 @@
           <h3 style="font-size: 16px; font-weight: 800; color: #fbcfe8; margin-bottom: 16px;"><i class="fa-solid fa-circle-play"></i> Panduan Aktivasi Alight Motion</h3>
           
           <div style="display: grid; gap: 14px;">
-            <div style="background: var(--card-inner); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px;">
+            <div style="background: var(--card-inner, #161f32); border: 1px solid var(--border-color, #2d3748); border-radius: 12px; padding: 14px;">
               <h4 style="color: #fff; font-size: 14px; margin-bottom: 6px;">1. Buka Menu Aktivasi / AM Generator</h4>
-              <p style="font-size: 12px; color: var(--text-muted);">Masukkan email akun Alight Motion Anda pada kolom yang telah disediakan, lalu klik <b>Kirim Link</b>.</p>
+              <p style="font-size: 12px; color: var(--text-muted, #94a3b8);">Masukkan email akun Alight Motion Anda pada kolom yang telah disediakan, lalu klik <b>Kirim Link</b>.</p>
             </div>
 
-            <div style="background: var(--card-inner); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px;">
+            <div style="background: var(--card-inner, #161f32); border: 1px solid var(--border-color, #2d3748); border-radius: 12px; padding: 14px;">
               <h4 style="color: #fff; font-size: 14px; margin-bottom: 6px;">2. Dapatkan Magic Link / Verifikasi</h4>
-              <p style="font-size: 12px; color: var(--text-muted);">Buka email Anda (bisa menggunakan Auto Temp Mail jika tidak ada email pribadi), lalu salin URL verifikasi yang dikirimkan oleh Alight Motion.</p>
+              <p style="font-size: 12px; color: var(--text-muted, #94a3b8);">Buka email Anda (bisa menggunakan Auto Temp Mail jika tidak ada email pribadi), lalu salin URL verifikasi yang dikirimkan oleh Alight Motion.</p>
             </div>
 
-            <div style="background: var(--card-inner); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px;">
+            <div style="background: var(--card-inner, #161f32); border: 1px solid var(--border-color, #2d3748); border-radius: 12px; padding: 14px;">
               <h4 style="color: #fff; font-size: 14px; margin-bottom: 6px;">3. Tempel Link & Aktivasi</h4>
-              <p style="font-size: 12px; color: var(--text-muted);">Tempelkan tautan Magic Link tersebut di form panel dan klik <b>Lanjut ke Tahap Aktivasi</b>. Sistem akan memproses lisensi secara otomatis dalam hitungan detik.</p>
+              <p style="font-size: 12px; color: var(--text-muted, #94a3b8);">Tempelkan tautan Magic Link tersebut di form panel dan klik <b>Lanjut ke Tahap Aktivasi</b>. Sistem akan memproses lisensi secara otomatis dalam hitungan detik.</p>
             </div>
           </div>
         </div>
@@ -1504,6 +1512,95 @@
     }
 
     // ============================================================
+    // ⏱️ SERVER UPTIME — AUTO START TIME (MONOTONIC, ANTI-TURUN)
+    // ============================================================
+    const UPTIME_REDIS_KEY       = "ayaka:server_start_ms";
+    const UPTIME_LOCAL_START_KEY = "ayaka:server_start_ms_local";
+    const UPTIME_LOCAL_MAX_KEY   = "ayaka:uptime_max_seconds";
+
+    let __serverStartMs     = null;
+    let __maxUptimeSeconds  = 0;
+    let __uptimeInitialized = false;
+
+    try {
+      const localStart = localStorage.getItem(UPTIME_LOCAL_START_KEY);
+      if (localStart) {
+        const n = parseInt(localStart, 10);
+        if (!isNaN(n) && n > 0) __serverStartMs = n;
+      }
+      const maxSaved = localStorage.getItem(UPTIME_LOCAL_MAX_KEY);
+      if (maxSaved) {
+        const n = parseInt(maxSaved, 10);
+        if (!isNaN(n) && n > 0) __maxUptimeSeconds = n;
+      }
+    } catch (e) { /* ignore */ }
+
+    async function initServerStartTime() {
+      const res = await redisGet(UPTIME_REDIS_KEY);
+      if (res && !res.__error && res.value) {
+        const n = parseInt(res.value, 10);
+        if (!isNaN(n) && n > 0) {
+          if (__serverStartMs === null || n < __serverStartMs) {
+            __serverStartMs = n;
+          }
+        }
+      } else if (res && !res.__error && !res.value) {
+        const seed = __serverStartMs || Date.now();
+        const setnxRes = await redisSetNX(UPTIME_REDIS_KEY, seed);
+        if (setnxRes === 1 || setnxRes === "1") {
+          __serverStartMs = seed;
+        } else {
+          const r2 = await redisGet(UPTIME_REDIS_KEY);
+          if (r2 && !r2.__error && r2.value) {
+            const n2 = parseInt(r2.value, 10);
+            if (!isNaN(n2) && n2 > 0) {
+              if (__serverStartMs === null || n2 < __serverStartMs) {
+                __serverStartMs = n2;
+              }
+            }
+          }
+        }
+      }
+
+      if (!__serverStartMs || isNaN(__serverStartMs) || __serverStartMs <= 0) {
+        __serverStartMs = Date.now();
+      }
+
+      try {
+        const localStart = localStorage.getItem(UPTIME_LOCAL_START_KEY);
+        if (localStart) {
+          const n = parseInt(localStart, 10);
+          if (!isNaN(n) && n > 0 && n < __serverStartMs) {
+            __serverStartMs = n;
+          }
+        }
+        localStorage.setItem(UPTIME_LOCAL_START_KEY, String(__serverStartMs));
+      } catch (e) { /* ignore */ }
+
+      __uptimeInitialized = true;
+      console.log("🕒 Server start time initialized:", new Date(__serverStartMs).toISOString());
+    }
+
+    function computeStableUptimeSeconds() {
+      if (!__serverStartMs) return __maxUptimeSeconds || 0;
+
+      let diffSec = Math.floor((Date.now() - __serverStartMs) / 1000);
+      if (diffSec < 0) diffSec = 0;
+
+      if (diffSec < __maxUptimeSeconds) {
+        diffSec = __maxUptimeSeconds;
+      } else if (diffSec > __maxUptimeSeconds) {
+        __maxUptimeSeconds = diffSec;
+        try { localStorage.setItem(UPTIME_LOCAL_MAX_KEY, String(diffSec)); } catch (e) { /* ignore */ }
+      }
+      return diffSec;
+    }
+
+    window.computeStableUptimeSeconds = computeStableUptimeSeconds;
+    window.getServerStartMs = () => __serverStartMs;
+    window.isUptimeReady = () => __uptimeInitialized;
+
+    // ============================================================
     // 🕒 UTIL: Timezone-aware WIB (Asia/Jakarta)
     // ============================================================
     const WIB_TZ = "Asia/Jakarta";
@@ -1516,10 +1613,8 @@
       return `${y}-${m}-${day}`;
     }
 
-    // Ambil komponen waktu WIB
     function getWIBDateParts(dateObj) {
       const d = dateObj || new Date();
-      // toLocaleString dengan en-US agar getHours, getDate, dll. bisa dipakai konsisten
       const wib = new Date(d.toLocaleString("en-US", { timeZone: WIB_TZ }));
       return {
         year: wib.getFullYear(),
@@ -1534,7 +1629,6 @@
 
     function formatWIBTime(dateObj) {
       const d = dateObj || new Date();
-      // Format HH:MM:SS WIB
       const str = d.toLocaleTimeString("id-ID", {
         timeZone: WIB_TZ,
         hour: "2-digit",
@@ -1542,7 +1636,6 @@
         second: "2-digit",
         hour12: false
       });
-      // id-ID pakai titik (HH.MM.SS), ganti ke titik dua
       return str.replace(/\./g, ":");
     }
 
@@ -1565,11 +1658,7 @@
           window.ayakaProductsData = [];
         } else {
           window.ayakaProductsData = data || [];
-
-          console.log('%c🌐 WEB GLOBAL', 'font-size:20px;font-weight:900;color:#22c55e;');
-          console.log('%c✅ Connected to: jbzykcuhpfkrgnimjtxx.supabase.co', 'color:#22c55e;font-weight:700;');
-          console.log('%c📦 Products loaded: ' + (data ? data.length : 0), 'color:#38bdf8;font-weight:700;');
-          console.log('%c🚀 Supabase LIVE!', 'color:#ec4899;font-weight:800;');
+          console.log('✅ Connected to Supabase & loaded products');
         }
 
         const visitorBadgeLabel = document.getElementById("visitorBadgeLabel");
@@ -1580,11 +1669,10 @@
     });
 
     // ============================================================
-    // NAVIGATION ROUTING & ACTIVE TAB SYNC
+    // NAVIGATION ROUTING & ACTIVE TAB SYNC (TANPA SIDEBAR)
     // ============================================================
     document.addEventListener("DOMContentLoaded", () => {
       const bottomNavItems = document.querySelectorAll(".bottom-nav-item");
-      const sidebarNavItems = document.querySelectorAll(".sidebar-menu .nav-item");
       const sections = document.querySelectorAll(".content-container section");
 
       function switchView(targetView) {
@@ -1603,25 +1691,10 @@
           }
         });
 
-        sidebarNavItems.forEach(item => {
-          if (item.getAttribute("data-view") === targetView) {
-            item.classList.add("active");
-          } else {
-            item.classList.remove("active");
-          }
-        });
-
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
 
       bottomNavItems.forEach(item => {
-        item.addEventListener("click", () => {
-          const targetView = item.getAttribute("data-view");
-          if (targetView) switchView(targetView);
-        });
-      });
-
-      sidebarNavItems.forEach(item => {
         item.addEventListener("click", () => {
           const targetView = item.getAttribute("data-view");
           if (targetView) switchView(targetView);
@@ -1884,8 +1957,8 @@
     // 🔥 LIVE RECENT AKTIVASI — Via Upstash Redis LIST
     // ============================================================
     const RECENT_AKTIVASI_KEY = "ayaka:recent_aktivasi";
-    const RECENT_MAX_ITEMS = 20;      // simpan max 20 di Redis
-    const RECENT_RENDER_COUNT = 10;   // tampilkan 10 terbaru di UI
+    const RECENT_MAX_ITEMS = 20;
+    const RECENT_RENDER_COUNT = 10;
 
     let activeRecentList = [];
 
@@ -1910,7 +1983,7 @@
 
       if (activeRecentList.length === 0) {
         container.innerHTML = `
-          <div style="text-align: center; color: var(--text-muted); padding: 18px; font-size: 12px; background: var(--card-inner); border: 1px dashed var(--border-color); border-radius: 12px;">
+          <div style="text-align: center; color: var(--text-muted, #94a3b8); padding: 18px; font-size: 12px; background: var(--card-inner, #161f32); border: 1px dashed var(--border-color, #2d3748); border-radius: 12px;">
             Belum ada aktivitas lisensi terbaru. Selesaikan aktivasi akun untuk menampilkan data secara real-time.
           </div>
         `;
@@ -1944,7 +2017,6 @@
       container.innerHTML = htmlContent;
     }
 
-    // 🔥 Simpan aktivasi baru ke Redis LIST (LPUSH + LTRIM)
     window.addLiveRecentActivation = async function(rawEmail, planType) {
       try {
         if (!rawEmail) rawEmail = "user" + Math.floor(1000 + Math.random() * 9000) + "@gmail.com";
@@ -1959,22 +2031,15 @@
 
         const jsonStr = JSON.stringify(data);
 
-        // LPUSH ke Redis (paling baru di depan)
         await redisLpush(RECENT_AKTIVASI_KEY, jsonStr);
-
-        // Potong jadi max RECENT_MAX_ITEMS
         await redisLtrim(RECENT_AKTIVASI_KEY, 0, RECENT_MAX_ITEMS - 1);
 
-        console.log("✅ Recent aktivasi tersimpan di Redis:", maskEmailAddress(rawEmail));
-
-        // Refresh UI langsung
         await fetchRecentActivationsFromRedis();
       } catch (err) {
         console.warn("Gagal simpan recent aktivasi ke Redis:", err);
       }
     };
 
-    // 🔥 Ambil recent dari Redis dan render
     async function fetchRecentActivationsFromRedis() {
       try {
         const result = await redisLrange(RECENT_AKTIVASI_KEY, 0, RECENT_RENDER_COUNT - 1);
@@ -1992,7 +2057,6 @@
           activeRecentList = parsed;
           renderRecentActivationUI();
         } else if (result && !result.__error && !result.value) {
-          // List kosong
           activeRecentList = [];
           renderRecentActivationUI();
         }
@@ -2004,309 +2068,11 @@
     window.fetchRecentActivationsFromRedis = fetchRecentActivationsFromRedis;
 
     // ============================================================
-    // 🚀 SISTEM VISITOR & AKTIVASI VIA UPSTASH REDIS
+    // INIT VISITOR & SINKRONISASI
     // ============================================================
     document.addEventListener("DOMContentLoaded", async () => {
-
-      const KEY_TOTAL_AKTIVASI = "ayaka:total_aktivasi";
-
-      // --------------------------------------------------------
-      // Track visitor via IP
-      // --------------------------------------------------------
-      async function trackVisitor() {
-        try {
-          let ip = "unknown";
-
-          try {
-            const ipRes = await fetch("https://api.ipify.org?format=json");
-            const ipData = await ipRes.json();
-            if (ipData && ipData.ip) ip = ipData.ip;
-          } catch (e) {
-            console.warn("Gagal ambil IP:", e);
-          }
-
-          const visitorKey = `visitor:${ip}`;
-          const existsResult = await redisGet(visitorKey);
-
-          if (existsResult && existsResult.__error) {
-            console.warn("⚠️ Visitor check error — skip increment");
-            return null;
-          }
-
-          const exists = existsResult && existsResult.value;
-
-          if (!exists) {
-            await redisIncr("total_visitors");
-            await redisSet(visitorKey, "1");
-            await redisExpire(visitorKey, 3600);
-            console.log("🆕 Visitor baru tercatat:", ip);
-          } else {
-            console.log("👤 Visitor sudah tercatat dalam 1 jam terakhir:", ip);
-          }
-
-          const totalResult = await redisGet("total_visitors");
-          if (totalResult && !totalResult.__error && totalResult.value) {
-            return parseInt(totalResult.value) || 0;
-          }
-          return null;
-        } catch (err) {
-          console.warn("trackVisitor error:", err);
-          return null;
-        }
-      }
-
-      // --------------------------------------------------------
-      // Fetch TOTAL AKTIVASI & HARI INI dari Redis
-      // --------------------------------------------------------
-      async function fetchAktivasiStatsFromRedis() {
-        try {
-          const todayStr = getLocalDateStr();
-          const dailyKey = `ayaka:aktivasi:${todayStr}`;
-
-          const totalResult = await redisGet(KEY_TOTAL_AKTIVASI);
-          const totalAktivasi = (totalResult && !totalResult.__error && totalResult.value)
-            ? parseInt(totalResult.value) || 0
-            : 0;
-
-          const dailyResult = await redisGet(dailyKey);
-          const dailyAktivasi = (dailyResult && !dailyResult.__error && dailyResult.value)
-            ? parseInt(dailyResult.value) || 0
-            : 0;
-
-          const elTotalGen = document.getElementById("totalGeneratedCounter");
-          const elStatSukses = document.getElementById("statTotalSukses");
-          const elGlobalTotal = document.getElementById("globalTotalAktivasi");
-          const elGlobalHariIni = document.getElementById("globalHariIniAktivasi");
-
-          const formattedTotal = totalAktivasi.toLocaleString("id-ID");
-          const formattedDaily = dailyAktivasi.toLocaleString("id-ID");
-
-          if (elTotalGen) elTotalGen.textContent = formattedTotal;
-          if (elStatSukses) elStatSukses.textContent = formattedTotal;
-          if (elGlobalTotal) elGlobalTotal.textContent = formattedTotal;
-          if (elGlobalHariIni) elGlobalHariIni.textContent = formattedDaily;
-
-          return { totalAktivasi, dailyAktivasi };
-        } catch (err) {
-          console.warn("fetchAktivasiStatsFromRedis error:", err);
-          return null;
-        }
-      }
-
-      window.fetchAktivasiStatsFromRedis = fetchAktivasiStatsFromRedis;
-
-      // --------------------------------------------------------
-      // 🔥 Live DateTime Widget — pakai WIB (Asia/Jakarta)
-      // --------------------------------------------------------
-      function updateLiveDateTimeWidget() {
-        const dateEl = document.getElementById("widgetDateVal");
-        const timeEl = document.getElementById("widgetTimeVal");
-        const wib = getWIBDateParts(new Date());
-
-        const daysShort = ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"];
-        const dayStr = daysShort[wib.day];
-
-        if (dateEl) {
-          dateEl.textContent = `${dayStr}, ${wib.date}/${wib.month}`;
-        }
-
-        if (timeEl) {
-          const hh = String(wib.hours).padStart(2, "0");
-          const mm = String(wib.minutes).padStart(2, "0");
-          const ss = String(wib.seconds).padStart(2, "0");
-          timeEl.textContent = `${hh}:${mm}:${ss}`;
-        }
-      }
-
-      function initDashboardBatteryStatus() {
-        const batteryValEl = document.getElementById("widgetBatteryVal");
-        const batteryIconEl = document.getElementById("widgetBatteryIcon");
-
-        if ('getBattery' in navigator) {
-          navigator.getBattery().then(battery => {
-            function updateAllBatteryInfo() {
-              const level = Math.round(battery.level * 100);
-              const isCharging = battery.charging;
-
-              if (batteryValEl) batteryValEl.textContent = `${level}%`;
-
-              if (batteryIconEl) {
-                if (isCharging) {
-                  batteryIconEl.innerHTML = `<i class="fa-solid fa-battery-charging" style="color:#15803d;"></i>`;
-                } else if (level <= 20) {
-                  batteryIconEl.innerHTML = `<i class="fa-solid fa-battery-quarter" style="color:#dc2626;"></i>`;
-                } else if (level <= 70) {
-                  batteryIconEl.innerHTML = `<i class="fa-solid fa-battery-half"></i>`;
-                } else {
-                  batteryIconEl.innerHTML = `<i class="fa-solid fa-battery-full" style="color:#16a34a;"></i>`;
-                }
-              }
-            }
-
-            updateAllBatteryInfo();
-            battery.addEventListener('levelchange', updateAllBatteryInfo);
-            battery.addEventListener('chargingchange', updateAllBatteryInfo);
-          }).catch(err => {
-            if (batteryValEl) batteryValEl.textContent = "N/A";
-          });
-        } else {
-          if (batteryValEl) batteryValEl.textContent = "N/A";
-        }
-      }
-
-      // --------------------------------------------------------
-      // INIT SEMUA
-      // --------------------------------------------------------
-      const visitorCount = await trackVisitor();
-      if (visitorCount !== null) {
-        const el = document.getElementById("totalVisitorsCounter");
-        if (el) el.textContent = Number(visitorCount).toLocaleString("id-ID");
-      }
-
-      await fetchAktivasiStatsFromRedis();
-
-      // 🔥 Load recent activations dari Redis
-      await fetchRecentActivationsFromRedis();
-
-      // Clock & battery
-      setInterval(updateLiveDateTimeWidget, 1000);
-      updateLiveDateTimeWidget();
-      initDashboardBatteryStatus();
-
-      // --------------------------------------------------------
-      // 🔄 Refresh periodik (5 detik)
-      // --------------------------------------------------------
-      setInterval(async () => {
-        // Visitor
-        const totalResult = await redisGet("total_visitors");
-        if (totalResult && !totalResult.__error && totalResult.value) {
-          const total = parseInt(totalResult.value) || 0;
-          const el = document.getElementById("totalVisitorsCounter");
-          if (el) el.textContent = total.toLocaleString("id-ID");
-        }
-
-        // Aktivasi stats
-        await fetchAktivasiStatsFromRedis();
-
-        // 🔥 Recent aktivasi dari Redis (agar update realtime antar device)
-        await fetchRecentActivationsFromRedis();
-      }, 5000);
-
-      // --------------------------------------------------------
-      // 🔥 INCREMENT AKTIVASI → REDIS + recent
-      // --------------------------------------------------------
-      window.incrementAyakaActivationStats = async function(incrementCount = 1, userEmail = "", planName = "AM Premium Annual 1 Year") {
-        try {
-          if (!userEmail) {
-            userEmail = document.getElementById("emailInput")?.value || document.getElementById("emailInputV2")?.value || "ayaka_user@gmail.com";
-          }
-
-          const todayStr = getLocalDateStr();
-          const dailyKey = `ayaka:aktivasi:${todayStr}`;
-
-          // 1. Simpan recent aktivasi ke Redis LIST (non-blocking)
-          window.addLiveRecentActivation(userEmail, planName).catch(err => {
-            console.warn("Gagal simpan recent aktivasi:", err);
-          });
-
-          // 2. INCR TOTAL AKTIVASI
-          await redisIncrBy(KEY_TOTAL_AKTIVASI, incrementCount);
-
-          // 3. INCR HARI INI
-          await redisIncrBy(dailyKey, incrementCount);
-
-          // 4. TTL 90 hari untuk key harian
-          await redisExpire(dailyKey, 60 * 60 * 24 * 90);
-
-          console.log(`✅ Aktivasi +${incrementCount} → total & daily updated in Redis`);
-
-          // 5. Refresh UI
-          await fetchAktivasiStatsFromRedis();
-        } catch (err) {
-          console.warn("Gagal memperbarui increment aktivasi:", err);
-        }
-      };
-
-      // --------------------------------------------------------
-      // EVENT HANDLER AKTIVASI
-      // --------------------------------------------------------
-      const proceedStep3Btn = document.getElementById("proceedToStep3Btn");
-      if (proceedStep3Btn) {
-        proceedStep3Btn.addEventListener("click", () => {
-          const emailVal = document.getElementById("emailInput")?.value || "";
-          if (typeof window.incrementAyakaActivationStats === 'function') {
-            window.incrementAyakaActivationStats(1, emailVal, "AM Premium Annual 1 Year");
-          }
-        });
-      }
-
-      const proceedAmV2Step3Btn = document.getElementById("proceedToAmV2Step3Btn");
-      if (proceedAmV2Step3Btn) {
-        proceedAmV2Step3Btn.addEventListener("click", () => {
-          const emailValV2 = document.getElementById("emailInputV2")?.value || "";
-          const sel = document.getElementById("v2ProductSelect");
-          const planText = sel ? sel.options[sel.selectedIndex].text : "AM Premium V2";
-          if (typeof window.incrementAyakaActivationStats === 'function') {
-            window.incrementAyakaActivationStats(1, emailValV2, planText);
-          }
-        });
-      }
-
-      const startBulkBtn = document.getElementById("startBulkBtn");
-      if (startBulkBtn) {
-        startBulkBtn.addEventListener("click", () => {
-          const textarea = document.getElementById("bulkDataInput");
-          if (textarea && textarea.value.trim() !== "") {
-            const lines = textarea.value.trim().split("\n").filter(l => l.trim().length > 0);
-            if (lines.length > 0 && typeof window.incrementAyakaActivationStats === 'function') {
-              lines.forEach((line) => {
-                const parts = line.split(/[|,]/);
-                const em = parts[0] ? parts[0].trim() : "";
-                window.incrementAyakaActivationStats(1, em, "AM Premium Bulk");
-              });
-            }
-          }
-        });
-      }
-
-      const resetV1Btn = document.getElementById("resetAmFormV1Btn");
-      if (resetV1Btn) {
-        resetV1Btn.addEventListener("click", () => {
-          const emailInput = document.getElementById("emailInput");
-          const magicInput = document.getElementById("magicInput");
-          if (emailInput) emailInput.value = "";
-          if (magicInput) magicInput.value = "";
-
-          document.querySelectorAll("#view-am-generator .am-step-card").forEach(el => el.classList.remove("active"));
-          document.querySelectorAll("#view-am-generator .am-step-content-panel").forEach(el => el.classList.remove("active"));
-
-          const tab1 = document.getElementById("amStepTab1");
-          const panel1 = document.getElementById("amPanel1");
-          if (tab1) tab1.classList.add("active");
-          if (panel1) panel1.classList.add("active");
-        });
-      }
-
-      const resetV2Btn = document.getElementById("resetAmFormV2Btn");
-      if (resetV2Btn) {
-        resetV2Btn.addEventListener("click", () => {
-          const emailInputV2 = document.getElementById("emailInputV2");
-          const magicInputV2 = document.getElementById("magicInputV2");
-          const prefixInputV2 = document.getElementById("v2PrefixInput");
-          if (emailInputV2) emailInputV2.value = "";
-          if (magicInputV2) magicInputV2.value = "";
-          if (prefixInputV2) prefixInputV2.value = "GPA";
-
-          document.querySelectorAll("#view-am-generator-v2 .am-step-card").forEach(el => el.classList.remove("active"));
-          document.querySelectorAll("#view-am-generator-v2 .am-step-content-panel").forEach(el => el.classList.remove("active"));
-
-          const tabV2_1 = document.getElementById("amV2StepTab1");
-          const panelV2_1 = document.getElementById("amV2Panel1");
-          if (tabV2_1) tabV2_1.classList.add("active");
-          if (panelV2_1) panelV2_1.classList.add("active");
-        });
-      }
-
+      await initServerStartTime();
+      fetchRecentActivationsFromRedis();
     });
   </script>
 </body>
