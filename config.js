@@ -1,7 +1,7 @@
 // --- KONFIGURASI API KEY & KREDENSIAL TERPISAH ---
 const AYAKA_CONFIG = {
-  SUPABASE_URL: "https://your-project-id.supabase.co",
-  SUPABASE_ANON_KEY: "your-anon-key-here",
+  const SB_URL     = "https://ttivrqgtohrpeucrtkaq.supabase.co";
+const SB_KEY     = "sb_publishable_WkU4GOGSQ5SO4QG_u0aHTA_4ea3kfyo";
   ALIGHT_MOTION: {
     API_KEY: "AIzaSyDtG1AU22ErnQD60AzBAcaknySiz9_CEq0",
     DEFAULT_ORDER_ID: "GPA",
