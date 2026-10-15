@@ -749,7 +749,7 @@
           </div>
 
           <div class="widget-mini-card bg-yellow">
-            <div class="widget-header-text">WAKTU</div>
+            <div class="widget-header-text">WAKTU (WITA)</div>
             <div class="widget-body-content">
               <div class="widget-icon"><i class="fa-regular fa-clock"></i></div>
               <div class="widget-value-text" id="widgetTimeVal">Memuat...</div>
@@ -893,7 +893,7 @@
               </div>
               <div class="db-text-group">
                 <div class="db-title">System Uptime Global</div>
-                <div class="db-subtitle">Waktu aktif sistem global (WIB)</div>
+                <div class="db-subtitle">Waktu aktif sistem global (WITA)</div>
               </div>
             </div>
             <div class="uptime-digits-row" id="systemUptimeCustomDisplay">
@@ -1564,16 +1564,6 @@
     // ============================================================
     // ⏱️ SERVER UPTIME — AUTO START TIME (MONOTONIC, ANTI-TURUN)
     // ============================================================
-    // Start time TIDAK di-hardcode. Diambil otomatis dari:
-    //   1. localStorage (paling cepat & paling awal diketahui)
-    //   2. Upstash Redis (global, tersinkron antar device)
-    //   3. Date.now() (fallback pertama kali saja, lalu di-SETNX ke Redis)
-    //
-    // Logika anti-turun:
-    //   - Ambil timestamp start PALING AWAL (paling lama uptime-nya)
-    //   - Simpan nilai uptime maksimum di localStorage — kalau nilai baru lebih
-    //     kecil, pakai nilai maksimum (tidak pernah turun).
-
     const UPTIME_REDIS_KEY       = "ayaka:server_start_ms";
     const UPTIME_LOCAL_START_KEY = "ayaka:server_start_ms_local";
     const UPTIME_LOCAL_MAX_KEY   = "ayaka:uptime_max_seconds";
@@ -1582,7 +1572,6 @@
     let __maxUptimeSeconds  = 0;
     let __uptimeInitialized = false;
 
-    // Muat dari localStorage dulu (sinkron, cepat)
     try {
       const localStart = localStorage.getItem(UPTIME_LOCAL_START_KEY);
       if (localStart) {
@@ -1596,29 +1585,21 @@
       }
     } catch (e) { /* ignore */ }
 
-    /**
-     * Inisialisasi server start time.
-     * Prioritas: paling AWAL di antara {Redis, localStorage, Date.now()}.
-     */
     async function initServerStartTime() {
-      // 1. Cek Redis
       const res = await redisGet(UPTIME_REDIS_KEY);
       if (res && !res.__error && res.value) {
         const n = parseInt(res.value, 10);
         if (!isNaN(n) && n > 0) {
-          // Ambil yang PALING AWAL (uptime paling lama)
           if (__serverStartMs === null || n < __serverStartMs) {
             __serverStartMs = n;
           }
         }
       } else if (res && !res.__error && !res.value) {
-        // Redis kosong → seed pakai nilai lokal atau sekarang
         const seed = __serverStartMs || Date.now();
         const setnxRes = await redisSetNX(UPTIME_REDIS_KEY, seed);
         if (setnxRes === 1 || setnxRes === "1") {
           __serverStartMs = seed;
         } else {
-          // Race: device lain baru set → ambil lagi
           const r2 = await redisGet(UPTIME_REDIS_KEY);
           if (r2 && !r2.__error && r2.value) {
             const n2 = parseInt(r2.value, 10);
@@ -1631,12 +1612,10 @@
         }
       }
 
-      // 2. Fallback terakhir
       if (!__serverStartMs || isNaN(__serverStartMs) || __serverStartMs <= 0) {
         __serverStartMs = Date.now();
       }
 
-      // 3. Simpan ke localStorage (pakai yang paling awal)
       try {
         const localStart = localStorage.getItem(UPTIME_LOCAL_START_KEY);
         if (localStart) {
@@ -1652,12 +1631,6 @@
       console.log("🕒 Server start time initialized:", new Date(__serverStartMs).toISOString());
     }
 
-    /**
-     * Hitung uptime dalam DETIK dari __serverStartMs.
-     * - Pakai Math.floor
-     * - Tidak pernah negatif
-     * - Anti-turun: kalau diffSec < max sebelumnya → pakai max sebelumnya
-     */
     function computeStableUptimeSeconds() {
       if (!__serverStartMs) return __maxUptimeSeconds || 0;
 
@@ -1673,49 +1646,55 @@
       return diffSec;
     }
 
-    // Expose untuk debug
     window.computeStableUptimeSeconds = computeStableUptimeSeconds;
     window.getServerStartMs = () => __serverStartMs;
     window.isUptimeReady = () => __uptimeInitialized;
 
     // ============================================================
-    // 🕒 UTIL: Timezone-aware WIB (Asia/Jakarta)
+    // 🕒 UTIL: Timezone-aware WITA (Asia/Makassar)
     // ============================================================
-    const WIB_TZ = "Asia/Jakarta";
+    const WITA_TZ = "Asia/Makassar";
 
     function getLocalDateStr() {
       const d = new Date();
-      const y = d.getFullYear();
-      const m = String(d.getMonth() + 1).padStart(2, '0');
-      const day = String(d.getDate()).padStart(2, '0');
+      const options = { timeZone: WITA_TZ, year: 'numeric', month: '2-digit', day: '2-digit' };
+      const parts = new Intl.DateTimeFormat('en-CA', options).formatToParts(d);
+      const y = parts.find(p => p.type === 'year').value;
+      const m = parts.find(p => p.type === 'month').value;
+      const day = parts.find(p => p.type === 'day').value;
       return `${y}-${m}-${day}`;
     }
 
-    // Ambil komponen waktu WIB
-    function getWIBDateParts(dateObj) {
+    function getWITADateParts(dateObj) {
       const d = dateObj || new Date();
-      const wib = new Date(d.toLocaleString("en-US", { timeZone: WIB_TZ }));
-      return {
-        year: wib.getFullYear(),
-        month: wib.getMonth() + 1,
-        date: wib.getDate(),
-        day: wib.getDay(),
-        hours: wib.getHours(),
-        minutes: wib.getMinutes(),
-        seconds: wib.getSeconds()
-      };
-    }
-
-    function formatWIBTime(dateObj) {
-      const d = dateObj || new Date();
-      const str = d.toLocaleTimeString("id-ID", {
-        timeZone: WIB_TZ,
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
+      const options = {
+        timeZone: WITA_TZ,
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric',
+        weekday: 'short',
+        hour: 'numeric',
+        minute: 'numeric',
+        second: 'numeric',
         hour12: false
-      });
-      return str.replace(/\./g, ":");
+      };
+      const formatter = new Intl.DateTimeFormat('en-US', options);
+      const parts = formatter.formatToParts(d);
+      
+      const getVal = (type) => parts.find(p => p.type === type)?.value || '';
+      
+      const daysMap = { 'Sun': 0, 'Mon': 1, 'Tue': 2, 'Wed': 3, 'Thu': 4, 'Fri': 5, 'Sat': 6 };
+      const weekdayStr = getVal('weekday');
+
+      return {
+        year: parseInt(getVal('year'), 10),
+        month: parseInt(getVal('month'), 10),
+        date: parseInt(getVal('day'), 10),
+        day: daysMap[weekdayStr] ?? new Date().getDay(),
+        hours: parseInt(getVal('hour'), 10),
+        minutes: parseInt(getVal('minute'), 10),
+        seconds: parseInt(getVal('second'), 10)
+      };
     }
 
     // ============================================================
@@ -1943,11 +1922,11 @@
         const now = new Date();
 
         if (!hasSunCalc) {
-          const wib = getWIBDateParts(now);
+          const wita = getWITADateParts(now);
           let theme = "day", label = "Siang", icon = "fa-solid fa-sun";
-          if (wib.hours >= 5 && wib.hours < 10) { theme = "morning"; label = "Pagi"; }
-          else if (wib.hours >= 10 && wib.hours < 15) { theme = "day"; label = "Siang"; }
-          else if (wib.hours >= 15 && wib.hours < 18) { theme = "evening"; label = "Sore"; icon = "fa-solid fa-cloud-sun"; }
+          if (wita.hours >= 5 && wita.hours < 10) { theme = "morning"; label = "Pagi"; }
+          else if (wita.hours >= 10 && wita.hours < 15) { theme = "day"; label = "Siang"; }
+          else if (wita.hours >= 15 && wita.hours < 18) { theme = "evening"; label = "Sore"; icon = "fa-solid fa-cloud-sun"; }
           else { theme = "night"; label = "Malam"; icon = "fa-solid fa-moon"; }
 
           skyBar.classList.remove("theme-morning", "theme-day", "theme-evening", "theme-night");
@@ -2173,12 +2152,8 @@
     // ============================================================
     document.addEventListener("DOMContentLoaded", async () => {
 
-      // 🔑 Key aktivasi
       const KEY_TOTAL_AKTIVASI = "ayaka:total_aktivasi";
 
-      // --------------------------------------------------------
-      // Track visitor via IP
-      // --------------------------------------------------------
       async function trackVisitor() {
         try {
           let ip = "unknown";
@@ -2221,9 +2196,6 @@
         }
       }
 
-      // --------------------------------------------------------
-      // Fetch TOTAL AKTIVASI & HARI INI dari Redis
-      // --------------------------------------------------------
       async function fetchAktivasiStatsFromRedis() {
         try {
           const todayStr = getLocalDateStr();
@@ -2261,9 +2233,6 @@
 
       window.fetchAktivasiStatsFromRedis = fetchAktivasiStatsFromRedis;
 
-      // --------------------------------------------------------
-      // ✅ UPDATE UPTIME UI — AUTO START, MONOTONIC (anti-turun)
-      // --------------------------------------------------------
       function updateGlobalUptimeUI() {
         const diffSec = computeStableUptimeSeconds();
 
@@ -2275,28 +2244,24 @@
         const widgetUptimeVal   = document.getElementById("widgetUptimeVal");
         const uptimeDaysCountEl = document.getElementById("uptimeDaysCount");
 
-        const totalDays  = Math.floor(diffSec / 86400);              // Math.floor — hanya naik
+        const totalDays  = Math.floor(diffSec / 86400);
         const hours      = Math.floor((diffSec % 86400) / 3600);
         const minutes    = Math.floor((diffSec % 3600) / 60);
         const seconds    = diffSec % 60;
 
-        // 🔹 HEADER utama → format "XX Days"
         if (uptimeCounterEl) {
           uptimeCounterEl.textContent = `${totalDays.toLocaleString("id-ID")} Days`;
         }
 
-        // 🔹 Split display di Server Status
         if (uptimeDaysEl)    uptimeDaysEl.textContent    = totalDays + "d";
         if (uptimeHoursEl)   uptimeHoursEl.textContent   = String(hours).padStart(2, "0") + "h";
         if (uptimeMinutesEl) uptimeMinutesEl.textContent = String(minutes).padStart(2, "0") + "m";
         if (uptimeSecondsEl) uptimeSecondsEl.textContent = String(seconds).padStart(2, "0") + "s";
 
-        // 🔹 Widget dashboard → format "XX Days"
         if (widgetUptimeVal) {
           widgetUptimeVal.textContent = `${totalDays} Days`;
         }
 
-        // 🔹 Info uptime kecil di Auto Temp Mail
         if (uptimeDaysCountEl) {
           uptimeDaysCountEl.textContent = totalDays;
         }
@@ -2323,24 +2288,24 @@
       }
 
       // --------------------------------------------------------
-      // 🔥 Live DateTime Widget — pakai WIB (Asia/Jakarta)
+      // 🔥 Live DateTime Widget — pakai WITA (Asia/Makassar) Real-Time
       // --------------------------------------------------------
       function updateLiveDateTimeWidget() {
         const dateEl = document.getElementById("widgetDateVal");
         const timeEl = document.getElementById("widgetTimeVal");
-        const wib = getWIBDateParts(new Date());
+        const wita = getWITADateParts(new Date());
 
         const daysShort = ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"];
-        const dayStr = daysShort[wib.day];
+        const dayStr = daysShort[wita.day];
 
         if (dateEl) {
-          dateEl.textContent = `${dayStr}, ${wib.date}/${wib.month}`;
+          dateEl.textContent = `${dayStr}, ${wita.date}/${wita.month}`;
         }
 
         if (timeEl) {
-          const hh = String(wib.hours).padStart(2, "0");
-          const mm = String(wib.minutes).padStart(2, "0");
-          const ss = String(wib.seconds).padStart(2, "0");
+          const hh = String(wita.hours).padStart(2, "0");
+          const mm = String(wita.minutes).padStart(2, "0");
+          const ss = String(wita.seconds).padStart(2, "0");
           timeEl.textContent = `${hh}:${mm}:${ss}`;
         }
       }
@@ -2381,10 +2346,6 @@
         }
       }
 
-      // --------------------------------------------------------
-      // INIT SEMUA
-      // --------------------------------------------------------
-      // ⏱️ Inisialisasi start time (dari Redis + localStorage)
       await initServerStartTime();
 
       updateGlobalUptimeUI();
@@ -2403,13 +2364,7 @@
       updateLiveDateTimeWidget();
       initDashboardBatteryStatus();
 
-      // --------------------------------------------------------
-      // Refresh periodik (5 detik) — visitor, aktivasi, recent.
-      // Uptime TIDAK di-sync via Redis karena start time sudah permanen
-      // (anti-turun). Cukup pakai computeStableUptimeSeconds().
-      // --------------------------------------------------------
       setInterval(async () => {
-        // Visitor
         const totalResult = await redisGet("total_visitors");
         if (totalResult && !totalResult.__error && totalResult.value) {
           const total = parseInt(totalResult.value) || 0;
@@ -2417,16 +2372,10 @@
           if (el) el.textContent = total.toLocaleString("id-ID");
         }
 
-        // Aktivasi stats
         await fetchAktivasiStatsFromRedis();
-
-        // Recent aktivasi
         await fetchRecentActivationsFromRedis();
       }, 5000);
 
-      // --------------------------------------------------------
-      // 🔥 INCREMENT AKTIVASI → REDIS + recent
-      // --------------------------------------------------------
       window.incrementAyakaActivationStats = async function(incrementCount = 1, userEmail = "", planName = "AM Premium Annual 1 Year") {
         try {
           if (!userEmail) {
@@ -2452,9 +2401,6 @@
         }
       };
 
-      // --------------------------------------------------------
-      // EVENT HANDLER AKTIVASI
-      // --------------------------------------------------------
       const proceedStep3Btn = document.getElementById("proceedToStep3Btn");
       if (proceedStep3Btn) {
         proceedStep3Btn.addEventListener("click", () => {
