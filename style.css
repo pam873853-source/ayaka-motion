@@ -1,11 +1,11 @@
 :root {
   --bg-dark: #20131d;
-  --sidebar-bg: #271725;
-  --card-bg: #2f1d2d;
-  --card-inner: #3a2638;
+  --sidebar-bg: #fde047;
+  --card-bg: #fde047;
+  --card-inner: #facc15;
   --border-color: #000000;
-  --text-main: #fff0f5;
-  --text-muted: #e2c1dc;
+  --text-main: #000000;
+  --text-muted: #374151;
   --brand-blue: #f472b6;
   --brand-purple: #db2777;
   --success: #34d399;
@@ -67,7 +67,7 @@ body {
 
 .sidebar {
   width: 250px;
-  background: #ffffff;
+  background: #fde047;
   border-right: 4px solid #000000;
   display: flex;
   flex-direction: column;
@@ -90,7 +90,7 @@ body {
   gap: 12px;
   border-bottom: 4px solid #000000;
   position: relative;
-  background: #fdf2f8;
+  background: #facc15;
 }
 
 .sidebar-logo {
@@ -164,7 +164,7 @@ body {
   user-select: none;
 }
 
-.nav-item:hover { color: #000; background: #fdf2f8; border: 2px solid #000000; box-shadow: 3px 3px 0px #000000; transform: translate(-2px, -2px); }
+.nav-item:hover { color: #000; background: #facc15; border: 2px solid #000000; box-shadow: 3px 3px 0px #000000; transform: translate(-2px, -2px); }
 .nav-item.active { background: #f472b6; color: #000000; border: 2px solid #000000; box-shadow: 3px 3px 0px #000000; border-left: 2px solid #000000; }
 
 .sidebar.collapsed .nav-item span { display: none; }
@@ -174,7 +174,7 @@ body {
   padding: 16px 12px;
   margin-top: auto;
   border-top: 4px solid #000000;
-  background: #fff;
+  background: #fde047;
 }
 
 .user-profile-card {
@@ -183,7 +183,7 @@ body {
   gap: 10px;
   padding: 10px 12px;
   border-radius: var(--radius-md);
-  background: #fdf2f8;
+  background: #facc15;
   border: 3px solid #000000;
   box-shadow: 3px 3px 0px #000000;
 }
@@ -221,7 +221,7 @@ body {
 
 .user-email {
   font-size: 11px;
-  color: #4b5563;
+  color: #374151;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -233,7 +233,7 @@ body {
 .sidebar.collapsed .user-info { display: none; }
 
 .ayaka-banner {
-  background: #fdf2f8;
+  background: #fde047;
   border: 3px solid #000000;
   border-radius: var(--radius-lg);
   padding: 16px 20px;
@@ -341,7 +341,7 @@ body {
 }
 
 .dash-card {
-  background: #ffffff;
+  background: #fde047;
   border: 3px solid #000000;
   border-radius: var(--radius-lg);
   padding: 20px;
@@ -360,7 +360,7 @@ body {
 }
 
 .stat-card {
-  background: #ffffff;
+  background: #fde047;
   border: 3px solid #000000;
   border-radius: var(--radius-md);
   padding: 16px;
@@ -405,7 +405,7 @@ body {
 }
 
 .database-card-custom {
-  background: #ffffff;
+  background: #fde047;
   border: 3px solid #000000;
   border-radius: 16px;
   padding: 22px 24px;
@@ -485,7 +485,7 @@ body {
 }
 
 .system-uptime-card-custom {
-  background: #ffffff;
+  background: #fde047;
   border: 3px solid #000000;
   border-radius: 16px;
   padding: 22px 24px;
@@ -518,7 +518,7 @@ body {
 }
 
 .am-step-card {
-  background: #ffffff;
+  background: #fde047;
   border: 3px solid #000000;
   border-radius: 8px;
   padding: 14px 8px;
@@ -535,7 +535,7 @@ body {
 
 .am-step-card:hover {
   border-color: #000000;
-  background: #fdf2f8;
+  background: #facc15;
   transform: translate(-2px, -2px);
   box-shadow: 5px 5px 0px #000000;
 }
@@ -739,7 +739,7 @@ body {
   width: 100%;
   max-width: 100%;
   margin: 0 auto;
-  background: #ffffff;
+  background: #fde047;
   color: #000000;
   border: 3px solid #000000;
   border-radius: 16px;
@@ -780,7 +780,7 @@ body {
 }
 
 .ss-email-box {
-  background: #fdf2f8;
+  background: #facc15;
   border: 3px solid #000000;
   border-radius: 8px;
   padding: 10px 12px;
@@ -883,7 +883,7 @@ body {
   box-shadow: 3px 3px 0px #000000;
   transition: all 0.1s;
 }
-.ss-custom-btn:hover { background: #fdf2f8; transform: translate(-2px, -2px); box-shadow: 4px 4px 0px #000; }
+.ss-custom-btn:hover { background: #facc15; transform: translate(-2px, -2px); box-shadow: 4px 4px 0px #000; }
 
 .ss-action-row {
   display: grid;
@@ -963,7 +963,7 @@ body {
   color: #000000;
   box-shadow: 3px 3px 0px #000000;
 }
-.inbox-item:hover { border-color: #000000; background: #fdf2f8; transform: translate(-2px, -2px); box-shadow: 4px 4px 0px #000; }
+.inbox-item:hover { border-color: #000000; background: #facc15; transform: translate(-2px, -2px); box-shadow: 4px 4px 0px #000; }
 .inbox-item-header { display: flex; justify-content: space-between; font-size: 10px; color: #4b5563; margin-bottom: 3px; gap: 6px; font-weight: 800; }
 .inbox-item-subject { font-weight: 900; font-size: 12px; color: #000000; word-break: break-all; }
 
